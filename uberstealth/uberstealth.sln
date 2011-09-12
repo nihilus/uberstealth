@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "uberstealth", "uberstealth.vcproj", "{9295F5F3-F47E-4C50-B526-55AE13AA9457}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8B566A2C-41AC-40FF-B1EF-8AD47A208093} = {8B566A2C-41AC-40FF-B1EF-8AD47A208093}
+		{59339E37-7C43-4CD2-B7B5-DF10D9197655} = {59339E37-7C43-4CD2-B7B5-DF10D9197655}
+		{D42B8C42-9344-44E7-844C-524F13995981} = {D42B8C42-9344-44E7-844C-524F13995981}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HideDebugger", "..\HideDebugger\HideDebugger.vcproj", "{59339E37-7C43-4CD2-B7B5-DF10D9197655}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StealthDriver.W7", "..\StealthDriver\StealthDriver\StealthDriver.W7.vcproj", "{D42B8C42-9344-44E7-844C-524F13995981}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RDTSCEmu.WLH", "..\RDTSCEmu\driver\RDTSCEmu.WLH.vcproj", "{8B566A2C-41AC-40FF-B1EF-8AD47A208093}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		IDAStealth Debug|Win32 = IDAStealth Debug|Win32
+		IDAStealth Release|Win32 = IDAStealth Release|Win32
+		OllyStealth Debug|Win32 = OllyStealth Debug|Win32
+		OllyStealth Release|Win32 = OllyStealth Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9295F5F3-F47E-4C50-B526-55AE13AA9457}.IDAStealth Debug|Win32.ActiveCfg = Debug|Win32
+		{9295F5F3-F47E-4C50-B526-55AE13AA9457}.IDAStealth Debug|Win32.Build.0 = Debug|Win32
+		{9295F5F3-F47E-4C50-B526-55AE13AA9457}.IDAStealth Release|Win32.ActiveCfg = Release|Win32
+		{9295F5F3-F47E-4C50-B526-55AE13AA9457}.IDAStealth Release|Win32.Build.0 = Release|Win32
+		{9295F5F3-F47E-4C50-B526-55AE13AA9457}.OllyStealth Debug|Win32.ActiveCfg = OllyStealth Debug|Win32
+		{9295F5F3-F47E-4C50-B526-55AE13AA9457}.OllyStealth Debug|Win32.Build.0 = OllyStealth Debug|Win32
+		{9295F5F3-F47E-4C50-B526-55AE13AA9457}.OllyStealth Release|Win32.ActiveCfg = OllyStealth Release|Win32
+		{9295F5F3-F47E-4C50-B526-55AE13AA9457}.OllyStealth Release|Win32.Build.0 = OllyStealth Release|Win32
+		{59339E37-7C43-4CD2-B7B5-DF10D9197655}.IDAStealth Debug|Win32.ActiveCfg = Debug|Win32
+		{59339E37-7C43-4CD2-B7B5-DF10D9197655}.IDAStealth Debug|Win32.Build.0 = Debug|Win32
+		{59339E37-7C43-4CD2-B7B5-DF10D9197655}.IDAStealth Release|Win32.ActiveCfg = Release|Win32
+		{59339E37-7C43-4CD2-B7B5-DF10D9197655}.IDAStealth Release|Win32.Build.0 = Release|Win32
+		{59339E37-7C43-4CD2-B7B5-DF10D9197655}.OllyStealth Debug|Win32.ActiveCfg = OllyStealth Debug|Win32
+		{59339E37-7C43-4CD2-B7B5-DF10D9197655}.OllyStealth Debug|Win32.Build.0 = OllyStealth Debug|Win32
+		{59339E37-7C43-4CD2-B7B5-DF10D9197655}.OllyStealth Release|Win32.ActiveCfg = OllyStealth Release|Win32
+		{59339E37-7C43-4CD2-B7B5-DF10D9197655}.OllyStealth Release|Win32.Build.0 = OllyStealth Release|Win32
+		{D42B8C42-9344-44E7-844C-524F13995981}.IDAStealth Debug|Win32.ActiveCfg = W7XP checked|Win32
+		{D42B8C42-9344-44E7-844C-524F13995981}.IDAStealth Debug|Win32.Build.0 = W7XP checked|Win32
+		{D42B8C42-9344-44E7-844C-524F13995981}.IDAStealth Release|Win32.ActiveCfg = W7XP free|Win32
+		{D42B8C42-9344-44E7-844C-524F13995981}.IDAStealth Release|Win32.Build.0 = W7XP free|Win32
+		{D42B8C42-9344-44E7-844C-524F13995981}.OllyStealth Debug|Win32.ActiveCfg = W7XP checked|Win32
+		{D42B8C42-9344-44E7-844C-524F13995981}.OllyStealth Debug|Win32.Build.0 = W7XP checked|Win32
+		{D42B8C42-9344-44E7-844C-524F13995981}.OllyStealth Release|Win32.ActiveCfg = W7XP free|Win32
+		{D42B8C42-9344-44E7-844C-524F13995981}.OllyStealth Release|Win32.Build.0 = W7XP free|Win32
+		{8B566A2C-41AC-40FF-B1EF-8AD47A208093}.IDAStealth Debug|Win32.ActiveCfg = WLHXP checked|Win32
+		{8B566A2C-41AC-40FF-B1EF-8AD47A208093}.IDAStealth Debug|Win32.Build.0 = WLHXP checked|Win32
+		{8B566A2C-41AC-40FF-B1EF-8AD47A208093}.IDAStealth Release|Win32.ActiveCfg = WLHXP free|Win32
+		{8B566A2C-41AC-40FF-B1EF-8AD47A208093}.IDAStealth Release|Win32.Build.0 = WLHXP free|Win32
+		{8B566A2C-41AC-40FF-B1EF-8AD47A208093}.OllyStealth Debug|Win32.ActiveCfg = WLHXP checked|Win32
+		{8B566A2C-41AC-40FF-B1EF-8AD47A208093}.OllyStealth Debug|Win32.Build.0 = WLHXP checked|Win32
+		{8B566A2C-41AC-40FF-B1EF-8AD47A208093}.OllyStealth Release|Win32.ActiveCfg = WLHXP free|Win32
+		{8B566A2C-41AC-40FF-B1EF-8AD47A208093}.OllyStealth Release|Win32.Build.0 = WLHXP free|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
