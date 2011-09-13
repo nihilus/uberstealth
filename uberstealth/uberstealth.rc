@@ -31,9 +31,9 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSM
 CAPTION "About uberstealth"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    CTEXT           "Thx to everyone for suggestions and feedback\n Special thanks to Peter Ferrie who provided an in-depth analysis of this plugin\nGreetz to all the unmentioned guys, u know why :)\n\n",IDC_ABOUT_TXT,7,182,271,50
-    CONTROL         "<a>http://newgre.net/idastealth</a>",IDC_SYSLINK,
-                    "SysLink",0x0,96,238,93,11
+    CTEXT           "Thx to everyone for suggestions and feedback\nGreetz to all the unmentioned guys, u know why :)\n\n",IDC_ABOUT_TXT,7,182,271,50
+    CONTROL         "<a>http://code.google.com/uberstealth</a>",IDC_SYSLINK,
+                    "SysLink",0x0,83,238,119,11
 END
 
 IDD_DIALOG1 DIALOGEX 0, 0, 286, 247
@@ -81,10 +81,10 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,15,59,163,10
     CONTROL         "Disable BlockInput",IDC_BLOCKINPUT,"Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,15,20,92,10
     CONTROL         "Disable SuspendThread",IDC_SUSPENDTHREAD,"Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,15,33,93,10
-    CONTROL         "Hide IDA from process list (NtQuerySystemInformation)",IDC_HIDEIDAPROCESS,
-                    "Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,15,72,190,10
-    CONTROL         "Hide IDA Windows (FindWindow + EnumWindows)",IDC_HIDEIDAWND,
-                    "Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,15,85,181,10
+    CONTROL         "Hide debugger from process list (NtQuerySystemInformation)",IDC_HIDEDEBUGGERPROCESS,
+                    "Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,15,72,248,10
+    CONTROL         "Hide debugger windows (FindWindow + EnumWindows)",IDC_HIDEDEBUGGERWND,
+                    "Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,15,85,226,10
     CONTROL         "Disable NtTerminateThread + NtTerminateProcess",IDC_TERMINATE,
                     "Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,15,46,176,10
     CONTROL         "Swallow DBG_PRINTEXCEPTION (Hook DbgUiConvertStateChangeStructure)",IDC_DBGPRNTEXCEPT,
@@ -142,25 +142,23 @@ BEGIN
     CONTROL         "Automatic jump selection (relative / absolute) [5 / 7 bytes]",IDC_AUTO_SELECTION,
                     "Button",BS_AUTORADIOBUTTON | BS_FLAT | WS_GROUP | WS_TABSTOP,15,20,245,10
     CONTROL         "Force absolute jumps [7 bytes]",IDC_FORCE_ABS,"Button",BS_AUTORADIOBUTTON | BS_FLAT | WS_TABSTOP,15,33,120,10
-    CONTROL         "Push/ret sequence [6 bytes] (NOT YET)",IDC_PUSH_RET,
-                    "Button",BS_AUTORADIOBUTTON | BS_FLAT | WS_DISABLED | WS_TABSTOP,15,46,155,10
     CONTROL         "Automatically pass unknown exceptions to debuggee",IDC_PASS_EXCEPTIONS,
-                    "Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,15,84,193,10
+                    "Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,15,72,193,10
     CONTROL         "Automatically halt debugger in top-level exception handler",IDC_HALT_IN_SEH,
-                    "Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,15,97,243,10
+                    "Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,15,85,243,10
     CONTROL         "Automatically halt debugger at new EIP after SEH exception",IDC_HALT_AFTER_SEH,
-                    "Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,15,110,248,10
-    EDITTEXT        IDC_TCP_PORT,40,162,44,14,ES_AUTOHSCROLL | ES_NUMBER
+                    "Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,15,98,248,10
+    EDITTEXT        IDC_TCP_PORT,40,151,44,14,ES_AUTOHSCROLL | ES_NUMBER
     COMBOBOX        IDC_PROFILES,51,205,209,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     PUSHBUTTON      "Add",IDC_ADD_PROFILE,98,227,50,14
     PUSHBUTTON      "Delete",IDC_DEL_PROFILE,162,227,50,14
-    GROUPBOX        "Inline Patching Configuration",IDC_STATIC,7,7,272,56
+    GROUPBOX        "Inline Patching Configuration",IDC_STATIC,7,7,272,44
     GROUPBOX        "Profiles",IDC_STATIC,7,191,272,60
-    GROUPBOX        "Debugging Support",IDC_STATIC,7,71,272,70
-    GROUPBOX        "Remote Debugging",IDC_STATIC,7,149,272,36
-    LTEXT           "Port:",IDC_STATIC,15,165,18,8
+    GROUPBOX        "Debugging Support",IDC_STATIC,7,59,272,70
+    GROUPBOX        "Remote Debugging",IDC_STATIC,7,138,272,36
+    LTEXT           "Port:",IDC_STATIC,15,154,18,8
     CONTROL         "Log location of top-level SEH handler and instruction pointer after SEH",IDC_LOG_SEH,
-                    "Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,15,123,248,10
+                    "Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,15,111,248,10
 END
 
 IDD_INPUTBOX DIALOGEX 0, 0, 263, 49

@@ -33,6 +33,7 @@
 #define IDC_PARENTPROCESS               1020
 #define IDC_RTLNTGF                     1021
 #define IDC_HIDEIDAPROCESS              1022
+#define IDC_HIDEDEBUGGERPROCESS         1022
 #define IDC_BLOCKINPUT                  1023
 #define IDC_DISSUSPEND                  1024
 #define IDC_SUSPENDTHREAD               1024
@@ -44,6 +45,8 @@
 #define IDC_RDTSC                       1031
 #define IDC_HIDEIDAWND                  1032
 #define IDC_NTSIT_DRV                   1032
+#define IDC_DEBUGGERWND                 1032
+#define IDC_HIDEDEBUGGERWND             1032
 #define IDC_NTQIP_DRV                   1033
 #define IDC_GETVERSION                  1035
 #define IDC_TERMINATE                   1036
