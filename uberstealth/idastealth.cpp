@@ -20,8 +20,7 @@ int idaapi callback(void* user_data, int notification_code, va_list va);
 
 namespace
 {
-	typedef uberstealth::LocalStealthSession<uberstealth::IDAEngine> IDASession;
-	boost::shared_ptr<IDASession> session_;
+	boost::shared_ptr<uberstealth::StealthSession<uberstealth::IDAEngine>> session_;
 }
 
 /*********************************************************************
@@ -99,8 +98,6 @@ void __stdcall run(int arg)
 		uberstealth::WTLWrapper& wtlWrapper = uberstealth::WTLWrapper::getInstance();
 		wtlWrapper.showGUI((HWND)callui(ui_get_hwnd).vptr);
 	}
-
-	return;
 }
 
 int idaapi callback(void*, int notification_code, va_list va)
@@ -111,8 +108,9 @@ int idaapi callback(void*, int notification_code, va_list va)
 		{
 		case dbg_process_attach:
 			{
+				// TODO: instantiate RemoteStealthSession if appropriate
 				const debug_event_t* dbgEvent = va_arg(va, const debug_event_t*);
-				session_ = boost::make_shared<IDASession>();
+				session_ = boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine>>();
 				session_->handleDbgAttach(dbgEvent->pid);
 			}
 			break;
@@ -120,7 +118,7 @@ int idaapi callback(void*, int notification_code, va_list va)
 		case dbg_process_start:
 			{
 				const debug_event_t* dbgEvent = va_arg(va, const debug_event_t*);
-				session_ = boost::make_shared<IDASession>();
+				session_ = boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine>>();
 				session_->handleProcessStart(dbgEvent->pid, dbgEvent->modinfo.base);
 			}
 			break;

@@ -51,7 +51,7 @@ public:
 		reloadProfile();
 		if (currentProfile_.getEnableDbgStartEnabled())
 		{
-			// TODO: the exception should NOT be catached here; instead it should bubble up to the caller which then nedds to handle it!
+			// TODO: the exception should NOT be catched here; instead it should bubble up to the caller which then needs to handle it!
 			try
 			{
 				injectionBeacon_ = boost::make_shared<InjectionBeacon>(processId);
@@ -85,6 +85,9 @@ public:
 		stopDrivers();
 		CloseHandle(hProcess_);
 	}
+
+	virtual void handleBreakPoint(unsigned int threadID, uintptr_t address) =0;
+	virtual void handleException(unsigned int exceptionCode) =0;
 
 protected:
 	virtual ResourceItem getRDTSCDriverResource() =0;

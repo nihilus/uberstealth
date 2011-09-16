@@ -137,7 +137,7 @@ public:
 	}
 
 	// Handle an exception which occurred in the debuggee.
-	void handleException(unsigned int exceptionCode) const
+	void handleException(unsigned int exceptionCode)
 	{
 		if (currentProfile_.getPassUnknownExceptionsEnabled())
 		{

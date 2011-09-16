@@ -19,6 +19,10 @@ public:
 	void handleProcessStart(unsigned int processID, uintptr_t baseAddress, const std::string& configFile, const std::string profile);
 	void handleProcessExit();
 
+	// TODO: implement.
+	void handleBreakPoint(unsigned int /*threadID*/, uintptr_t /*address*/) {}
+	void handleException(unsigned int /*exceptionCode*/) {}
+
 private:
 	typedef boost::shared_ptr<remotestealth::RemoteStealthClient> RemoteStealthClient_Ptr;
 
