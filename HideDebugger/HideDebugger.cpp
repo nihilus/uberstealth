@@ -68,16 +68,11 @@ void handleProcessAttach()
 	uberstealth::InjectionBeacon injectionBeacon;
 	if (injectionBeacon.queryBeacon())
 	{
-		DBG_PRINT("injection beacon present");
 		initSystemAPIs();
 		restoreNTHeaders();
 		InitializeCriticalSection(&section_);
 		getOSVersion();
 		hideDebugger();
-	}
-	else
-	{
-		DBG_PRINT("injection beacon NOT present");
 	}
 }
 
@@ -105,11 +100,8 @@ void hideDebugger()
 {
 	try
 	{
-		dbgPrint("awaiting config exchange...");
 		ipc::IPCConfigExchangeReader configExchange;
-		dbgPrint("instance created...reading profile file...");
 		std::string configFile = configExchange.getProfileFile();
-		dbgPrint("profile file is: %s", configFile.c_str());
 		IDAProcessID = configExchange.getIDAProcessID();
 		applyConfigFromFile(configFile);
 	}
