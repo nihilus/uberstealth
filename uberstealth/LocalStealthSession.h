@@ -24,7 +24,8 @@ class LocalStealthSession :
 	public boost::noncopyable
 {
 public:
-	LocalStealthSession() :
+	LocalStealthSession(ProfileHelper* profileHelper) :
+		StealthSession<debuggerT>(profileHelper),
 		rtlDispatchExceptionAddr_(0),
 		ntContinueCallAddr_(0) {}
 	
@@ -139,23 +140,7 @@ public:
 	// Handle an exception which occurred in the debuggee.
 	void handleException(unsigned int exceptionCode)
 	{
-		if (currentProfile_.getPassUnknownExceptionsEnabled())
-		{
-			// since the user could add new exceptions while debugging, we need to
-			// retrieve the whole list again for every event
-			excvec_t* exceptions = retrieve_exceptions();
-			bool ignoreException = true;
-			BOOST_FOREACH(const exception_info_t& exInfo, *exceptions)
-			{
-				// is this a known exception code?
-				if (exceptionCode == exInfo.code)
-				{
-					ignoreException = false;
-					break;
-				}
-			}
-			setExceptionOptions(ignoreException);
-		}
+		engine_.setExceptionOption(exceptionCode, currentProfile_.getPassUnknownExceptionsEnabled());
 	}
 
 private:
@@ -255,13 +240,6 @@ private:
 	{
 		if (currentProfile_.getHaltInSEHHandlerEnabled() || currentProfile_.getLogSEHEnabled()) debugger_.removeBreakpoint(getRtlDispatchExceptionAddr());
 		if (currentProfile_.getHaltAfterSEHHandlerEnabled() || currentProfile_.getLogSEHEnabled()) debugger_.removeBreakpoint(getNtContinueCallAddr());
-	}
-
-	void setExceptionOptions(bool ignoreException) const
-	{
-		uint oldSettings = set_debugger_options(0) & ~(EXCDLG_ALWAYS | EXCDLG_UNKNOWN);
-		uint newSettings = ignoreException ? oldSettings | EXCDLG_NEVER : oldSettings | EXCDLG_UNKNOWN;
-		set_debugger_options(newSettings);
 	}
 
 	// Hooks local function from ntdll in order to prevent special handling of DBG_PRINTEXCEPTION_C

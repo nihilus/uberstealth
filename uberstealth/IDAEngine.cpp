@@ -43,9 +43,35 @@ bool uberstealth::IDAEngine::removeBreakpoint(uintptr_t address) const
 	return del_bpt(address);
 }
 
-void uberstealth::IDAEngine::setExceptionOption(unsigned int /*exceptionCode*/, bool /*ignore*/) const
+void uberstealth::IDAEngine::showExceptionDialog(bool showDialog) const
 {
-	// TODO: implement!
+	uint oldSettings = set_debugger_options(0) & ~(EXCDLG_ALWAYS | EXCDLG_UNKNOWN);
+	uint newSettings = showDialog ? oldSettings | EXCDLG_UNKNOWN : oldSettings | EXCDLG_NEVER;
+	set_debugger_options(newSettings);
+}
+
+void uberstealth::IDAEngine::setExceptionOption(unsigned int exceptionCode, bool ignore) const
+{
+	// since the user could add new exceptions while debugging, we need to
+	// retrieve the whole list again for every event
+	if (ignore)
+	{
+		excvec_t* exceptions = retrieve_exceptions();
+		bool showDialog = false;
+		BOOST_FOREACH(const exception_info_t& exInfo, *exceptions)
+		{
+			if (exceptionCode == exInfo.code)
+			{
+				showDialog = true;
+				break;
+			}
+		}
+		showExceptionDialog(showDialog);
+	}
+	else
+	{
+		showExceptionDialog(true);
+	}
 }
 
 bool uberstealth::IDAEngine::continueProcess() const

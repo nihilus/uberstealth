@@ -401,14 +401,6 @@
 				RelativePath=".\OllyStealth.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\RemoteStealthSession.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\RemoteStealthSession.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="NInjectLib"
@@ -664,6 +656,14 @@
 			>
 			<File
 				RelativePath=".\LocalStealthSession.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RemoteStealthSession.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RemoteStealthSession.h"
 				>
 			</File>
 			<File

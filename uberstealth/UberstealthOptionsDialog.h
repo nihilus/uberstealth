@@ -4,6 +4,7 @@
 
 #include "WTLCommon.h"
 #include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include <HideDebugger/HideDebuggerProfile.h>
 #include "UberstealthPage1.h"
 #include "UberstealthPage2.h"
@@ -16,12 +17,13 @@ namespace uberstealth {
 class UberstealthOptionsDialog : public CPropertySheetImpl<UberstealthOptionsDialog>
 {
 public:
-	UberstealthOptionsDialog(LPCTSTR title) : CPropertySheetImpl(title)
+	UberstealthOptionsDialog(LPCTSTR title, ProfileHelper* profileHelper) : CPropertySheetImpl(title)
 	{
-		page1_ = boost::shared_ptr<UberstealthPage1>(new UberstealthPage1(&configProvider_));
-		page2_ = boost::shared_ptr<UberstealthPage2>(new UberstealthPage2(&configProvider_));
-		page3_ = boost::shared_ptr<UberstealthDriversPage>(new UberstealthDriversPage(&configProvider_));
-		page4_ = boost::shared_ptr<UberstealthPageMisc>(new UberstealthPageMisc(&configProvider_));
+		configProvider_ = boost::make_shared<ConfigProvider>(profileHelper);
+		page1_ = boost::shared_ptr<UberstealthPage1>(new UberstealthPage1(configProvider_.get()));
+		page2_ = boost::shared_ptr<UberstealthPage2>(new UberstealthPage2(configProvider_.get()));
+		page3_ = boost::shared_ptr<UberstealthDriversPage>(new UberstealthDriversPage(configProvider_.get()));
+		page4_ = boost::shared_ptr<UberstealthPageMisc>(new UberstealthPageMisc(configProvider_.get(), profileHelper));
 		pageAbout_ = boost::shared_ptr<UberstealthAboutPage>(new UberstealthAboutPage());
 		AddPage(*page1_);
 		AddPage(*page2_);
@@ -48,7 +50,7 @@ private:
 	LRESULT OnOkButton(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& bHandled)
 	{
 		bHandled = FALSE;
-		configProvider_.triggerSaveEvent();
+		configProvider_->triggerSaveEvent();
 		return 0;
 	}
 
@@ -57,7 +59,7 @@ private:
 	boost::shared_ptr<UberstealthDriversPage> page3_;
 	boost::shared_ptr<UberstealthPageMisc> page4_;
 	boost::shared_ptr<UberstealthAboutPage> pageAbout_;
-	ConfigProvider configProvider_;
+	boost::shared_ptr<ConfigProvider> configProvider_;
 };
 
 }

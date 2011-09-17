@@ -6,8 +6,6 @@
 
 namespace
 {
-	uberstealth::ProfileHelper profileHelper;
-
 	boost::filesystem::path profilesPath = uberstealth::ProfileHelper::getConfigPath();
 
 	// Get the absolute path for a given profile filename.
@@ -95,11 +93,6 @@ uberstealth::ProfileHelper::ProfileHelper()
 	}
 }
 
-uberstealth::ProfileHelper::~ProfileHelper()
-{
-	writeLastProfile(lastProfile_, mainConfigFile_);
-}
-
 // Determine the directory where all profile files are stored.
 // Note: this function must not throw since it might be invoked from static initializers.
 boost::filesystem::path uberstealth::ProfileHelper::getConfigPath()
@@ -136,7 +129,7 @@ void uberstealth::ProfileHelper::writeLastProfile(const std::string& lastProfile
 	ofs << lastProfile;
 }
 
-uberstealth::ProfileHelper& uberstealth::getProfileHelper()
+void uberstealth::ProfileHelper::writeLastProfile()
 {
-	return profileHelper;
+	writeLastProfile(lastProfile_, mainConfigFile_);
 }

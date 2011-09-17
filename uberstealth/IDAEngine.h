@@ -18,6 +18,7 @@ public:
 	void logString(const char* str, ...) const;
 
 private:
+	void showExceptionDialog(bool ignoreException) const;
 	HWND hIDAWnd_;
 	unsigned int idaMainThread_;
 };

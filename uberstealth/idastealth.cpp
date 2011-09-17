@@ -6,6 +6,7 @@
 // Otherwise, weird compiler errors will appear!
 
 #include "WTLWrapper.h"
+
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 #include <common/StringHelper.h>
@@ -21,6 +22,7 @@ int idaapi callback(void* user_data, int notification_code, va_list va);
 namespace
 {
 	boost::shared_ptr<uberstealth::StealthSession<uberstealth::IDAEngine>> session_;
+	uberstealth::ProfileHelper profileHelper_;
 }
 
 /*********************************************************************
@@ -61,6 +63,14 @@ int __stdcall init()
 *********************************************************************/
 void __stdcall term()
 {
+	try
+	{
+		profileHelper_.writeLastProfile();
+	}
+	catch (const std::runtime_error& e)
+	{
+		msg("Error while saving last profile: %s\n", e.what());
+	}
 	unhook_from_notification_point(HT_DBG, callback, NULL);
 }
 
@@ -96,7 +106,7 @@ void __stdcall run(int arg)
 	else
 	{
 		uberstealth::WTLWrapper& wtlWrapper = uberstealth::WTLWrapper::getInstance();
-		wtlWrapper.showGUI((HWND)callui(ui_get_hwnd).vptr);
+		wtlWrapper.showGUI((HWND)callui(ui_get_hwnd).vptr, &profileHelper_);
 	}
 }
 
@@ -110,7 +120,7 @@ int idaapi callback(void*, int notification_code, va_list va)
 			{
 				// TODO: instantiate RemoteStealthSession if appropriate
 				const debug_event_t* dbgEvent = va_arg(va, const debug_event_t*);
-				session_ = boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine>>();
+				session_ = boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine>>(&profileHelper_);
 				session_->handleDbgAttach(dbgEvent->pid);
 			}
 			break;
@@ -118,7 +128,7 @@ int idaapi callback(void*, int notification_code, va_list va)
 		case dbg_process_start:
 			{
 				const debug_event_t* dbgEvent = va_arg(va, const debug_event_t*);
-				session_ = boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine>>();
+				session_ = boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine>>(&profileHelper_);
 				session_->handleProcessStart(dbgEvent->pid, dbgEvent->modinfo.base);
 			}
 			break;

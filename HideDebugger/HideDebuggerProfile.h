@@ -7,9 +7,9 @@
 #include <RDTSCEmu/driver/RDTSCEmu.h>
 #include <vector>
 
-enum InlinePatching { AutoSelect, ForceAbsolute };
-
 namespace uberstealth {
+
+enum InlinePatching { AutoSelect, ForceAbsolute };
 
 // Represents the settings of a single configuration profile.
 class HideDebuggerProfile
@@ -141,14 +141,14 @@ class ProfileHelper
 {
 public:
 	ProfileHelper();
-	~ProfileHelper();
-
 	static boost::filesystem::path getConfigPath();
 	// Returns the filename of the profile used in the last session.
 	std::string getLastProfileFilename() const { return lastProfile_; }
 	void setLastProfileFilename(const std::string& profileFilename) { lastProfile_ = profileFilename; }
 	// Returns the full path of the profile used in the last session.
 	std::string getLastProfilePath() const { return (profilesPath_ / lastProfile_).string(); }
+	// Write the last used profile to the main config file.
+	void writeLastProfile();
 
 private:
 	std::string readLastProfile(const boost::filesystem::path& mainConfigFile) const;
@@ -158,7 +158,5 @@ private:
 	boost::filesystem::path mainConfigFile_;
 	std::string lastProfile_;
 };
-
-uberstealth::ProfileHelper& getProfileHelper();
 
 }

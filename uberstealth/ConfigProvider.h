@@ -13,9 +13,9 @@ namespace uberstealth {
 class ConfigProvider
 {
 public:
-	ConfigProvider()
+	ConfigProvider(const ProfileHelper* profileHelper)
 	{
-		currentProfileFileName_ = uberstealth::getProfileHelper().getLastProfileFilename();
+		currentProfileFileName_ = profileHelper->getLastProfileFilename();
 		currentProfile_ = HideDebuggerProfile::readProfileByName(currentProfileFileName_);
 	}
 

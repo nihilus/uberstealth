@@ -32,7 +32,9 @@ class StealthSession
 {
 public:
 
-	StealthSession() : hProcess_(INVALID_HANDLE_VALUE) {}
+	StealthSession(ProfileHelper* profileHelper):
+		hProcess_(INVALID_HANDLE_VALUE),
+		profileHelper_(profileHelper) {}
 	virtual ~StealthSession() {}
 	
 	virtual void handleDbgAttach(unsigned int processID)
@@ -64,7 +66,7 @@ public:
 				// TODO: move functionality of "remove" into destructor.
 				if (ipc_) ipc_->remove();
 				ipc_ = IPCConfigExchangeWriter_Ptr(new ipc::IPCConfigExchangeWriter(processId));
-				ipc_->setProfileFile(getProfileHelper().getLastProfilePath());
+				ipc_->setProfileFile(profileHelper_->getLastProfilePath());
 				ipc_->setIPCPEHeaderData(ipc::IPCPEHeaderData(baseAddress, iatMod.readNTHeaders()));
 				ipc_->setPERestoreRequired(true);
 				iatMod.writeIAT(getStealthDllPath());
@@ -219,7 +221,7 @@ private:
 			performCommonInit(processId);
 			if (ipc_) ipc_->remove();
 			ipc_ = IPCConfigExchangeWriter_Ptr(new ipc::IPCConfigExchangeWriter(processId));
-			ipc_->setProfileFile(getProfileHelper().getLastProfileFilename());
+			ipc_->setProfileFile(profileHelper_->getLastProfileFilename());
 			ipc_->setPERestoreRequired(false);
 
 			Process process(processId);
@@ -241,7 +243,7 @@ private:
 
 	void reloadProfile()
 	{
-		currentProfile_ = HideDebuggerProfile::readProfileByName(getProfileHelper().getLastProfileFilename());
+		currentProfile_ = HideDebuggerProfile::readProfileByName(profileHelper_->getLastProfileFilename());
 	}
 
 	IPCConfigExchangeWriter_Ptr ipc_;
@@ -249,6 +251,7 @@ private:
 	DriverControl stealthDriver_;
 	HANDLE hProcess_;
 	boost::shared_ptr<InjectionBeacon> injectionBeacon_;
+	ProfileHelper* profileHelper_;
 };
 
 }

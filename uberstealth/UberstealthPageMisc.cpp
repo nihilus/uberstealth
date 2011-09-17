@@ -19,7 +19,7 @@ LRESULT uberstealth::UberstealthPageMisc::OnAddProfileClick(WORD /*wNotifyCode*/
 
 		// Switch profile and save current dialogs to the new profile - leave dialog settings intact
 		// TODO: re-think the workflow of managing profiles in the GUI!
-		uberstealth::getProfileHelper().setLastProfileFilename(input);
+		profileHelper_->setLastProfileFilename(input);
 		configProvider_->triggerSaveEvent();
 	}
 	return 0;
@@ -133,7 +133,7 @@ void uberstealth::UberstealthPageMisc::switchProfile()
 		cboProfiles_.GetLBText(itemID, itemText);
 		std::string profile = std::string(CT2A(itemText, CP_UTF8));
 		configProvider_->triggerSwitchProfile(profile);
-		getProfileHelper().setLastProfileFilename(profile);
+		profileHelper_->setLastProfileFilename(profile);
 	}
 }
 
@@ -142,7 +142,7 @@ void uberstealth::UberstealthPageMisc::initComboBox()
 	BOOST_FOREACH(const std::string& profile, uberstealth::HideDebuggerProfile::getProfiles())
 	{
 		int itemID = cboProfiles_.AddString(StringToUnicode(profile));
-		if (profile == getProfileHelper().getLastProfileFilename())
+		if (profile == profileHelper_->getLastProfileFilename())
 		{
 			cboProfiles_.SetCurSel(itemID);
 		}

@@ -36,11 +36,11 @@ public:
 		::CoUninitialize();
 	}
 
-	void showGUI(HWND hWndParent)
+	void showGUI(HWND hWndParent, ProfileHelper* profileHelper)
 	{
 		try
 		{
-			UberstealthOptionsDialog dlg(UBERSTEALTH_NAME);
+			UberstealthOptionsDialog dlg(UBERSTEALTH_NAME, profileHelper);
 			dlg.DoModal(hWndParent);
 		}
 		catch (const std::exception& e)
@@ -51,7 +51,6 @@ public:
 	}
 
 private:
-
 	WTLWrapper()
 	{
 		HRESULT hRes = ::CoInitialize(NULL);

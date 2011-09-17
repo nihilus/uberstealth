@@ -25,6 +25,7 @@ namespace
 {
 	typedef uberstealth::LocalStealthSession<uberstealth::OllyEngine> OllySession;
 	boost::shared_ptr<OllySession> session_;
+	uberstealth::ProfileHelper profileHelper_;
 }
 
 int showDialog(t_table* /*pt*/, wchar_t* /*name*/, ulong /*index*/, int mode)
@@ -33,7 +34,7 @@ int showDialog(t_table* /*pt*/, wchar_t* /*name*/, ulong /*index*/, int mode)
 	else if (mode == MENU_EXECUTE)
 	{
 		uberstealth::WTLWrapper& wtlWrapper = uberstealth::WTLWrapper::getInstance();
-		wtlWrapper.showGUI(_hwollymain);
+		wtlWrapper.showGUI(_hwollymain, &profileHelper_);
 		return MENU_NOREDRAW;
 	}
 	return MENU_ABSENT;
@@ -57,12 +58,12 @@ extc _export void cdecl ODBG2_Pluginmainloop(DEBUG_EVENT* debugEvent)
 		case CREATE_PROCESS_DEBUG_EVENT:
 			if (_run.status == STAT_LOADING)
 			{
-				session_ = boost::make_shared<OllySession>();
+				session_ = boost::make_shared<OllySession>(&profileHelper_);
 				session_->handleProcessStart(_processid, reinterpret_cast<uintptr_t>(debugEvent->u.CreateProcessInfo.lpBaseOfImage));
 			}		
 			else if (_run.status == STAT_ATTACHING)
 			{
-				session_ = boost::make_shared<OllySession>();
+				session_ = boost::make_shared<OllySession>(&profileHelper_);
 				session_->handleDbgAttach(_processid);
 			}
 			break;
