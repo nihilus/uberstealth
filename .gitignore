@@ -17,3 +17,7 @@
 /RDTSCEmu/driver/buildchk_wxp_x86.wrn
 /HideDebugger/Debug
 /HideDebugger/Release
+/HideDebugger/OllyStealth Debug/
+/HideDebugger/OllyStealth Release/
+/uberstealth/OllyStealth Debug/
+/uberstealth/OllyStealth Release/
