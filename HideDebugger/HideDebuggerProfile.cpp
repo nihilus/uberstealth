@@ -15,6 +15,7 @@ namespace
 	}
 
 	const char* MainConfigFile = "uberstealth.config";
+	const char* DefaultProfileFile = "default.xml";
 }
 
 // Map given name to the corresponding file in the standard profiles path and read the profile.
@@ -81,7 +82,7 @@ uberstealth::ProfileHelper::ProfileHelper()
 	mainConfigFile_ = profilesPath_ / MainConfigFile;
 	
 	// Create an empty default profile file if it doesn't exist yet.
-	boost::filesystem::path defaultFile = profilesPath_ / "default.xml";
+	boost::filesystem::path defaultFile = profilesPath_ / DefaultProfileFile;
 	if (!boost::filesystem::exists(defaultFile))
 	{
 		uberstealth::HideDebuggerProfile::writeProfile(HideDebuggerProfile(), defaultFile.string());
@@ -89,7 +90,7 @@ uberstealth::ProfileHelper::ProfileHelper()
 	lastProfile_ = readLastProfile(mainConfigFile_);
 	if (lastProfile_.empty())
 	{
-		lastProfile_ = "default.xml";
+		lastProfile_ = DefaultProfileFile;
 	}
 }
 

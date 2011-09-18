@@ -13,14 +13,27 @@ LRESULT uberstealth::UberstealthPageMisc::OnAddProfileClick(WORD /*wNotifyCode*/
 	std::string input = inputBox.getInput();
 	if (input.length())
 	{
+		if (configProvider_->isProfileModified())
+		{
+			// Ask user to save the modified profile!
+			MessageBox(L"current profile was modified!", L"Info", MB_ICONINFORMATION);
+		}
+
 		int item = cboProfiles_.AddString(uberstealth::StringToUnicode(input));
 		cboProfiles_.SetCurSel(item);
-		configProvider_->triggerSaveEvent();
 
 		// Switch profile and save current dialogs to the new profile - leave dialog settings intact
 		// TODO: re-think the workflow of managing profiles in the GUI!
-		profileHelper_->setLastProfileFilename(input);
-		configProvider_->triggerSaveEvent();
+		try
+		{
+			configProvider_->triggerSaveEvent();
+			profileHelper_->setLastProfileFilename(input);
+			HideDebuggerProfile::writeProfileByName(configProvider_->getCurrentProfile(), input);
+		}
+		catch (const std::runtime_error& e)
+		{
+			MessageBox(StringToUnicode("Error while writing new profile file: " + std::string(e.what())), L"Error", MB_ICONERROR);
+		}
 	}
 	return 0;
 }

@@ -46,7 +46,7 @@ public:
 		catch (const std::exception& e)
 		{
 			std::string err = "Error in options dialog: " + std::string(e.what());
-			::MessageBox(hWndParent, StringToUnicode(err), L"uberstealth", MB_ICONERROR);	
+			::MessageBox(hWndParent, StringToUnicode(err), L"uberstealth", MB_ICONERROR);
 		}
 	}
 
