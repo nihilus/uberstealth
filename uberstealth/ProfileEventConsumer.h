@@ -12,7 +12,7 @@ public:
 
 	// The consumer should update the given profile regarding to its internal state.
 	// If its internal state cannot be mapped to the supplied profile it should return false and the profile is not saved (e.g. invalid characters entered by the user).
-	virtual bool saveProfile(uberstealth::HideDebuggerProfile& profile) =0;
+	virtual void flushProfile(uberstealth::HideDebuggerProfile& profile) =0;
 
 	// The consumer should update its controls according to the given enable state.
 	virtual void changeGlobalEnableState(bool globalEnable) =0;

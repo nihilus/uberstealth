@@ -61,7 +61,7 @@ void uberstealth::UberstealthDriversPage::loadProfile(const uberstealth::HideDeb
 	}
 }
 
-bool uberstealth::UberstealthDriversPage::saveProfile(uberstealth::HideDebuggerProfile& profile)
+void uberstealth::UberstealthDriversPage::flushProfile(uberstealth::HideDebuggerProfile& profile)
 {
 	if (m_hWnd)
 	{
@@ -81,11 +81,8 @@ bool uberstealth::UberstealthDriversPage::saveProfile(uberstealth::HideDebuggerP
 			profile.setStealthDriverUseCustomName(useStealthName_);
 			profile.setRDTSCDriverCustomName(std::string(CT2A(rdtscName_, CP_UTF8)));
 			profile.setStealthDriverCustomName(std::string(CT2A(stealthName_, CP_UTF8)));
-			return true;
 		}
-		else return false;
 	}
-	return true;
 }
 
 bool uberstealth::UberstealthDriversPage::isProfileDirty()

@@ -33,21 +33,12 @@ public:
 		}
 	}
 
-	// Send saveConfig event to all listeners.
-	void triggerSaveEvent()
+	// Send flushProfile event to all listeners.
+	void triggerFlushProfileEvent()
 	{
-		bool storeProfile = true;
 		BOOST_FOREACH(uberstealth::ProfileEventConsumer* consumer, consumers_)
 		{
-			if (!consumer->saveProfile(currentProfile_))
-			{
-				storeProfile = false;
-				break;
-			}
-		}
-		if (storeProfile)
-		{
-			HideDebuggerProfile::writeProfileByName(currentProfile_, currentProfileFileName_);
+			consumer->flushProfile(currentProfile_);
 		}
 	}
 

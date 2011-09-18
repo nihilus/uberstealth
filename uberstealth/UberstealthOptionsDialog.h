@@ -17,7 +17,9 @@ namespace uberstealth {
 class UberstealthOptionsDialog : public CPropertySheetImpl<UberstealthOptionsDialog>
 {
 public:
-	UberstealthOptionsDialog(LPCTSTR title, ProfileHelper* profileHelper) : CPropertySheetImpl(title)
+	UberstealthOptionsDialog(LPCTSTR title, ProfileHelper* profileHelper) :
+		CPropertySheetImpl(title),
+		profileHelper_(profileHelper)
 	{
 		configProvider_ = boost::make_shared<ConfigProvider>(profileHelper);
 		page1_ = boost::shared_ptr<UberstealthPage1>(new UberstealthPage1(configProvider_.get()));
@@ -50,7 +52,8 @@ private:
 	LRESULT OnOkButton(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& bHandled)
 	{
 		bHandled = FALSE;
-		configProvider_->triggerSaveEvent();
+		configProvider_->triggerFlushProfileEvent();
+		HideDebuggerProfile::writeProfileByName(configProvider_->getCurrentProfile(), profileHelper_->getLastProfileFilename());
 		return 0;
 	}
 
@@ -60,6 +63,7 @@ private:
 	boost::shared_ptr<UberstealthPageMisc> page4_;
 	boost::shared_ptr<UberstealthAboutPage> pageAbout_;
 	boost::shared_ptr<ConfigProvider> configProvider_;
+	ProfileHelper* profileHelper_;
 };
 
 }

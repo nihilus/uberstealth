@@ -21,7 +21,7 @@ public:
 
 	void OnDataExchangeError(UINT nCtrlID, BOOL bSave);
 	void loadProfile(const uberstealth::HideDebuggerProfile& profile);
-	bool saveProfile(uberstealth::HideDebuggerProfile& profile);
+	void flushProfile(uberstealth::HideDebuggerProfile& profile);
 	bool isProfileDirty();
 
 	int OnApply()

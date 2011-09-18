@@ -59,7 +59,7 @@ void uberstealth::UberstealthPage1::loadProfile(const uberstealth::HideDebuggerP
 	configProvider_->triggerChangeGlobalEnableState(dbgStart_ || dbgAttach_);
 }
 
-bool uberstealth::UberstealthPage1::saveProfile(uberstealth::HideDebuggerProfile& profile)
+void uberstealth::UberstealthPage1::flushProfile(uberstealth::HideDebuggerProfile& profile)
 {
 	if (DoDataExchange(TRUE))
 	{
@@ -78,12 +78,10 @@ bool uberstealth::UberstealthPage1::saveProfile(uberstealth::HideDebuggerProfile
 		profile.setEnableDbgAttachEnabled(dbgAttach_);
 		profile.setEnableDbgStartEnabled(dbgStart_);
 		ddxError_ = false;
-		return true;
 	}
 	else
 	{
 		ddxError_ = true;
-		return false;
 	}
 }
 

@@ -13,22 +13,40 @@ LRESULT uberstealth::UberstealthPageMisc::OnAddProfileClick(WORD /*wNotifyCode*/
 	std::string input = inputBox.getInput();
 	if (input.length())
 	{
-		if (configProvider_->isProfileModified())
-		{
-			// Ask user to save the modified profile!
-			MessageBox(L"current profile was modified!", L"Info", MB_ICONINFORMATION);
-		}
-
-		int item = cboProfiles_.AddString(uberstealth::StringToUnicode(input));
-		cboProfiles_.SetCurSel(item);
-
-		// Switch profile and save current dialogs to the new profile - leave dialog settings intact
-		// TODO: re-think the workflow of managing profiles in the GUI!
 		try
 		{
-			configProvider_->triggerSaveEvent();
-			profileHelper_->setLastProfileFilename(input);
-			HideDebuggerProfile::writeProfileByName(configProvider_->getCurrentProfile(), input);
+			// If profile was modified, let user decide if it should be saved before creating a new one.
+			if (configProvider_->isProfileModified())
+			{
+				SaveChangesDialog saveChangesDlg;
+				saveChangesDlg.DoModal(m_hWnd);
+				switch (saveChangesDlg.getAnswer())
+				{
+				case SaveChangesDialog::Save:
+					configProvider_->triggerFlushProfileEvent();
+					HideDebuggerProfile::writeProfileByName(configProvider_->getCurrentProfile(),  profileHelper_->getLastProfileFilename());
+					HideDebuggerProfile::writeProfileByName(configProvider_->getCurrentProfile(), input);
+					break;
+
+				case SaveChangesDialog::DontSave:
+					configProvider_->triggerFlushProfileEvent();
+					HideDebuggerProfile::writeProfileByName(configProvider_->getCurrentProfile(), input);
+					break;
+
+				case SaveChangesDialog::Cancel:
+					return 0;
+				}
+				profileHelper_->setLastProfileFilename(input);
+				int item = cboProfiles_.AddString(uberstealth::StringToUnicode(input));
+				cboProfiles_.SetCurSel(item);
+			}
+			else
+			{
+				HideDebuggerProfile::writeProfileByName(configProvider_->getCurrentProfile(), input);
+				profileHelper_->setLastProfileFilename(input);
+				int item = cboProfiles_.AddString(uberstealth::StringToUnicode(input));
+				cboProfiles_.SetCurSel(item);
+			}
 		}
 		catch (const std::runtime_error& e)
 		{
@@ -69,7 +87,8 @@ LRESULT uberstealth::UberstealthPageMisc::OnProfilesSelChange(WORD /*wNotifyCode
 		switch (saveChangesDlg.getAnswer())
 		{
 		case SaveChangesDialog::Save:
-			configProvider_->triggerSaveEvent();
+			configProvider_->triggerFlushProfileEvent();
+			HideDebuggerProfile::writeProfileByName(configProvider_->getCurrentProfile(),  profileHelper_->getLastProfileFilename());
 			break;
 
 		case SaveChangesDialog::DontSave:
@@ -109,7 +128,7 @@ void uberstealth::UberstealthPageMisc::loadProfile(const uberstealth::HideDebugg
 	}
 }
 
-bool uberstealth::UberstealthPageMisc::saveProfile(uberstealth::HideDebuggerProfile& profile)
+void uberstealth::UberstealthPageMisc::flushProfile(uberstealth::HideDebuggerProfile& profile)
 {
 	if (m_hWnd)
 	{
@@ -121,11 +140,8 @@ bool uberstealth::UberstealthPageMisc::saveProfile(uberstealth::HideDebuggerProf
 			profile.setHaltInSEHHandlerEnabled(haltInSEH_);
 			profile.setHaltAfterSEHHandlerEnabled(haltAfterSEH_);
 			profile.setLogSEHEnabled(logSEH_);
-			return true;
 		}
-		else return false;
 	}
-	return true;
 }
 
 BOOL uberstealth::UberstealthPageMisc::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)

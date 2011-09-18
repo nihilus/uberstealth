@@ -23,7 +23,7 @@ void uberstealth::UberstealthPage2::loadProfile(const uberstealth::HideDebuggerP
 	}
 }
 
-bool uberstealth::UberstealthPage2::saveProfile(uberstealth::HideDebuggerProfile& profile)
+void uberstealth::UberstealthPage2::flushProfile(uberstealth::HideDebuggerProfile& profile)
 {
 	if (m_hWnd)
 	{
@@ -42,11 +42,8 @@ bool uberstealth::UberstealthPage2::saveProfile(uberstealth::HideDebuggerProfile
 			profile.setNtYieldExecutionEnabled(ntYield_);
 			profile.setOutputDbgStringEnabled(outputDbgStr_);
 			profile.setNtSetInformationThreadEnabled(ntSetInfoThread_);
-			return true;
 		}
-		else return false;
 	}
-	return true;
 }
 
 void uberstealth::UberstealthPage2::enableControls(bool enabled)

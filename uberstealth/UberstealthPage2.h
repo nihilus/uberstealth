@@ -15,7 +15,7 @@ public:
 		UberstealthPropertyPage(configProvider) {}
 
 	void loadProfile(const uberstealth::HideDebuggerProfile& profile);
-	bool saveProfile(uberstealth::HideDebuggerProfile& profile);
+	void flushProfile(uberstealth::HideDebuggerProfile& profile);
 	bool isProfileDirty();
 
 protected:
