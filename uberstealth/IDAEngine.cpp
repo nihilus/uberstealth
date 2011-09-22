@@ -1,5 +1,6 @@
 #ifdef IDASTEALTH
 
+#include <algorithm>
 #include <boost/foreach.hpp>
 #include <boost/thread/mutex.hpp>
 #include "IDACommon.h"
@@ -31,6 +32,11 @@ uberstealth::IDAEngine::IDAEngine()
 	idaMainThread_ = GetWindowThreadProcessId(hIDAWnd_, NULL);
 }
 
+uberstealth::IDAEngine::~IDAEngine()
+{
+	restoreExceptions();
+}
+
 bool uberstealth::IDAEngine::setBreakpoint(uintptr_t address) const
 {
 	if (exist_bpt(address)) return true;
@@ -46,31 +52,48 @@ bool uberstealth::IDAEngine::removeBreakpoint(uintptr_t address) const
 void uberstealth::IDAEngine::showExceptionDialog(bool showDialog) const
 {
 	uint oldSettings = set_debugger_options(0) & ~(EXCDLG_ALWAYS | EXCDLG_UNKNOWN);
-	uint newSettings = showDialog ? oldSettings | EXCDLG_UNKNOWN : oldSettings | EXCDLG_NEVER;
+	uint newSettings = showDialog ? oldSettings | EXCDLG_ALWAYS : oldSettings | EXCDLG_NEVER;
 	set_debugger_options(newSettings);
 }
 
-void uberstealth::IDAEngine::setExceptionOption(unsigned int exceptionCode, bool ignore) const
+// Delete exceptions which were added by us during the debugging session.
+void uberstealth::IDAEngine::restoreExceptions()
 {
-	// since the user could add new exceptions while debugging, we need to
-	// retrieve the whole list again for every event
-	if (ignore)
+	excvec_t* exceptions = retrieve_exceptions();
+	excvec_t::iterator it = std::remove_if(exceptions->begin(), exceptions->end(), ExceptionFilter(&addedExceptions_));
+	exceptions->erase(it);
+	store_exceptions();
+}
+
+const exception_info_t* uberstealth::IDAEngine::findException(unsigned int exceptionCode) const
+{
+	BOOST_FOREACH(const exception_info_t& exInfo, *retrieve_exceptions())
 	{
-		excvec_t* exceptions = retrieve_exceptions();
-		bool showDialog = false;
-		BOOST_FOREACH(const exception_info_t& exInfo, *exceptions)
+		if (exceptionCode == exInfo.code)
 		{
-			if (exceptionCode == exInfo.code)
-			{
-				showDialog = true;
-				break;
-			}
+			return &exInfo;
 		}
-		showExceptionDialog(showDialog);
 	}
-	else
+	return NULL;
+}
+
+void uberstealth::IDAEngine::setExceptionOption(unsigned int exceptionCode, bool ignore)
+{	
+	// Due to the design of the IDA API we need to (globally) tell IDA whether to display the exception dialog or not.
+	// If we encounter a known exception, we show the dialog depending on the setting of the exception.
+	// If it is an unknown exception, we hide the dialog and pass the exception to the application.
+	const exception_info_t* existingException = findException(exceptionCode);
+	if (!existingException && ignore)
 	{
-		showExceptionDialog(true);
+		exception_info_t newException(exceptionCode, 0, "added by uberstealth", "");
+		retrieve_exceptions()->push_back(newException);
+		store_exceptions();
+		showExceptionDialog(false);
+		addedExceptions_.insert(newException);
+	}
+	else if (existingException)
+	{
+		showExceptionDialog(existingException->break_on());
 	}
 }
 
@@ -102,4 +125,3 @@ void uberstealth::IDAEngine::logString(const char* str, ...) const
 }
 
 #endif
-

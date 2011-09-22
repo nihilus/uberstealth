@@ -37,14 +37,14 @@ public:
 		profileHelper_(profileHelper) {}
 	virtual ~StealthSession() {}
 	
-	virtual void handleDbgAttach(unsigned int processID)
+	virtual void handleDbgAttach(unsigned int processId)
 	{
 		reloadProfile();
 		if (currentProfile_.getEnableDbgAttachEnabled())
 		{
 			// we need to start dll injection in background, because the dll injection
 			// will block until the process is resumed
-			boost::thread(boost::bind(&StealthSession::dbgAttachThread, this, processID));
+			boost::thread(boost::bind(&StealthSession::dbgAttachThread, this, processId));
 		}
 	}
 
