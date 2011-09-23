@@ -60,8 +60,7 @@ void uberstealth::IDAEngine::showExceptionDialog(bool showDialog) const
 void uberstealth::IDAEngine::restoreExceptions()
 {
 	excvec_t* exceptions = retrieve_exceptions();
-	excvec_t::iterator it = std::remove_if(exceptions->begin(), exceptions->end(), ExceptionFilter(&addedExceptions_));
-	exceptions->erase(it);
+	exceptions->erase(std::remove_if(exceptions->begin(), exceptions->end(), ExceptionFilter(&addedExceptions_)));
 	store_exceptions();
 }
 
