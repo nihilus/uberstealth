@@ -66,11 +66,11 @@ INJECT_CODEPAYLOAD InjectLibrary::createLoadLibCode()
 
 	__asm
 	{
-		mov s, offset start
-		mov e, offset end
-		mov source, offset start
-		jmp end // we only want to copy this code - not execute it so jump over it
-	start:
+		mov s, offset _start
+		mov e, offset _end
+		mov source, offset _start
+		jmp _end // we only want to copy this code - not execute it so jump over it
+	_start:
 		// create standard stack frame
 		push ebp
 		mov ebp, esp
@@ -90,7 +90,7 @@ INJECT_CODEPAYLOAD InjectLibrary::createLoadLibCode()
 		pop esi
 		pop ebp
 		ret
-	end:
+	_end:
 	}
 
 	INJECT_CODEPAYLOAD tmpPayload;
@@ -172,11 +172,11 @@ INJECT_CODEPAYLOAD InjectLibrary::createUnloadLibCode()
 
 	__asm
 	{
-		mov s, offset start
-		mov e, offset end
-		mov source, offset start
-		jmp end // we only want to copy this code - not execute it so jump over it
-	start:
+		mov s, offset _start
+		mov e, offset _end
+		mov source, offset _start
+		jmp _end // we only want to copy this code - not execute it so jump over it
+	_start:
 		// create standard stack frame
 		push ebp
 		mov ebp, esp
@@ -194,7 +194,7 @@ INJECT_CODEPAYLOAD InjectLibrary::createUnloadLibCode()
 		pop esi
 		pop ebp
 		ret
-	end:
+	_end:
 	}
 
 	INJECT_CODEPAYLOAD tmpPayload;
