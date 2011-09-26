@@ -183,7 +183,7 @@ private:
 			p /= "HideDebugger.dll";
 			return p.string();
 		}
-		return "";
+		throw std::runtime_error("Unable to retrieve path of HideDebugger.dll");
 	}
 
 	uintptr_t getRtlDispatchExceptionAddr() const

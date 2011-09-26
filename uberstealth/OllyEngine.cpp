@@ -12,7 +12,8 @@ extern "C" __declspec(dllimport) int Setint3breakpoint(ulong addr, ulong type, i
 
 bool uberstealth::OllyEngine::setBreakpoint(uintptr_t address) const
 {
-	return Setint3breakpoint(address, BP_MANUAL, 0, 0, 0, NULL, NULL, NULL) == 1;
+	//Setint3breakpoint(address, BP_MANUAL, 0, 0, 0, NULL, NULL, NULL);
+	return false;
 }
 
 bool uberstealth::OllyEngine::removeBreakpoint(uintptr_t /*address*/) const
@@ -29,7 +30,8 @@ void uberstealth::OllyEngine::setExceptionOption(unsigned int /*exceptionCode*/,
 bool uberstealth::OllyEngine::continueProcess() const
 {
 	//Run(t_status status,int pass);
-	return Run(STAT_RUNNING, 0) == 1;
+	//return Run(STAT_RUNNING, 0) == 1;
+	return false;
 }
 
 void uberstealth::OllyEngine::logString(const char* /*str*/, ...) const

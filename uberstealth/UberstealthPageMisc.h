@@ -10,7 +10,6 @@ namespace uberstealth {
 class UberstealthPageMisc : public UberstealthPropertyPage<UberstealthPageMisc, IDD_DIALOG4>
 {
 public:
-
 	UberstealthPageMisc(ConfigProvider* configProvider, ProfileHelper* profileHelper) :
 		UberstealthPropertyPage<UberstealthPageMisc, IDD_DIALOG4>(configProvider),
 		profileHelper_(profileHelper) {}

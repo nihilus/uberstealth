@@ -105,13 +105,21 @@ LRESULT uberstealth::UberstealthPageMisc::OnProfilesSelChange(WORD /*wNotifyCode
 void uberstealth::UberstealthPageMisc::enableControls(bool enabled)
 {
 	BOOL state = enabled ? TRUE : FALSE;
-	::EnableWindow(GetDlgItem(IDC_PASS_EXCEPTIONS), state);
-	::EnableWindow(GetDlgItem(IDC_AUTO_SELECTION), state);
-	::EnableWindow(GetDlgItem(IDC_FORCE_ABS), state);
+#ifdef OLLYSTEALTH
+	::EnableWindow(GetDlgItem(IDC_TCP_PORT), FALSE);
+	::EnableWindow(GetDlgItem(IDC_PASS_EXCEPTIONS), FALSE);
+	::EnableWindow(GetDlgItem(IDC_HALT_IN_SEH), FALSE);
+	::EnableWindow(GetDlgItem(IDC_HALT_AFTER_SEH), FALSE);
+	::EnableWindow(GetDlgItem(IDC_LOG_SEH), FALSE);
+#else
 	::EnableWindow(GetDlgItem(IDC_TCP_PORT), state);
+	::EnableWindow(GetDlgItem(IDC_PASS_EXCEPTIONS), state);
 	::EnableWindow(GetDlgItem(IDC_HALT_IN_SEH), state);
 	::EnableWindow(GetDlgItem(IDC_HALT_AFTER_SEH), state);
 	::EnableWindow(GetDlgItem(IDC_LOG_SEH), state);
+#endif
+	::EnableWindow(GetDlgItem(IDC_AUTO_SELECTION), state);
+	::EnableWindow(GetDlgItem(IDC_FORCE_ABS), state);
 }
 
 void uberstealth::UberstealthPageMisc::loadProfile(const uberstealth::HideDebuggerProfile& profile)
@@ -148,6 +156,15 @@ BOOL uberstealth::UberstealthPageMisc::OnInitDialog(UINT /*uMsg*/, WPARAM /*wPar
 {
 	DoDataExchange(FALSE);
 	initComboBox();
+
+#ifdef OLLYSTEALTH
+	::EnableWindow(GetDlgItem(IDC_TCP_PORT), FALSE);
+	::EnableWindow(GetDlgItem(IDC_PASS_EXCEPTIONS), FALSE);
+	::EnableWindow(GetDlgItem(IDC_HALT_IN_SEH), FALSE);
+	::EnableWindow(GetDlgItem(IDC_HALT_AFTER_SEH), FALSE);
+	::EnableWindow(GetDlgItem(IDC_LOG_SEH), FALSE);
+#endif
+
 	bHandled = FALSE;
 	return TRUE;
 }

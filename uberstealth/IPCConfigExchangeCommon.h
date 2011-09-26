@@ -5,13 +5,12 @@
 
 namespace ipc
 {
-	static const size_t SegmentSize = 4096;
 	static const char* ConfigFileDataStr = "HideDebuggerPathStrData212";
 	static const char* IDAProcessIDStr = "IDAProcessID";
 	static const char* PEHeaderDataStr = "PEHeaderData";
 	static const char* PERestoreRequiredStr = "PERestore";
-	static const size_t ConfigDataSegmentSize = 2048;
-	static const size_t ConfigProfileSegmentSize = 128;
+	static const size_t ConfigDataSegmentSize = MAX_PATH;
+	static const size_t SegmentSize = 4096;
 
 	std::string getSegmentName(unsigned int processID);
 	std::string getSegmentName();

@@ -22,8 +22,7 @@ unsigned int IPCConfigExchangeReader::getIDAProcessID()
 
 ipc::IPCPEHeaderData IPCConfigExchangeReader::getIPCPEHeaderData()
 {
-	std::pair<ipc::IPCPEHeaderData*, size_t> dataPtr =
-		segment_.find<ipc::IPCPEHeaderData>(ipc::PEHeaderDataStr);
+	std::pair<ipc::IPCPEHeaderData*, size_t> dataPtr = segment_.find<ipc::IPCPEHeaderData>(ipc::PEHeaderDataStr);
 	return *dataPtr.first;
 }
 

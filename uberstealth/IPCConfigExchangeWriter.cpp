@@ -37,8 +37,7 @@ void IPCConfigExchangeWriter::setIDAProcessID(unsigned int processID)
 
 void IPCConfigExchangeWriter::setIPCPEHeaderData(const IPCPEHeaderData& headerData)
 {
-	std::pair<IPCPEHeaderData*, size_t> segmentData =
-		segment_.find<IPCPEHeaderData>(PEHeaderDataStr);
+	std::pair<IPCPEHeaderData*, size_t> segmentData = segment_.find<IPCPEHeaderData>(PEHeaderDataStr);
 	*segmentData.first = headerData;
 }
 
