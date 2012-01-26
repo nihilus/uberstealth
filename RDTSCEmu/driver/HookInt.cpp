@@ -17,25 +17,13 @@ typedef struct
 
 // simplified layout of an IDT entry 
 // (all the flag details have been omitted, we don't change them anyway)
-typedef struct  
+typedef struct
 {
 	USHORT lowOffset;
 	USHORT segSelector;
 	USHORT flags;
 	USHORT highOffset;
 } IDT_ENTRY, *PIDT_ENTRY;
-
-IDT_INFO getIDTInfo()
-{
-	IDT_INFO retVal;
-	__asm
-	{
-		sidt	retVal
-		//mov eax, fs:[0]KPCR.IDT
-		//mov retVal, eax
-	}
-	return retVal;
-}
 
 VOID hookInterrupt(PVOID newHandler, ULONG number, PUINT_PTR oldHandler)
 {
@@ -49,6 +37,7 @@ VOID hookInterrupt(PVOID newHandler, ULONG number, PUINT_PTR oldHandler)
 
 	UINT_PTR origHandler = (ULONG)(idt[number].highOffset) << 16 | idt[number].lowOffset;
 
+	// TODO: MAKE ATOMIC!!!!!!!!!!!!!!!!!
 	idt[number].lowOffset = (USHORT)newHandler;
 	idt[number].highOffset = (USHORT)((ULONG)newHandler >> 16);
 	if (oldHandler) *oldHandler = origHandler;

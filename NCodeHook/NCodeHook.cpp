@@ -26,7 +26,7 @@ NCodeHook<ArchT>::~NCodeHook()
 	if (cleanOnDestruct_)
 	{
 		// restore all hooks and free memory
-		while (hookedFunctions_.size()) removeHook(hookedFunctions_.begin()->second);
+		for (size_t i = hookedFunctions_.size(); i > 0; --i) removeHook(hookedFunctions_[i - 1]);
 		VirtualFree(trampolineBuffer_, 0, MEM_RELEASE);
 	}
 }

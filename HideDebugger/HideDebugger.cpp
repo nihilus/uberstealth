@@ -408,11 +408,11 @@ DWORD WINAPI GetTickCountHook()
 	__asm
 	{
 		lea		edx, counter
-			mov		eax, [edx]
+		mov		eax, [edx]
 		mov		edx, [edx+4]
 		mul		edx
-			shrd	eax, edx, 24
-			mov		retVal, eax
+		shrd	eax, edx, 24
+		mov		retVal, eax
 	}
 	return retVal;
 }
@@ -551,9 +551,9 @@ void __declspec(naked) NTAPI KiUserExceptionDispatcherHook(PEXCEPTION_RECORD /*p
 	__asm
 	{					
 		push	eax								// push fake address on stack so compiler generated code works!
-			push	ebp								// setup standard stack frame
-			mov		ebp, esp
-			sub		esp, __LOCAL_SIZE				// get required size from compiler
+		push	ebp								// setup standard stack frame
+		mov		ebp, esp
+		sub		esp, __LOCAL_SIZE				// get required size from compiler
 	}
 
 	handlePreSEH(pContext);
@@ -563,22 +563,22 @@ void __declspec(naked) NTAPI KiUserExceptionDispatcherHook(PEXCEPTION_RECORD /*p
 	__asm
 	{
 		add		esp, __LOCAL_SIZE
-			pop		ebp
-			add		esp, 4							// remove fake address
-			mov		ecx, [esp+4]
+		pop		ebp
+		add		esp, 4							// remove fake address
+		mov		ecx, [esp+4]
 		mov		ebx, [esp+0]
 		push	ecx
-			push	ebx
-			call	sysAPIs[4*RtlDispatchExcept]	// stack is now clean, call RtlDispatchException
+		push	ebx
+		call	sysAPIs[4*RtlDispatchExcept]	// stack is now clean, call RtlDispatchException
 		pop		ebx
-			pop		ecx
-			or		al, al
-			jz		_RaiseExcept
-			push	ecx
-			call	handlePostSEH
-			pop		ecx								// PCONTEXT
-			push	0
-			push	ecx
+		pop		ecx
+		or		al, al
+		jz		_RaiseExcept
+		push	ecx
+		call	handlePostSEH
+		pop		ecx								// PCONTEXT
+		push	0
+		push	ecx
 	}
 
 	__asm
@@ -589,19 +589,19 @@ void __declspec(naked) NTAPI KiUserExceptionDispatcherHook(PEXCEPTION_RECORD /*p
 
 _RaiseExcept:
 		push	0
-			push	ecx
-			push	ebx
-			call	sysAPIs[4*ZwRaiseExcept]
+		push	ecx
+		push	ebx
+		call	sysAPIs[4*ZwRaiseExcept]
 
 		// original code from KiUserExceptionDispatcher
 _RtlRaiseExcept:
 		add		esp, 0FFFFFFECh
-			mov     [esp], eax
-			mov     dword ptr [esp+4], 1
-			mov     [esp+8], ebx
-			mov     dword ptr [esp+10h], 0
-			push    esp
-			call    sysAPIs[4*RtlRaiseExcept]
+		mov     [esp], eax
+		mov     dword ptr [esp+4], 1
+		mov     [esp+8], ebx
+		mov     dword ptr [esp+10h], 0
+		push    esp
+		call    sysAPIs[4*RtlRaiseExcept]
 		retn    8
 	}	
 }
@@ -757,7 +757,7 @@ void patchHeapFlags()
 			mov eax, [eax+18h]
 			lea ecx, [eax+40h]
 			mov heapFlag, ecx
-				lea ecx, [eax+44h]
+			lea ecx, [eax+44h]
 			mov forceFlag, ecx
 		}
 	}
@@ -769,7 +769,7 @@ void patchHeapFlags()
 			mov eax, [eax+18h]
 			lea ecx, [eax+0Ch]
 			mov heapFlag, ecx
-				lea ecx, [eax+10h]
+			lea ecx, [eax+10h]
 			mov forceFlag, ecx
 		}
 	}
