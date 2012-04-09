@@ -8,7 +8,7 @@
 #include <iostream>
 #include "IPCConfigExchangeCommon.h"
 
-namespace ipc
+namespace uberstealth
 {
 	class IPCConfigExchangeWriter
 	{

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include <NCodeHook/NCodeHookInstantiation.h>
 #include "ntdll.h"
 
@@ -15,8 +14,7 @@ void initSystemAPIs();
 enum SystemApi { ZwRaiseExcept, RtlDispatchExcept, RtlRaiseExcept, 
 NtQueryInfoProcess, NtQueryInfoThread, NtContinue, MaxSystemApi };
 
-// original function pointers
-
+// Original function pointers.
 extern NtQueryInformationProcessFPtr origNtQueryInformationProcess;
 extern NtSetInformationThreadFPtr origNtSetInformationThread;
 extern NtQueryObjectFPtr origNtQueryObject;

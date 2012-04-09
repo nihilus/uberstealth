@@ -1,27 +1,25 @@
 #pragma once
 
+// Abstract base class for injection of code and data into a remote process.
+// Derived classes need to implement methods that generate specific code and data payloads.
+
 #include <iostream>
 #include "Process.h"
 
-struct INJECT_DATAPAYLOAD 
-{
+struct INJECT_DATAPAYLOAD {
 	void* data;
 	size_t size;
 };
 
-struct INJECT_CODEPAYLOAD 
-{
+struct INJECT_CODEPAYLOAD {
 	void* code;
 	size_t size;
 };
 
-// abstract base class for injection of code and data into a remote process
-// derived classes need to implement methods that generate specific code and data payload
-class GenericInjector
-{
+class GenericInjector {
 public:
 	GenericInjector(const Process& process);
-	~GenericInjector();
+	virtual ~GenericInjector();
 
 	void doInjection(INJECT_DATAPAYLOAD dataPayload, INJECT_CODEPAYLOAD codePayload);
 	void* getAddrOfData() const;
@@ -29,7 +27,7 @@ public:
 
 private:
 	void freeMem();
-	Process process_;
-	void* injectedData_;
-	void* injectedCode_;
+	Process _process;
+	void* _injectedData;
+	void* _injectedCode;
 };

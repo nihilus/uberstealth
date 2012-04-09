@@ -1,29 +1,26 @@
+// Contains all definitions for low level routines used by ntdll.dll.
+
 #pragma once
 
 #include <Windows.h>
 
 #pragma warning (push)
-
 #pragma warning(disable : 4005)
 #include <ntstatus.h>
-
 #pragma warning (pop)
 
 typedef LONG NTSTATUS;
 #define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)
 
 typedef enum _OBJECT_INFORMATION_CLASS {
-
 	ObjectBasicInformation, 
 	ObjectNameInformation, 
 	ObjectTypeInformation, 
 	ObjectAllInformation, 
 	ObjectDataInformation
-
 } OBJECT_INFORMATION_CLASS, *POBJECT_INFORMATION_CLASS;
 
 typedef enum _PROCESS_INFORMATION_CLASS {
-
 	ProcessBasicInformation,
 	ProcessQuotaLimits,
 	ProcessIoCounters,
@@ -37,7 +34,7 @@ typedef enum _PROCESS_INFORMATION_CLASS {
 	ProcessLdtInformation,
 	ProcessLdtSize,
 	ProcessDefaultHardErrorMode,
-	ProcessIoPortHandlers,          // Note: this is kernel mode only
+	ProcessIoPortHandlers,
 	ProcessPooledUsageAndLimits,
 	ProcessWorkingSetWatch,
 	ProcessUserModeIOPL,
@@ -75,8 +72,7 @@ typedef enum _PROCESS_INFORMATION_CLASS {
 	ProcessTokenVirtualizationEnabled,
 	ProcessConsoleHostProcess,
 	ProcessWindowInformation,
-	MaxProcessInfoClass             // MaxProcessInfoClass should always be the last enum
-
+	MaxProcessInfoClass
 } PROCESS_INFORMATION_CLASS, *PPROCESS_INFORMATION_CLASS;
 
 typedef struct _PEB {
@@ -96,7 +92,6 @@ typedef struct _PROCESS_BASIC_INFORMATION {
 } PROCESS_BASIC_INFORMATION;
 
 typedef enum _THREAD_INFORMATION_CLASS {
-
 	ThreadBasicInformation, 
 	ThreadTimes, 
 	ThreadPriority, 
@@ -115,7 +110,6 @@ typedef enum _THREAD_INFORMATION_CLASS {
 	ThreadSetTlsArrayAddress, 
 	ThreadIsIoPending, 
 	ThreadHideFromDebugger
-
 } THREAD_INFORMATION_CLASS, *PTHREAD_INFORMATION_CLASS;
 
 typedef enum _SYSTEM_INFORMATION_CLASS {
@@ -138,8 +132,7 @@ typedef struct _UNICODE_STRING {
 } UNICODE_STRING;
 typedef UNICODE_STRING *PUNICODE_STRING;
 
-typedef enum _DBG_STATE
-{
+typedef enum _DBG_STATE {
 	DbgIdle,
 	DbgReplyPending,
 	DbgCreateThreadStateChange,
@@ -159,20 +152,17 @@ typedef struct _CLIENT_ID {
 } CLIENT_ID;
 typedef CLIENT_ID *PCLIENT_ID;
 
-typedef struct _DBGKM_EXCEPTION
-{
+typedef struct _DBGKM_EXCEPTION {
 	EXCEPTION_RECORD ExceptionRecord;
 	ULONG FirstChance;
 } DBGKM_EXCEPTION, *PDBGKM_EXCEPTION;
 
-typedef struct _DBGKM_CREATE_THREAD
-{
+typedef struct _DBGKM_CREATE_THREAD {
 	ULONG SubSystemKey;
 	PVOID StartAddress;
 } DBGKM_CREATE_THREAD, *PDBGKM_CREATE_THREAD;
 
-typedef struct _DBGKM_CREATE_PROCESS
-{
+typedef struct _DBGKM_CREATE_PROCESS {
 	ULONG SubSystemKey;
 	HANDLE FileHandle;
 	PVOID BaseOfImage;
@@ -181,18 +171,15 @@ typedef struct _DBGKM_CREATE_PROCESS
 	DBGKM_CREATE_THREAD InitialThread;
 } DBGKM_CREATE_PROCESS, *PDBGKM_CREATE_PROCESS;
 
-typedef struct _DBGKM_EXIT_THREAD
-{
+typedef struct _DBGKM_EXIT_THREAD {
 	NTSTATUS ExitStatus;
 } DBGKM_EXIT_THREAD, *PDBGKM_EXIT_THREAD;
 
-typedef struct _DBGKM_EXIT_PROCESS
-{
+typedef struct _DBGKM_EXIT_PROCESS {
 	NTSTATUS ExitStatus;
 } DBGKM_EXIT_PROCESS, *PDBGKM_EXIT_PROCESS;
 
-typedef struct _DBGKM_LOAD_DLL
-{
+typedef struct _DBGKM_LOAD_DLL {
 	HANDLE FileHandle;
 	PVOID BaseOfDll;
 	ULONG DebugInfoFileOffset;
@@ -200,24 +187,19 @@ typedef struct _DBGKM_LOAD_DLL
 	PVOID NamePointer;
 } DBGKM_LOAD_DLL, *PDBGKM_LOAD_DLL;
 
-typedef struct _DBGKM_UNLOAD_DLL
-{
+typedef struct _DBGKM_UNLOAD_DLL {
 	PVOID BaseAddress;
 } DBGKM_UNLOAD_DLL, *PDBGKM_UNLOAD_DLL;
 
-typedef struct _DBGUI_WAIT_STATE_CHANGE
-{
+typedef struct _DBGUI_WAIT_STATE_CHANGE {
 	DBG_STATE NewState;
 	CLIENT_ID AppClientId;
-	union
-	{
-		struct
-		{
+	union {
+		struct {
 			HANDLE HandleToThread;
 			DBGKM_CREATE_THREAD NewThread;
 		} CreateThread;
-		struct
-		{
+		struct {
 			HANDLE HandleToProcess;
 			HANDLE HandleToThread;
 			DBGKM_CREATE_PROCESS NewProcess;
@@ -255,7 +237,7 @@ typedef struct _THREAD_BASIC_INFORMATION {
 	KPRIORITY BasePriority;
 } THREAD_BASIC_INFORMATION, *PTHREAD_BASIC_INFORMATION;
 
-// hook function pointer declarations
+// Hook function pointer declarations.
 typedef NTSTATUS (NTAPI *NtQueryInformationProcessFPtr)(HANDLE ProcessHandle, PROCESS_INFORMATION_CLASS ProcessInformationClass, PVOID ProcessInformation, ULONG ProcessInformationLength, PULONG ReturnLength);
 typedef NTSTATUS (NTAPI *NtSetInformationThreadFPtr)(HANDLE ThreadHandle, THREAD_INFORMATION_CLASS ThreadInformationClass, PVOID ThreadInformation, ULONG ThreadInformationLength);
 typedef NTSTATUS (NTAPI *NtQueryObjectFPtr)(HANDLE ObjectHandle, OBJECT_INFORMATION_CLASS ObjectInformationClass, PVOID ObjectInformation, ULONG Length, PULONG ResultLength);

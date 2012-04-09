@@ -523,10 +523,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\NCodeHook\NCodeHookItem.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\NCodeHook\NCodeHookItem.h"
 				>
 			</File>

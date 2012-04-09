@@ -1,26 +1,22 @@
 #include "StringHelper.h"
 #include <Windows.h>
 
-uberstealth::StringToUnicode::operator const wchar_t*()
-{
-	if (!ws_)
-	{
-		size_t length = s_.length() + 1;
-		int numberOfElements = MultiByteToWideChar(CP_UTF8, 0, s_.c_str(), static_cast<int>(length), 0, 0); 
-		ws_ = new wchar_t[numberOfElements];
-		MultiByteToWideChar(CP_UTF8, 0, s_.c_str(), static_cast<int>(length), ws_, numberOfElements);
+uberstealth::StringToUnicode::operator const wchar_t*() {
+	if (!_ws) {
+		size_t length = _s.length() + 1;
+		int numberOfElements = MultiByteToWideChar(CP_UTF8, 0, _s.c_str(), static_cast<int>(length), 0, 0); 
+		_ws = new wchar_t[numberOfElements];
+		MultiByteToWideChar(CP_UTF8, 0, _s.c_str(), static_cast<int>(length), _ws, numberOfElements);
 	}
-	return ws_;
+	return _ws;
 }
 
-uberstealth::UnicodeToString::operator const char*()
-{
-	if (!as_)
-	{
-		size_t length = s_.length() + 1;
-		int numberOfElements = WideCharToMultiByte(CP_UTF8, 0, s_.c_str(), static_cast<int>(length), NULL, 0, NULL, NULL);
-		as_ = new char[numberOfElements];
-		WideCharToMultiByte(CP_UTF8, 0, s_.c_str(), static_cast<int>(length), as_, numberOfElements, NULL, NULL);
+uberstealth::UnicodeToString::operator const char*() {
+	if (!_as) {
+		size_t length = _s.length() + 1;
+		int numberOfElements = WideCharToMultiByte(CP_UTF8, 0, _s.c_str(), static_cast<int>(length), NULL, 0, NULL, NULL);
+		_as = new char[numberOfElements];
+		WideCharToMultiByte(CP_UTF8, 0, _s.c_str(), static_cast<int>(length), _as, numberOfElements, NULL, NULL);
 	}
-	return as_;
+	return _as;
 }

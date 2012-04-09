@@ -1,12 +1,12 @@
 // Represents the debug registers thread context and provides methods to handle different events
 // corresponding to invocations of (internal) windows API functions.
+
 #pragma once
 
-#include <iostream>
 #include <Windows.h>
+#include <iostream>
 
-class ThreadDebugRegisterState
-{
+class ThreadDebugRegisterState {
 public:
 	ThreadDebugRegisterState(DWORD threadId) :
 		threadId(threadId) {};
@@ -17,9 +17,7 @@ public:
 	void handlePostSEH(LPCONTEXT context);
 
 private:
-
-	struct DebugRegisters 
-	{
+	struct DebugRegisters {
 		DebugRegisters() :
 			dr0(0),
 			dr1(0),
@@ -46,8 +44,8 @@ private:
 
 	void copyToContext(const DebugRegisters& debugRegisters, LPCONTEXT context) const;
 	DebugRegisters copyFromContext(LPCONTEXT context) const;
-	DWORD threadId;
 
+	DWORD threadId;
 	DebugRegisters debugRegisters;
 	DebugRegisters preSehDebugRegisters;
 };

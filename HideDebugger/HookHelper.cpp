@@ -72,11 +72,11 @@ void restoreNTHeaders()
 {
 	try
 	{
-		ipc::IPCConfigExchangeReader ipcReader;
+		uberstealth::IPCConfigExchangeReader ipcReader;
 		// we don't need to restore the PE headers when we attach to a process
 		if (ipcReader.isPERestoreRequired())
 		{
-			ipc::IPCPEHeaderData peData = ipcReader.getIPCPEHeaderData();
+			uberstealth::IPCPEHeaderData peData = ipcReader.getIPCPEHeaderData();
 			// read DOS header, advance to NT headers and restore them
 			DWORD oldProtection;
 			PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)peData.imageBase;

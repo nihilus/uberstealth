@@ -5,7 +5,7 @@
 //#include <boost/shared_ptr.hpp>
 #include <iostream>
 
-namespace RemoteEvent
+namespace uberstealth
 {
 	class RemoteEventWriter
 	{

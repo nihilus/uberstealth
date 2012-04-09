@@ -21,7 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="0"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -94,7 +94,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="0"
+			CharacterSet="1"
 			WholeProgramOptimization="0"
 			>
 			<Tool
@@ -189,10 +189,6 @@
 				RelativePath=".\RemoteStealthSession.cpp"
 				>
 			</File>
-			<File
-				RelativePath="..\IDAStealth\StealthSession.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -224,7 +220,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\IDAStealth\StealthSession.h"
+				RelativePath="..\uberstealth\StealthSession.h"
 				>
 			</File>
 			<File
@@ -246,11 +242,11 @@
 			Name="DriverControl"
 			>
 			<File
-				RelativePath="..\IDAStealth\DriverControl.cpp"
+				RelativePath="..\uberstealth\DriverControl.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\IDAStealth\DriverControl.h"
+				RelativePath="..\uberstealth\DriverControl.h"
 				>
 			</File>
 		</Filter>
@@ -302,39 +298,31 @@
 			Name="IPCConfigExchange"
 			>
 			<File
-				RelativePath="..\IDAStealth\IPCConfigExchangeCommon.cpp"
+				RelativePath="..\uberstealth\IPCConfigExchangeCommon.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\IDAStealth\IPCConfigExchangeCommon.h"
+				RelativePath="..\uberstealth\IPCConfigExchangeCommon.h"
 				>
 			</File>
 			<File
-				RelativePath="..\HideDebugger\IPCConfigExchangeReader.cpp"
+				RelativePath="..\uberstealth\IPCConfigExchangeWriter.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\HideDebugger\IPCConfigExchangeReader.h"
-				>
-			</File>
-			<File
-				RelativePath="..\IDAStealth\IPCConfigExchangeWriter.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\IDAStealth\IPCConfigExchangeWriter.h"
+				RelativePath="..\uberstealth\IPCConfigExchangeWriter.h"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="HideDebuggerConfig"
+			Name="HideDebuggerProfile"
 			>
 			<File
-				RelativePath="..\HideDebugger\HideDebuggerConfig.cpp"
+				RelativePath="..\HideDebugger\HideDebuggerProfile.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\HideDebugger\HideDebuggerConfig.h"
+				RelativePath="..\HideDebugger\HideDebuggerProfile.h"
 				>
 			</File>
 		</Filter>
@@ -342,23 +330,11 @@
 			Name="ResourceItem"
 			>
 			<File
-				RelativePath="..\IDAStealth\ResourceItem.cpp"
+				RelativePath="..\uberstealth\ResourceItem.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\IDAStealth\ResourceItem.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="IniFileAccess"
-			>
-			<File
-				RelativePath="..\IniFileAccess\IniFileAccess.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\IniFileAccess\IniFileAccess.h"
+				RelativePath="..\uberstealth\ResourceItem.h"
 				>
 			</File>
 		</Filter>

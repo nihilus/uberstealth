@@ -1,14 +1,14 @@
 #include "ObjectTextSerialization.h"
 #include "RemoteEventWriter.h"
 
-using namespace RemoteEvent;
+using namespace uberstealth;
 
-RemoteEvent::RemoteEventWriter::RemoteEventWriter() :
+uberstealth::RemoteEventWriter::RemoteEventWriter() :
 	mq_(boost::interprocess::open_only, genRemoteEventName().c_str())
 {
 }
 
-void RemoteEvent::RemoteEventWriter::sendEvent(const RemoteEventData& /*data*/) const
+void uberstealth::RemoteEventWriter::sendEvent(const RemoteEventData& /*data*/) const
 {
 	using namespace std;
 

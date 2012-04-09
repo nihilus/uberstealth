@@ -14,7 +14,7 @@
 #include <Tlhelp32.h>
 
 void hideDebugger();
-void applyConfigFromFile(const string& configFile);
+void applyConfigFromFile(const std::string& configFile);
 void getOSVersion();
 
 void handleProcessAttach();
@@ -40,7 +40,7 @@ namespace {
 	CRITICAL_SECTION section_;
 
 	// map thread ids to the corresponding debug register state
-	map<DWORD, boost::shared_ptr<ThreadDebugRegisterState>> threads;
+	std::map<DWORD, boost::shared_ptr<ThreadDebugRegisterState>> threads;
 
 }
 
@@ -100,9 +100,9 @@ void hideDebugger()
 {
 	try
 	{
-		ipc::IPCConfigExchangeReader configExchange;
+		uberstealth::IPCConfigExchangeReader configExchange;
 		std::string configFile = configExchange.getProfileFile();
-		IDAProcessID = configExchange.getIDAProcessID();
+		IDAProcessID = configExchange.getDebuggerProcessID();
 		applyConfigFromFile(configFile);
 	}
 	catch (const std::exception& e)
@@ -248,7 +248,7 @@ VOID WINAPI OutputDebugStringWHook(LPCWSTR lpOutputString)
 
 // search in data returned from NtQuerySystemInformation for the corresponding
 // chunk of the given process
-PSYSTEM_PROCESS_INFORMATION findProcessChunk(PSYSTEM_PROCESS_INFORMATION pInfo, const wstring& processName)
+PSYSTEM_PROCESS_INFORMATION findProcessChunk(PSYSTEM_PROCESS_INFORMATION pInfo, const std::wstring& processName)
 {
 	PSYSTEM_PROCESS_INFORMATION lastPInfo = pInfo;
 	while (lastPInfo->NextEntryOffset)
@@ -313,7 +313,7 @@ NTSTATUS NTAPI NtQuerySystemInformationHook(SYSTEM_INFORMATION_CLASS SystemInfor
 			if (explorerPInfo)
 			{
 				PSYSTEM_PROCESS_INFORMATION ownPInfo = (PSYSTEM_PROCESS_INFORMATION)SystemInformation;
-				wstring processName = getProcessName();
+				std::wstring processName = getProcessName();
 				// we need to walk the whole list because there might be multiple instances running
 				while (ownPInfo->NextEntryOffset)
 				{
@@ -429,34 +429,34 @@ DWORD WINAPI SuspendThreadHook(HANDLE hThread)
 }
 
 // convert ascii string to widechar string
-wstring strToWstr(const string& str)
+std::wstring strToWstr(const std::string& str)
 {
-	wstring wstr(str.length() + 1, 0);
+	std::wstring wstr(str.length() + 1, 0);
 	MultiByteToWideChar(CP_ACP, 0, str.c_str(), str.length(), &wstr[0], str.length());
 	return wstr;
 }
 
 // check if given class name matches any of the IDA window classes
-bool filterClassName(const wstring& name)
+bool filterClassName(const std::wstring& name)
 {
 	static wchar_t* names[] = { L"idawindow", L"tnavbox", L"idaview", L"tgrzoom" };
-	wstring tmp(name.length(), 0);
-	transform(name.begin(), name.end(), tmp.begin(), tolower);
-	for (int i=0; i<ARRAYSIZE(names); ++i) if (tmp.find(names[i]) != string::npos) return true;
+	std::wstring tmp(name.length(), 0);
+	std::transform(name.begin(), name.end(), tmp.begin(), tolower);
+	for (int i=0; i<ARRAYSIZE(names); ++i) if (tmp.find(names[i]) != std::string::npos) return true;
 	return false;
 }
 
 //check if given window name matches any of the IDA window captions
-bool filterWndName(const wstring& name)
+bool filterWndName(const std::wstring& name)
 {
 	static wchar_t* names[] = { L"ida", L"graph overview", L"idc scripts", L"disassembly", 
 		L"program segmentation", L"call stack", L"general registers",
 		L"breakpoint", L"structure offsets", L"database notepad", L"threads",
 		L"segment translation", L"imports", L"desktopform", L"function calls",
 		L"structures", L"strings window", L"functions window", L"no signature"};
-	wstring tmp(name.length(), 0);
-	transform(name.begin(), name.end(), tmp.begin(), tolower);
-	for (int i=0; i<ARRAYSIZE(names); ++i) if (tmp.find(names[i]) != string::npos) return true;
+	std::wstring tmp(name.length(), 0);
+	std::transform(name.begin(), name.end(), tmp.begin(), tolower);
+	for (int i=0; i<ARRAYSIZE(names); ++i) if (tmp.find(names[i]) != std::string::npos) return true;
 	return false;
 }
 
@@ -510,7 +510,7 @@ BOOL CALLBACK enumWndFilterCallback(HWND hwnd, LPARAM lParam)
 	wchar_t tmp[666];
 	if (GetWindowTextW(hwnd, tmp, 666))
 	{
-		wstring wndText(tmp);
+		std::wstring wndText(tmp);
 		if (filterWndName(wndText)) return TRUE;
 	}
 	return enumCallback(hwnd, lParam);

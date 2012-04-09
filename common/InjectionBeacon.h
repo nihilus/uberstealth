@@ -4,14 +4,13 @@
 
 #pragma once
 
-#include <boost/noncopyable.hpp>
-#include <iostream>
 #include <Windows.h>
+#include <iostream>
+#include <boost/noncopyable.hpp>
 
 namespace uberstealth {
 
-class InjectionBeacon : public boost::noncopyable
-{
+class InjectionBeacon : public boost::noncopyable {
 public:
 	InjectionBeacon() :
 		hMutex_(NULL) {}

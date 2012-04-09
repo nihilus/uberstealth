@@ -1,32 +1,25 @@
+// Represents the stealth session on the server side if "remote stealth" is used.
+
 #pragma once
 
-// used in the remote stealth scenario on the server side
-
 #include <iostream>
-#include <IDAStealth/StealthSession.h>
-#include <IDAStealth/ResourceItem.h>
 #include "RemoteStealthProtocol.h"
 
-namespace remotestealth
-{
-	class RemoteStealthSession : public idastealth::StealthSession
-	{
+namespace remotestealth {
+
+	class RemoteStealthSession {
 	public:
-
 		RemoteStealthSession();
-		~RemoteStealthSession() {}
-
 		void handleDbgAttach(const RSProtocolItem& item);
 		void handleProcessStart(const RSProtocolItem& item);
 
-	private:
-
-		std::string stealthDll_;
-		
+	private:		
 		void logString(const std::string& str);
 		ResourceItem getRDTSCDriverResource();
 		ResourceItem getStealthDriverResource();
 		std::string getStealthDllPath();
 		std::string serializeConfig(const std::string& configStr);
+
+		std::string _stealthDll;
 	};
 }

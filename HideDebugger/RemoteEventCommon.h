@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-namespace RemoteEvent
+namespace uberstealth
 {
 	struct RemoteEventData 
 	{

@@ -17,11 +17,11 @@ void uberstealth::RemoteStealthSession::sendRemoteCommand(const remotestealth::R
 
 	try
 	{
-		client_->sendData(item);
+		_client->sendData(item);
 	}
 	catch (const std::exception& e)
 	{
-		engine_.logString("Error while sending remote command: %s\n", e.what());
+		_engine.logString("Error while sending remote command: %s\n", e.what());
 	}
 }
 
@@ -36,17 +36,17 @@ void uberstealth::RemoteStealthSession::connectToServer()
 		get_process_options(NULL, NULL, NULL, &host, NULL, NULL);
 
 		std::ostringstream oss;
-		oss << currentProfile_.getRemoteTCPPortValue();
+		oss << _currentProfile.getRemoteTCPPortValue();
 
 		ip::tcp::resolver::query query(host.c_str(), oss.str());
-		ip::tcp::resolver::iterator iterator = resolver_.resolve(query);
+		ip::tcp::resolver::iterator iterator = _resolver.resolve(query);
 
-		client_ = RemoteStealthClient_Ptr(new remotestealth::RemoteStealthClient(ioService_, iterator));
-		client_->connect();
+		_client = RemoteStealthClient_Ptr(new remotestealth::RemoteStealthClient(_ioService, iterator));
+		_client->connect();
 	}
 	catch (const std::exception& e)
 	{
-		engine_.logString("Error while connecting: %s\n", e.what());
+		_engine.logString("Error while connecting: %s\n", e.what());
 	}
 }
 

@@ -1,6 +1,6 @@
 #include "IPCConfigExchangeWriter.h"
 
-using namespace ipc;
+using namespace uberstealth;
 
 IPCConfigExchangeWriter::IPCConfigExchangeWriter(unsigned int processID) :
 	processID_(processID)
@@ -41,7 +41,7 @@ void IPCConfigExchangeWriter::setIPCPEHeaderData(const IPCPEHeaderData& headerDa
 	*segmentData.first = headerData;
 }
 
-void ipc::IPCConfigExchangeWriter::setPERestoreRequired(bool required)
+void uberstealth::IPCConfigExchangeWriter::setPERestoreRequired(bool required)
 {
 	std::pair<bool*, size_t> segmentData = segment_.find<bool>(PERestoreRequiredStr);
 	*(segmentData.first) = required;

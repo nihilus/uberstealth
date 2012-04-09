@@ -448,10 +448,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\NCodeHook\NCodeHookItem.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\NCodeHook\NCodeHookItem.h"
 				>
 			</File>
@@ -501,34 +497,6 @@
 			>
 			<File
 				RelativePath=".\ObjectTextSerialization.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="AntiDebuggingEvent"
-			>
-			<File
-				RelativePath=".\DebugEvent.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DebugEvent.h"
-				>
-			</File>
-			<File
-				RelativePath=".\IPCDebugEventHelper.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\IPCDebugEventHelper.h"
-				>
-			</File>
-			<File
-				RelativePath=".\IPCDebugEventWriter.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\IPCDebugEventWriter.h"
 				>
 			</File>
 		</Filter>

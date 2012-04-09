@@ -2,7 +2,7 @@
 #include <sstream>
 #include <Windows.h>
 
-namespace RemoteEvent
+namespace uberstealth
 {
 	// gen unique name for message queue object
 	std::string genRemoteEventName(unsigned int processID)

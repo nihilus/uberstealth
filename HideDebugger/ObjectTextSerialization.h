@@ -1,53 +1,43 @@
+// Provides text serialization of arbitrary objects to be sent across the network, process boundaries, etc.
+
 #pragma once
 
-// provides text serialization of arbitrary objects to be sent
-// across the network, process boundaries, etc.
-
+#include <iostream>
+#include <sstream>
+#include <vector>
 #pragma warning(disable : 4512)
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #pragma warning(default : 4512)
 #include <boost/asio.hpp>
 #include <boost/shared_ptr.hpp>
-#include <iostream>
-#include <sstream>
-#include <vector>
 
-namespace RemoteEvent
+namespace uberstealth
 {
 	const int HeaderLength = 8;
 
 	template <typename structT, typename recvHandlerT>
-	void deserialize(structT& item, recvHandlerT recv)
-	{
-		using namespace std;
-
-		// first read header
+	void deserialize(structT& item, recvHandlerT recv) {
+		// First read header.
 		char inboundHeader[HeaderLength];
-		// read header length
-		//boost::asio::read(socket_, boost::asio::buffer(inboundHeader));
 		recv(boost::asio::buffer(inboundHeader));
 
 		istringstream is(std::string(inboundHeader, HeaderLength));
 		size_t inboundDataSize = 0;
 		if (!(is >> hex >> inboundDataSize))
-			throw runtime_error("Error while processing inbound data: invalid header received");
+			throw std::runtime_error("Error while processing inbound data: invalid header received");
 
-		// header is correct, so read data
-		vector<char> inboundData(inboundDataSize);
-		// read given length
-		//boost::asio::read(socket_, boost::asio::buffer(inboundData));
+		// Header is correct, so read data.
+		std::vector<char> inboundData(inboundDataSize);
 		recv(boost::asio::buffer(inboundData));
-		try
-		{
-			string archiveString(&inboundData[0], inboundData.size());
-			istringstream archiveStream(archiveString);
+		try	{
+			std::string archiveString(&inboundData[0], inboundData.size());
+			std::istringstream archiveStream(archiveString);
 			boost::archive::text_iarchive archive(archiveStream);
 			archive >> item;
 		}
-		catch (const exception&)
-		{
-			throw runtime_error("Error while processing inbound data: unable to deserialize protocol buffer");
+		catch (const std::exception&) {
+			throw std::runtime_error("Error while processing inbound data: unable to deserialize protocol buffer");
 		}
 	}
 

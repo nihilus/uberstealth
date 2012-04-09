@@ -16,7 +16,7 @@ class RemoteStealthSession : public StealthSession<IDAEngine>
 public:
 	RemoteStealthSession(ProfileHelper* profileHelper) :
 		StealthSession<IDAEngine>(profileHelper),
-		resolver_(boost::asio::ip::tcp::resolver(ioService_)) {}
+		_resolver(boost::asio::ip::tcp::resolver(_ioService)) {};
 	void handleDbgAttach(unsigned int processID, const std::string& configFile, const std::string profile);
 	void handleProcessStart(unsigned int processID, uintptr_t baseAddress, const std::string& configFile, const std::string profile);
 	void handleProcessExit();
@@ -32,9 +32,9 @@ private:
 	void sendRemoteCommand(const remotestealth::RSProtocolItem& item);
 	void connectToServer();
 
-	RemoteStealthClient_Ptr client_;
-	boost::asio::io_service ioService_;
-	boost::asio::ip::tcp::resolver resolver_;
+	RemoteStealthClient_Ptr _client;
+	boost::asio::io_service _ioService;
+	boost::asio::ip::tcp::resolver _resolver;
 };
 
 }

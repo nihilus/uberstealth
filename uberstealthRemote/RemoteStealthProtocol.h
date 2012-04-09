@@ -2,28 +2,25 @@
 
 #pragma once
 
+#include <iostream>
+#include <sstream>
 #pragma warning(disable : 4512)
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #pragma warning(default : 4512)
 #include <boost/asio.hpp>
-#include <boost/shared_ptr.hpp>
-#include <iostream>
-#include <sstream>
 
-namespace remotestealth
-{
+namespace remotestealth {
 	enum ProcessEvent { ProcessStart, ProcessAttach, ProcessExit };
 
-	struct RSProtocolItem
-	{
+	struct RSProtocolItem {
 		RSProtocolItem(unsigned int pID, uintptr_t base, ProcessEvent pEvent,
 			const std::string& configStr, const std::string currentProfile) :
-			processID(pID),
-			baseAddress(base),
-			procEvent(pEvent),
-			serializedConfigFile(configStr),
-			profile(currentProfile) {}
+				processID(pID),
+				baseAddress(base),
+				procEvent(pEvent),
+				serializedConfigFile(configStr),
+				profile(currentProfile) {}
 
 		RSProtocolItem() :
 			processID(0),
@@ -40,8 +37,7 @@ namespace remotestealth
 		int remoteEventPort;
 
 		template <typename Archive>
-		void serialize(Archive& ar, const unsigned int)
-		{
+		void serialize(Archive& ar, const unsigned int)	{
 			ar & processID;
 			ar & baseAddress;
 			ar & procEvent;
@@ -50,17 +46,15 @@ namespace remotestealth
 		}
 	};
 
-	// Response sent from the remote side to indicate success / error of an operation
-	struct RSProtocolResponse 
-	{
+	// Response sent from the remote side to indicate success / error of an operation.
+	struct RSProtocolResponse {
 		RSProtocolResponse(bool succ, const std::string& err) :
 			success(succ),
 			error(err) {}
 		RSProtocolResponse() : success(false) {}
 
 		template <typename Archive>
-		void serialize(Archive& ar, const unsigned int)
-		{
+		void serialize(Archive& ar, const unsigned int)	{
 			ar & success;
 			ar & error;			
 		}

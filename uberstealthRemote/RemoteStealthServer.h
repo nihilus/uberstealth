@@ -1,6 +1,6 @@
-#pragma once
+// Implements the IDAStealth remote server.
 
-// implements the IDAStealth remote server
+#pragma once
 
 #include <boost/asio.hpp>
 #include <iostream>
@@ -8,18 +8,13 @@
 #include "RemoteStealthProtocol.h"
 #include <vector>
 
-namespace remotestealth
-{
-	class RemoteStealthServer
-	{
+namespace remotestealth {
+	class RemoteStealthServer {
 	public:
-
 		RemoteStealthServer(boost::asio::io_service& ioService, unsigned short port);
-		~RemoteStealthServer() {}
 		void run();
 
 	private:
-
 		void session(RemoteStealthConnectionPtr connection);
 
 		boost::asio::ip::tcp::acceptor acceptor_;

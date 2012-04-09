@@ -1,33 +1,28 @@
 #include "IPCConfigExchangeReader.h"
 
-using namespace ipc;
+using namespace uberstealth;
 
-IPCConfigExchangeReader::IPCConfigExchangeReader()
-{
+IPCConfigExchangeReader::IPCConfigExchangeReader() {
 	using namespace boost::interprocess;
-	segment_ = managed_shared_memory(open_read_only, ipc::getSegmentName().c_str());
+	_segment = managed_shared_memory(open_read_only, uberstealth::getSegmentName().c_str());
 }
 
-std::string IPCConfigExchangeReader::getProfileFile()
-{
-	std::pair<char*, size_t> dataPtr = segment_.find<char>(ipc::ConfigFileDataStr);
+std::string IPCConfigExchangeReader::getProfileFile() {
+	std::pair<char*, size_t> dataPtr = _segment.find<char>(uberstealth::ConfigFileDataStr);
 	return std::string(dataPtr.first);
 }
 
-unsigned int IPCConfigExchangeReader::getIDAProcessID()
-{
-	std::pair<unsigned int*, size_t> dataPtr = segment_.find<unsigned int>(ipc::IDAProcessIDStr);
+unsigned int IPCConfigExchangeReader::getDebuggerProcessID() {
+	std::pair<unsigned int*, size_t> dataPtr = _segment.find<unsigned int>(uberstealth::IDAProcessIDStr);
 	return *(dataPtr.first);
 }
 
-ipc::IPCPEHeaderData IPCConfigExchangeReader::getIPCPEHeaderData()
-{
-	std::pair<ipc::IPCPEHeaderData*, size_t> dataPtr = segment_.find<ipc::IPCPEHeaderData>(ipc::PEHeaderDataStr);
+uberstealth::IPCPEHeaderData IPCConfigExchangeReader::getIPCPEHeaderData() {
+	std::pair<uberstealth::IPCPEHeaderData*, size_t> dataPtr = _segment.find<uberstealth::IPCPEHeaderData>(uberstealth::PEHeaderDataStr);
 	return *dataPtr.first;
 }
 
-bool ipc::IPCConfigExchangeReader::isPERestoreRequired()
-{
-	std::pair<bool*, size_t> dataPtr = segment_.find<bool>(ipc::PERestoreRequiredStr);
+bool uberstealth::IPCConfigExchangeReader::isPERestoreRequired() {
+	std::pair<bool*, size_t> dataPtr = _segment.find<bool>(uberstealth::PERestoreRequiredStr);
 	return *(dataPtr.first);
 }

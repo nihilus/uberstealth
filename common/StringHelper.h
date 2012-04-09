@@ -2,47 +2,43 @@
 
 #pragma once
 
-#include <boost/noncopyable.hpp>
 #include <iostream>
+#include <boost/noncopyable.hpp>
 
 namespace uberstealth {
 
-class StringToUnicode : public boost::noncopyable
-{
+class StringToUnicode : public boost::noncopyable {
 public:
 	StringToUnicode(const std::string& str) :
-		s_(str),
-		ws_(NULL) {}
+		_s(str),
+		_ws(NULL) {}
 	
-	~StringToUnicode()
-	{
-		delete[] ws_;
+	~StringToUnicode() {
+		delete[] _ws;
 	}
 
 	operator const wchar_t*();
 	
 private:
-	const std::string& s_;
-	wchar_t* ws_;
+	const std::string& _s;
+	wchar_t* _ws;
 };
 
-class UnicodeToString : public boost::noncopyable
-{
+class UnicodeToString : public boost::noncopyable {
 public:
 	UnicodeToString(const std::wstring& str) :
-		s_(str),
-		as_(NULL) {};
+		_s(str),
+		_as(NULL) {};
 
-	~UnicodeToString()
-	{
-		delete[] as_;
+	~UnicodeToString() {
+		delete[] _as;
 	}
 
 	operator const char*();
 	
 private:
-	const std::wstring& s_;
-	char* as_;
+	const std::wstring& _s;
+	char* _as;
 };
 
 }

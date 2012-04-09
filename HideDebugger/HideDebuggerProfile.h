@@ -1,19 +1,18 @@
+// Represents the settings of a single configuration profile.
+
 #pragma once
 
+#include <vector>
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include <boost/property_tree/ptree.hpp>
-#include <iostream>
 #include <RDTSCEmu/driver/RDTSCEmu.h>
-#include <vector>
 
 namespace uberstealth {
 
 enum InlinePatching { AutoSelect, ForceAbsolute };
 
-// Represents the settings of a single configuration profile.
-class HideDebuggerProfile
-{
+class HideDebuggerProfile {
 #define GENERAL_ACCESSORS(config_name, config_path, data_type, default_value) data_type get##config_name##config_path() const { return pt_.get(#config_name"."#config_path, default_value); } \
 																			  void set##config_name##config_path(const data_type& value) { pt_.put(#config_name"."#config_path, value); }
 
@@ -26,19 +25,15 @@ class HideDebuggerProfile
 
 private:
 	// Custom property_tree translator for the InlinePatching enum.
-	struct InlinePatchingTranslator
-	{
-		InlinePatching get_value(const std::string& value) const
-		{
+	struct InlinePatchingTranslator	{
+		InlinePatching get_value(const std::string& value) const {
 			if (value == "AutoSelect") return AutoSelect;
 			else if (value == "ForceAbsolute")return ForceAbsolute;
 			else throw std::runtime_error("Unable to convert given string to InlinePatching enum (" + value + ")");
 		}
 
-		std::string put_value(InlinePatching value) const
-		{
-			switch (value)
-			{
+		std::string put_value(InlinePatching value) const {
+			switch (value) {
 			case AutoSelect: return "AutoSelect";
 			case ForceAbsolute: return "ForceAbsolute";
 			default: throw std::runtime_error("Unable to convert unknown InlinePatching enum to string");
@@ -47,19 +42,15 @@ private:
 	};
 
 	// Custom property_tree translator for the RDTSCMode enum.
-	struct RDTSCModeTranslator
-	{
-		RDTSCMode get_value(const std::string& value) const
-		{
+	struct RDTSCModeTranslator {
+		RDTSCMode get_value(const std::string& value) const	{
 			if (value == "Constant") return constant;
 			else if (value == "Increasing")return increasing;
 			else throw std::runtime_error("Unable to convert given string to RDTSCMode enum (" + value + ")");
 		}
 
-		std::string put_value(RDTSCMode value) const
-		{
-			switch (value)
-			{
+		std::string put_value(RDTSCMode value) const {
+			switch (value) {
 			case constant: return "Constant";
 			case increasing: return "Increasing";
 			default: throw std::runtime_error("Unable to convert unknown RDTSCMode enum to string");
@@ -137,8 +128,7 @@ private:
 };
 
 // Provides some helper functionality for retrieving the profiles path and storing the profile which was used in the last session.
-class ProfileHelper
-{
+class ProfileHelper {
 public:
 	ProfileHelper();
 	static boost::filesystem::path getConfigPath();

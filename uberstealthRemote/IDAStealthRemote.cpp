@@ -1,18 +1,12 @@
-// IDAStealthRemote.cpp : Defines the entry point for the console application.
-//
-
 #include "IDAStealthRemote.h"
 #include <boost/filesystem.hpp>
-#include "../idastealth/version.h"
+#include "../uberstealth/version.h"
 
-int _tmain(int argc, char* argv[])
-{
-	try
-	{		
+int _tmain(int argc, char* argv[]) {
+	try {		
 		std::cout << REMOTESTEALTH_INFO_STRING << std::endl << std::endl;
 
-		if (!boost::filesystem::exists("HideDebugger.dll"))
-		{
+		if (!boost::filesystem::exists("HideDebugger.dll")) {
 			std::cout << "HideDebugger.dll not found...terminating" << std::endl;
 			return 1;
 		}
@@ -27,8 +21,7 @@ int _tmain(int argc, char* argv[])
 		remotestealth::RemoteStealthServer server(ioService, port);
 		server.run();
 	}
-	catch (const std::exception& e)
-	{
+	catch (const std::exception& e) {
 		std::cerr << e.what() << std::endl;
 	}
 	return 0;

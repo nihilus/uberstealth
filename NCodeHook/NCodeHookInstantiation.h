@@ -1,3 +1,7 @@
+// Convenience typedefs xor IA32 and X64.
+
+#pragma once
+
 #include "NCodeHook.cpp"
 
 template class NCodeHook<ArchitectureIA32>;
