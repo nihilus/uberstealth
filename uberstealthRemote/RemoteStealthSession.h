@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "RemoteStealthProtocol.h"
+#include <uberstealth/ResourceItem.h>
 
 namespace remotestealth {
 

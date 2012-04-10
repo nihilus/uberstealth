@@ -13,7 +13,7 @@ const std::string StealthDllFileName = "HideDebugger.dll";
 }
 
 remotestealth::RemoteStealthSession::RemoteStealthSession() {
-	char buffer[MAX_PATH];
+	wchar_t buffer[MAX_PATH];
 	GetModuleFileName(NULL, buffer, MAX_PATH);
 	boost::filesystem::path p = buffer;
 	p.remove_leaf();

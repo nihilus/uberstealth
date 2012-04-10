@@ -65,10 +65,10 @@ public:
 				iatMod.writeIAT(getStealthDllPath());
 			}
 			catch (const std::exception& e) {
-				_engine.logString("Failed to inject stealth dll (%s): %s\n", getStealthDllPath().c_str(), e.what());
+				_engine.logString("Failed to inject stealth dll (%s): %s.\n", getStealthDllPath().c_str(), e.what());
 			}
 			catch (...) {
-				_engine.logString("Unknown error while trying to inject stealth dll (%s)\n", getStealthDllPath().c_str());
+				_engine.logString("Unknown error while trying to inject stealth dll (%s).\n", getStealthDllPath().c_str());
 			}
 		}
 	}

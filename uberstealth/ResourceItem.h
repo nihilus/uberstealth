@@ -1,3 +1,5 @@
+// Represents a resource specified by an ID and a name in the resource section of a given module.
+
 #pragma once
 
 #include <iostream>
