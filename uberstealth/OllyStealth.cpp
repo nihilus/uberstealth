@@ -1,4 +1,4 @@
-// The Implementation of OllyStealth.
+// The Implementation for OllyStealth.
 
 #ifdef OLLYSTEALTH
 

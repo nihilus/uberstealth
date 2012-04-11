@@ -14,7 +14,7 @@ bool ThreadDebugRegisterState::handleSetContext(LPCONTEXT context)
 		// Clear debug registers from the context flags while leaving all other flags intact
 		context->ContextFlags &= ~0x00000010;
 		
-		debugRegisters = copyFromContext(context);
+		debugRegisters_ = copyFromContext(context);
 
 		// If the context flags include any other parts of the context
 		// the original API has to be called
@@ -34,7 +34,7 @@ void ThreadDebugRegisterState::handleGetContext(const LPCONTEXT context) const
 	// was never assigned to, this operation sets all debug registers to zero
 	if (context->ContextFlags & CONTEXT_DEBUG_REGISTERS)
 	{
-		copyToContext(debugRegisters, context);
+		copyToContext(debugRegisters_, context);
 	}
 }
 
@@ -43,15 +43,15 @@ void ThreadDebugRegisterState::handleGetContext(const LPCONTEXT context) const
 **/
 void ThreadDebugRegisterState::handlePreSEH(LPCONTEXT context)
 {
-	preSehDebugRegisters = copyFromContext(context);
-	copyToContext(debugRegisters, context);
+	preSehDebugRegisters_ = copyFromContext(context);
+	copyToContext(debugRegisters_, context);
 }
 
 void ThreadDebugRegisterState::handlePostSEH(LPCONTEXT context)
 {
 	// copy (possibly) modified context to emulation, but copy the actual debug registers to the context
-	debugRegisters = copyFromContext(context);
-	copyToContext(preSehDebugRegisters, context);
+	debugRegisters_ = copyFromContext(context);
+	copyToContext(preSehDebugRegisters_, context);
 }
 
 void ThreadDebugRegisterState::copyToContext(const DebugRegisters& debugRegisters, LPCONTEXT context) const

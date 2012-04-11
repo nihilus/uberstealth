@@ -10,35 +10,35 @@ namespace uberstealth {
 class StringToUnicode : public boost::noncopyable {
 public:
 	StringToUnicode(const std::string& str) :
-		_s(str),
-		_ws(NULL) {}
+		s_(str),
+		ws_(NULL) {}
 	
 	~StringToUnicode() {
-		delete[] _ws;
+		delete[] ws_;
 	}
 
 	operator const wchar_t*();
 	
 private:
-	const std::string& _s;
-	wchar_t* _ws;
+	const std::string& s_;
+	wchar_t* ws_;
 };
 
 class UnicodeToString : public boost::noncopyable {
 public:
 	UnicodeToString(const std::wstring& str) :
-		_s(str),
-		_as(NULL) {};
+		s_(str),
+		as_(NULL) {};
 
 	~UnicodeToString() {
-		delete[] _as;
+		delete[] as_;
 	}
 
 	operator const char*();
 	
 private:
-	const std::wstring& _s;
-	char* _as;
+	const std::wstring& s_;
+	char* as_;
 };
 
 }

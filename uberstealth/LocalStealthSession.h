@@ -23,14 +23,14 @@ class LocalStealthSession :
 	public StealthSession<EngineT>,
 	public boost::noncopyable {
 public:
-	LocalStealthSession(ProfileHelper* profileHelper) :
-		StealthSession<EngineT>(profileHelper),
-		_rtlDispatchExceptionAddr(0),
-		_ntContinueCallAddr(0) {}
+	LocalStealthSession(const std::string profilePath) :
+		StealthSession<EngineT>(profilePath),
+		rtlDispatchExceptionAddr_(0),
+		ntContinueCallAddr_(0) {}
 	
 	void handleProcessStart(unsigned int processID, uintptr_t baseAddress) {
 		StealthSession::handleProcessStart(processID, baseAddress);
-		if (_currentProfile.getEnableDbgStartEnabled()) {
+		if (currentProfile_.getEnableDbgStartEnabled()) {
 			initSEHMonitoring();
 			localStealth();
 		}
@@ -38,7 +38,7 @@ public:
 
 	void handleDbgAttach(unsigned int processId) {
 		StealthSession::handleDbgAttach(processId);
-		if (_currentProfile.getEnableDbgAttachEnabled()) {
+		if (currentProfile_.getEnableDbgAttachEnabled()) {
 			initSEHMonitoring();
 			localStealth();
 		}
@@ -51,10 +51,10 @@ public:
 
 	// SEH logging and halting of the debuggee is implemented via breakpoints so we need to handle this event accordingly.
 	void handleBreakPoint(unsigned int threadID, uintptr_t address)	{
-		std::set<BPHit>::const_iterator sehCit = _sehHandlerBps.find(BPHit(threadID, address));
-		std::set<BPHit>::const_iterator postSEHCit = _postSEHBps.find(BPHit(threadID, address));
+		std::set<BPHit>::const_iterator sehCit = sehHandlerBps_.find(BPHit(threadID, address));
+		std::set<BPHit>::const_iterator postSEHCit = postSEHBps_.find(BPHit(threadID, address));
 		if (address == getRtlDispatchExceptionAddr() &&
-			(_currentProfile.getHaltInSEHHandlerEnabled() || _currentProfile.getLogSEHEnabled())) {
+			(currentProfile_.getHaltInSEHHandlerEnabled() || currentProfile_.getLogSEHEnabled())) {
 			HANDLE hThread = OpenThread(THREAD_ALL_ACCESS, FALSE, threadID);
 			if (hThread == INVALID_HANDLE_VALUE) {
 				throw std::runtime_error("Unable to open thread while trying to determine top level SEH handler.");
@@ -79,17 +79,17 @@ public:
 			// Read pointer to top level SEH record.
 			if (ReadProcessMemory(getProcessHandle(), (LPCVOID)fsBase, &sehChain, sizeof(sehChain), NULL) &&
 				ReadProcessMemory(getProcessHandle(), (LPCVOID)(sehChain + sizeof(uintptr_t)), &sehHandler, sizeof(sehHandler), NULL)) {
-				if (!_engine.setBreakpoint(sehHandler)) {
+				if (!engine_.setBreakpoint(sehHandler)) {
 					throw std::runtime_error("Error while setting breakpoint at top-level SEH handler in RtlDispatchException.");
 				}
-				_sehHandlerBps.insert(BPHit(threadID, sehHandler));
+				sehHandlerBps_.insert(BPHit(threadID, sehHandler));
 			} else {
 				throw std::runtime_error("Error while reading memory to determine top-level SEH handler in RtlDispatchException.");
 			}
-			_engine.continueProcess();
+			engine_.continueProcess();
 		}
 		else if (address == getNtContinueCallAddr() &&
-				(_currentProfile.getHaltAfterSEHHandlerEnabled() || _currentProfile.getLogSEHEnabled())) {
+				(currentProfile_.getHaltAfterSEHHandlerEnabled() || currentProfile_.getLogSEHEnabled())) {
 			// The first parameter on the stack is a pointer to the CONTEXT structure.
 			HANDLE hThread = OpenThread(THREAD_GET_CONTEXT, FALSE, threadID);
 			if (hThread == INVALID_HANDLE_VALUE) {
@@ -108,44 +108,44 @@ public:
 			CONTEXT sehContext;
 			if (ReadProcessMemory(getProcessHandle(), (LPCVOID)context.Esp, &contextAddr, sizeof(contextAddr), NULL) &&
 				ReadProcessMemory(getProcessHandle(), (LPCVOID)contextAddr, &sehContext, sizeof(sehContext), NULL)) {
-				if (!_engine.setBreakpoint(sehContext.Eip)) {
+				if (!engine_.setBreakpoint(sehContext.Eip)) {
 					throw std::runtime_error("Error while setting breakpoint at modified instruction pointer after SEH.");
 				}
-				_postSEHBps.insert(BPHit(threadID, sehContext.Eip));
+				postSEHBps_.insert(BPHit(threadID, sehContext.Eip));
 			} else {
 				throw std::runtime_error("Unable to get stack value while trying to determine modified instruction pointer after SEH.");
 			}
-			_engine.continueProcess();
-		} else if (sehCit != _sehHandlerBps.end()) {
-			_engine.removeBreakpoint(address);
-			_sehHandlerBps.erase(sehCit);
-			if (_currentProfile.getLogSEHEnabled()) {
-				_engine.logString("uberstealth: debugger reached top-level SEH handler at 0x%X\n", address);
-				if (!_currentProfile.getHaltInSEHHandlerEnabled()) {
-					_engine.continueProcess();
+			engine_.continueProcess();
+		} else if (sehCit != sehHandlerBps_.end()) {
+			engine_.removeBreakpoint(address);
+			sehHandlerBps_.erase(sehCit);
+			if (currentProfile_.getLogSEHEnabled()) {
+				engine_.logString("uberstealth: debugger reached top-level SEH handler at 0x%X\n", address);
+				if (!currentProfile_.getHaltInSEHHandlerEnabled()) {
+					engine_.continueProcess();
 				}
 			}
-			if (_currentProfile.getHaltInSEHHandlerEnabled()) {
-				_engine.logString("uberstealth: debugger has been halted in top-level SEH handler\n");
+			if (currentProfile_.getHaltInSEHHandlerEnabled()) {
+				engine_.logString("uberstealth: debugger has been halted in top-level SEH handler\n");
 			}
-		} else if (postSEHCit != _postSEHBps.end())	{		
-			_engine.removeBreakpoint(address);
-			_postSEHBps.erase(postSEHCit);
-			if (_currentProfile.getLogSEHEnabled()) {
-				_engine.logString("uberstealth: debugger reached new location after the SEH handler (possibly) modified EIP at 0x%X.\n", address);
-				if (!_currentProfile.getHaltAfterSEHHandlerEnabled()) {
-					_engine.continueProcess();
+		} else if (postSEHCit != postSEHBps_.end())	{		
+			engine_.removeBreakpoint(address);
+			postSEHBps_.erase(postSEHCit);
+			if (currentProfile_.getLogSEHEnabled()) {
+				engine_.logString("uberstealth: debugger reached new location after the SEH handler (possibly) modified EIP at 0x%X.\n", address);
+				if (!currentProfile_.getHaltAfterSEHHandlerEnabled()) {
+					engine_.continueProcess();
 				}
 			}
-			if (_currentProfile.getHaltAfterSEHHandlerEnabled()) {
-				_engine.logString("uberstealth: debugger has been halted at instruction pointer after it was (possibly) modified by SEH handler.\n");
+			if (currentProfile_.getHaltAfterSEHHandlerEnabled()) {
+				engine_.logString("uberstealth: debugger has been halted at instruction pointer after it was (possibly) modified by SEH handler.\n");
 			}
 		}
 	}
 
 	// Handle an exception which occurred in the debuggee.
 	void handleException(unsigned int exceptionCode) {
-		_engine.setExceptionOption(exceptionCode, _currentProfile.getPassUnknownExceptionsEnabled());
+		engine_.setExceptionOption(exceptionCode, currentProfile_.getPassUnknownExceptionsEnabled());
 	}
 
 private:
@@ -176,7 +176,7 @@ private:
 	}
 
 	uintptr_t getRtlDispatchExceptionAddr() const {
-		if (_rtlDispatchExceptionAddr) return _rtlDispatchExceptionAddr;
+		if (rtlDispatchExceptionAddr_) return rtlDispatchExceptionAddr_;
 
 		// We need to disassemble the beginning of KiUserExceptionDispatcher to get RtlDispatchException.
 		_DecodedInst instructions[20];
@@ -188,8 +188,8 @@ private:
 				if (_stricmp((const char*)instructions[i].mnemonic.p, "call") == 0) {
 					uintptr_t callOffset = 0;
 					sscanf_s((const char*)instructions[i].operands.p, "%X", &callOffset);
-					_rtlDispatchExceptionAddr = (uintptr_t)codePtr + callOffset;
-					return _rtlDispatchExceptionAddr;
+					rtlDispatchExceptionAddr_ = (uintptr_t)codePtr + callOffset;
+					return rtlDispatchExceptionAddr_;
 				}
 			}
 		}
@@ -198,8 +198,8 @@ private:
 
 	// Returns the address of the call to NtContinue inside KiUserExceptionDispatcher.
 	uintptr_t getNtContinueCallAddr() const	{
-		if (_ntContinueCallAddr) {
-			return _ntContinueCallAddr;
+		if (ntContinueCallAddr_) {
+			return ntContinueCallAddr_;
 		}
 
 		_DecodedInst instructions[25];
@@ -215,8 +215,8 @@ private:
 					sscanf_s((const char*)instructions[i].operands.p, "%X", &callOffset);
 					uintptr_t callDestination = (uintptr_t)codePtr + callOffset;
 					if (callDestination == ntContinueAddr) {
-						_ntContinueCallAddr = (uintptr_t)codePtr + (uintptr_t)instructions[i].offset;
-						return _ntContinueCallAddr;
+						ntContinueCallAddr_ = (uintptr_t)codePtr + (uintptr_t)instructions[i].offset;
+						return ntContinueCallAddr_;
 					}
 				}
 			}
@@ -226,20 +226,20 @@ private:
 
 	// Init mechanism to stop at SEH handler / stop at EIP after SEH.
 	void initSEHMonitoring() const {
-		if (_currentProfile.getHaltInSEHHandlerEnabled() || _currentProfile.getLogSEHEnabled()) {
-			_engine.setBreakpoint(getRtlDispatchExceptionAddr());
+		if (currentProfile_.getHaltInSEHHandlerEnabled() || currentProfile_.getLogSEHEnabled()) {
+			engine_.setBreakpoint(getRtlDispatchExceptionAddr());
 		}
-		if (_currentProfile.getHaltAfterSEHHandlerEnabled() || _currentProfile.getLogSEHEnabled()) {
-			_engine.setBreakpoint(getNtContinueCallAddr());
+		if (currentProfile_.getHaltAfterSEHHandlerEnabled() || currentProfile_.getLogSEHEnabled()) {
+			engine_.setBreakpoint(getNtContinueCallAddr());
 		}
 	}
 
 	void cleanupSEHMonitoring() const {
-		if (_currentProfile.getHaltInSEHHandlerEnabled() || _currentProfile.getLogSEHEnabled()) {
-			_engine.removeBreakpoint(getRtlDispatchExceptionAddr());
+		if (currentProfile_.getHaltInSEHHandlerEnabled() || currentProfile_.getLogSEHEnabled()) {
+			engine_.removeBreakpoint(getRtlDispatchExceptionAddr());
 		}
-		if (_currentProfile.getHaltAfterSEHHandlerEnabled() || _currentProfile.getLogSEHEnabled()) {
-			_engine.removeBreakpoint(getNtContinueCallAddr());
+		if (currentProfile_.getHaltAfterSEHHandlerEnabled() || currentProfile_.getLogSEHEnabled()) {
+			engine_.removeBreakpoint(getNtContinueCallAddr());
 		}
 	}
 
@@ -285,22 +285,22 @@ private:
 
 	// Add stealth hooks to the *debugger process*.
 	void localStealth()	{
-		if (_currentProfile.getDbgPrintExceptionEnabled()) {
-			origDbgUiConvStateChngStruct = _nCodeHook.createHookByName("ntdll.dll", "DbgUiConvertStateChangeStructure", DbgUiConvStateChngStructHook);
+		if (currentProfile_.getDbgPrintExceptionEnabled()) {
+			origDbgUiConvStateChngStruct = nCodeHook_.createHookByName("ntdll.dll", "DbgUiConvertStateChangeStructure", DbgUiConvStateChngStructHook);
 		}
-		if (_currentProfile.getKillAntiAttachEnabled())  {
-			origDebugActiveProcess = _nCodeHook.createHookByName("kernel32.dll", "DebugActiveProcess", DebugActiveProcessHook);
+		if (currentProfile_.getKillAntiAttachEnabled())  {
+			origDebugActiveProcess = nCodeHook_.createHookByName("kernel32.dll", "DebugActiveProcess", DebugActiveProcessHook);
 		}
 	}
 
 	static DbgUiConvertStateChangeStructureFPtr origDbgUiConvStateChngStruct;
 	static DebugActiveProcessFPtr origDebugActiveProcess;
 	
-	mutable uintptr_t _rtlDispatchExceptionAddr;
-	mutable uintptr_t _ntContinueCallAddr;
-	std::set<BPHit> _sehHandlerBps;
-	std::set<BPHit> _postSEHBps;
-	NCodeHookIA32 _nCodeHook;
+	mutable uintptr_t rtlDispatchExceptionAddr_;
+	mutable uintptr_t ntContinueCallAddr_;
+	std::set<BPHit> sehHandlerBps_;
+	std::set<BPHit> postSEHBps_;
+	NCodeHookIA32 nCodeHook_;
 };
 
 template <typename EngineT>

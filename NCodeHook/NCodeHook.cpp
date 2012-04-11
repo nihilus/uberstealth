@@ -8,20 +8,20 @@ static const unsigned int TrampolineBufferSize = 4096;
 template <typename ArchT>
 NCodeHook<ArchT>::NCodeHook(bool cleanOnDestruct) :
 	MaxTotalTrampolineSize(ArchT::AbsJumpPatchSize + ArchT::MaxTrampolineSize),
-	_cleanOnDestruct(cleanOnDestruct),
-	_forceAbsJmp(false) {
-	_trampolineBuffer = VirtualAlloc(NULL, TrampolineBufferSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-	if (_trampolineBuffer == NULL) throw std::runtime_error("Unable to allocate trampoline memory!");
-	for (uintptr_t i=(uintptr_t)_trampolineBuffer; i<(uintptr_t)_trampolineBuffer+TrampolineBufferSize; i+=MaxTotalTrampolineSize)
-		_freeTrampolines.insert(i);
+	cleanOnDestruct_(cleanOnDestruct),
+	forceAbsJmp_(false) {
+	trampolineBuffer_ = VirtualAlloc(NULL, TrampolineBufferSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+	if (trampolineBuffer_ == NULL) throw std::runtime_error("Unable to allocate trampoline memory!");
+	for (uintptr_t i=(uintptr_t)trampolineBuffer_; i<(uintptr_t)trampolineBuffer_+TrampolineBufferSize; i+=MaxTotalTrampolineSize)
+		freeTrampolines_.insert(i);
 }
 
 template <typename ArchT>
 NCodeHook<ArchT>::~NCodeHook() {
-	if (_cleanOnDestruct) {
+	if (cleanOnDestruct_) {
 		// Restore all hooks and free memory.
-		for (size_t i = _hookedFunctions.size(); i > 0; --i) removeHook(_hookedFunctions[i - 1]);
-		VirtualFree(_trampolineBuffer, 0, MEM_RELEASE);
+		for (size_t i = hookedFunctions_.size(); i > 0; --i) removeHook(hookedFunctions_[i - 1]);
+		VirtualFree(trampolineBuffer_, 0, MEM_RELEASE);
 	}
 }
 
@@ -58,15 +58,15 @@ template <typename ArchT>
 template <typename U> 
 U NCodeHook<ArchT>::createHook(U originalFunc, U hookFunc) {
 	// check if this function is already hooked
-	std::map<uintptr_t, NCodeHookItem>::const_iterator cit = _hookedFunctions.begin();
-	while(cit != _hookedFunctions.end()) {
+	std::map<uintptr_t, NCodeHookItem>::const_iterator cit = hookedFunctions_.begin();
+	while(cit != hookedFunctions_.end()) {
 		if ((uintptr_t)cit->second.OriginalFunc == (uintptr_t)originalFunc) return (U)cit->second.Trampoline;
 		++cit;
 	}
 
-	bool useAbsJump = _forceAbsJmp;
+	bool useAbsJump = forceAbsJmp_;
 	int offset = 0;
-	if (useAbsJump || _architecture.requiresAbsJump((uintptr_t)originalFunc, (uintptr_t)hookFunc)) {
+	if (useAbsJump || architecture_.requiresAbsJump((uintptr_t)originalFunc, (uintptr_t)hookFunc)) {
 		offset = getMinOffset((const unsigned char*)originalFunc, ArchT::AbsJumpPatchSize);
 		useAbsJump = true;
 	}		
@@ -81,12 +81,12 @@ U NCodeHook<ArchT>::createHook(U originalFunc, U hookFunc) {
 	uintptr_t trampolineAddr = getFreeTrampoline();
 	memcpy((void*)trampolineAddr, (void*)originalFunc, offset);
 	if (useAbsJump)	{
-		_architecture.writeAbsJump((uintptr_t)originalFunc, (uintptr_t)hookFunc);
-		_architecture.writeAbsJump(trampolineAddr + offset, (uintptr_t)originalFunc + offset);
+		architecture_.writeAbsJump((uintptr_t)originalFunc, (uintptr_t)hookFunc);
+		architecture_.writeAbsJump(trampolineAddr + offset, (uintptr_t)originalFunc + offset);
 	}
 	else {
-		_architecture.writeNearJump((uintptr_t)originalFunc, (uintptr_t)hookFunc);
-		_architecture.writeNearJump(trampolineAddr + offset, (uintptr_t)originalFunc + offset);
+		architecture_.writeNearJump((uintptr_t)originalFunc, (uintptr_t)hookFunc);
+		architecture_.writeNearJump(trampolineAddr + offset, (uintptr_t)originalFunc + offset);
 	}
 
 	DWORD dummy;
@@ -96,7 +96,7 @@ U NCodeHook<ArchT>::createHook(U originalFunc, U hookFunc) {
 	FlushInstructionCache(GetCurrentProcess(), (LPCVOID)originalFunc, useAbsJump ? ArchT::AbsJumpPatchSize : ArchT::NearJumpPatchSize);
 	
 	NCodeHookItem item((uintptr_t)originalFunc, (uintptr_t)hookFunc, trampolineAddr, offset);
-	_hookedFunctions.insert(std::make_pair((uintptr_t)hookFunc, item));
+	hookedFunctions_.insert(std::make_pair((uintptr_t)hookFunc, item));
 
 	return (U)trampolineAddr;
 }
@@ -116,8 +116,8 @@ template <typename ArchT>
 template <typename U>
 bool NCodeHook<ArchT>::removeHook(U address) {
 	// Remove hooked function again, address points to the HOOK function!
-	std::map<uintptr_t, NCodeHookItem>::const_iterator result = _hookedFunctions.find((uintptr_t)address);
-	if (result != _hookedFunctions.end())
+	std::map<uintptr_t, NCodeHookItem>::const_iterator result = hookedFunctions_.find((uintptr_t)address);
+	if (result != hookedFunctions_.end())
 		return removeHook(result->second);
 	return true;
 }
@@ -132,8 +132,8 @@ bool NCodeHook<ArchT>::removeHook(NCodeHookItem item) {
 	DWORD dummy;
 	VirtualProtect((LPVOID)item.OriginalFunc, item.PatchSize, oldProtect, &dummy);
 	
-	_hookedFunctions.erase(item.HookFunc);
-	_freeTrampolines.insert(item.Trampoline);
+	hookedFunctions_.erase(item.HookFunc);
+	freeTrampolines_.insert(item.Trampoline);
 	FlushInstructionCache(GetCurrentProcess(), (LPCVOID)item.OriginalFunc, item.PatchSize);
 	
 	return true;
@@ -141,9 +141,9 @@ bool NCodeHook<ArchT>::removeHook(NCodeHookItem item) {
 
 template <typename ArchT>
 uintptr_t NCodeHook<ArchT>::getFreeTrampoline() {
-	if (_freeTrampolines.empty()) throw std::runtime_error("No trampoline space available!");
-	std::set<uintptr_t>::iterator it = _freeTrampolines.begin();
+	if (freeTrampolines_.empty()) throw std::runtime_error("No trampoline space available!");
+	std::set<uintptr_t>::iterator it = freeTrampolines_.begin();
 	uintptr_t result = *it;
-	_freeTrampolines.erase(it);
+	freeTrampolines_.erase(it);
 	return result;
 }

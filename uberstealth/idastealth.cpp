@@ -1,4 +1,4 @@
-// The implementation of IDAStealth.
+// The implementation for IDAStealth.
 
 #ifdef IDASTEALTH
 
@@ -19,8 +19,7 @@
 
 int idaapi callback(void* user_data, int notification_code, va_list va);
 
-namespace
-{
+namespace {
 	boost::shared_ptr<uberstealth::StealthSession<uberstealth::IDAEngine>> session_;
 	uberstealth::ProfileHelper profileHelper_;
 }
@@ -120,7 +119,7 @@ int idaapi callback(void*, int notification_code, va_list va)
 			{
 				// TODO: instantiate RemoteStealthSession if appropriate
 				const debug_event_t* dbgEvent = va_arg(va, const debug_event_t*);
-				session_ = boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine>>(&profileHelper_);
+				session_ = boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine>>(profileHelper_.getLastProfilePath());
 				session_->handleDbgAttach(dbgEvent->pid);
 			}
 			break;
@@ -128,7 +127,7 @@ int idaapi callback(void*, int notification_code, va_list va)
 		case dbg_process_start:
 			{
 				const debug_event_t* dbgEvent = va_arg(va, const debug_event_t*);
-				session_ = boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine>>(&profileHelper_);
+				session_ = boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine>>(profileHelper_.getLastProfilePath());
 				session_->handleProcessStart(dbgEvent->pid, dbgEvent->modinfo.base);
 			}
 			break;

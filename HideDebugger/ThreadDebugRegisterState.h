@@ -9,7 +9,7 @@
 class ThreadDebugRegisterState {
 public:
 	ThreadDebugRegisterState(DWORD threadId) :
-		threadId(threadId) {};
+		threadId_(threadId) {}
 
 	bool handleSetContext(LPCONTEXT context);
 	void handleGetContext(const LPCONTEXT context) const;
@@ -45,7 +45,7 @@ private:
 	void copyToContext(const DebugRegisters& debugRegisters, LPCONTEXT context) const;
 	DebugRegisters copyFromContext(LPCONTEXT context) const;
 
-	DWORD threadId;
-	DebugRegisters debugRegisters;
-	DebugRegisters preSehDebugRegisters;
+	DWORD threadId_;
+	DebugRegisters debugRegisters_;
+	DebugRegisters preSehDebugRegisters_;
 };

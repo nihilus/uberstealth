@@ -98,7 +98,7 @@ public:
 	template <typename U> U createHookByName(const std::string& dll, const std::string& funcName, U newFunc);
 	template <typename U> bool removeHook(U address);
 
-	void forceAbsoluteJumps(bool value) { _forceAbsJmp = value; }
+	void forceAbsoluteJumps(bool value) { forceAbsJmp_ = value; }
 
 private:
 	// Get rid of useless compiler warning C4512 by making operator= private.
@@ -108,11 +108,11 @@ private:
 	bool removeHook(NCodeHookItem item);
 	int getMinOffset(const unsigned char* codePtr, unsigned int jumpPatchSize);
 	bool isBranch(const char* instr);
-	std::set<uintptr_t> _freeTrampolines;
-	std::map<uintptr_t, NCodeHookItem> _hookedFunctions;
-	void* _trampolineBuffer;
+	std::set<uintptr_t> freeTrampolines_;
+	std::map<uintptr_t, NCodeHookItem> hookedFunctions_;
+	void* trampolineBuffer_;
 	const unsigned int MaxTotalTrampolineSize;
-	bool _cleanOnDestruct;
-	ArchT _architecture;
-	bool _forceAbsJmp;
+	bool cleanOnDestruct_;
+	ArchT architecture_;
+	bool forceAbsJmp_;
 };

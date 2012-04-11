@@ -20,6 +20,6 @@ namespace uberstealth {
 		bool isPERestoreRequired();
 
 	private:
-		boost::interprocess::managed_shared_memory _segment;
+		boost::interprocess::managed_shared_memory segment_;
 	};
 }

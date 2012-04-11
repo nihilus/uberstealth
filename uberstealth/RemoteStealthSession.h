@@ -14,8 +14,8 @@ namespace uberstealth {
 class RemoteStealthSession : public StealthSession<IDAEngine>
 {
 public:
-	RemoteStealthSession(ProfileHelper* profileHelper) :
-		StealthSession<IDAEngine>(profileHelper),
+	RemoteStealthSession(const std::string& profilePath) :
+		StealthSession<IDAEngine>(profilePath),
 		_resolver(boost::asio::ip::tcp::resolver(_ioService)) {};
 	void handleDbgAttach(unsigned int processID, const std::string& configFile, const std::string profile);
 	void handleProcessStart(unsigned int processID, uintptr_t baseAddress, const std::string& configFile, const std::string profile);

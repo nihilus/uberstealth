@@ -12,8 +12,7 @@
 #include <boost/asio.hpp>
 #include <boost/shared_ptr.hpp>
 
-namespace uberstealth
-{
+namespace uberstealth {
 	const int HeaderLength = 8;
 
 	template <typename structT, typename recvHandlerT>
@@ -42,25 +41,20 @@ namespace uberstealth
 	}
 
 	template <typename structT, typename transportT>
-	void serialize(const structT& item, typename transportT)
-	{
-		using namespace std;
-
-		// serialize data
+	void serialize(const structT& item, typename transportT) {
 		ostringstream archiveStream;
 		boost::archive::text_oarchive archive(archiveStream);
 		archive << item;
-		string outboundData = archiveStream.str();
+		std::string outboundData = archiveStream.str();
 
-		// create header
-		ostringstream headerStream;
+		std::ostringstream headerStream;
 		headerStream << setw(HeaderLength) << hex << outboundData.size();
 		if (!headerStream || headerStream.str().size() != HeaderLength)
-			throw runtime_error("Error while processing outbound data: unable to serialize protocol buffer");
+			throw std::runtime_error("Error while processing outbound data: unable to serialize protocol buffer");
 
-		// gather buffers and write at once
-		vector<boost::asio::const_buffer> buffers;
-		string headerString = headerStream.str();
+		// Gather buffers and write at once.
+		std::vector<boost::asio::const_buffer> buffers;
+		std::string headerString = headerStream.str();
 		buffers.push_back(boost::asio::buffer(headerString));
 		buffers.push_back(boost::asio::buffer(outboundData));
 		// write data to socket/whatever
