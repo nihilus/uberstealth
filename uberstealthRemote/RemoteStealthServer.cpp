@@ -5,68 +5,60 @@
 #include <boost/bind.hpp>
 #include "RemoteStealthServer.h"
 #include "RemoteStealthSession.h"
+#include "TemporaryConfigFile.h"
 
-using namespace remotestealth;
-
-RemoteStealthServer::RemoteStealthServer(boost::asio::io_service& ioService, unsigned short port) :
+uberstealth::RemoteStealthServer::RemoteStealthServer(boost::asio::io_service& ioService, unsigned short port) :
 	acceptor_(ioService, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)),
-	ioService_(ioService)
-{
-}
+	ioService_(ioService) {}
 
-void remotestealth::RemoteStealthServer::run()
-{
-	for (;;)
-	{
-		RemoteStealthConnectionPtr connection(new RemoteStealthConnection(ioService_));
+void uberstealth::RemoteStealthServer::run() {
+	for (;;) {
+		boost::shared_ptr<RemoteStealthConnection> connection = boost::make_shared<RemoteStealthConnection>(boost::ref(ioService_));
 		acceptor_.accept(connection->socket());
-		std::cout << "Accepted connection from " 
-				  << connection->socket().remote_endpoint().address()
-				  << std::endl;
+		std::cout << "Accepted connection from " << connection->socket().remote_endpoint().address() << std::endl;
 		boost::thread t(boost::bind(&RemoteStealthServer::session, this, connection));
 	}
 }
 
-void remotestealth::RemoteStealthServer::session(RemoteStealthConnectionPtr connection)
-{
-	try
-	{
-		RemoteStealthSession stealthSession;
-		for (;;)
-		{
-			// read via connection stuff
+void uberstealth::RemoteStealthServer::session(boost::shared_ptr<RemoteStealthConnection> connection) {
+	try	{
+		boost::shared_ptr<RemoteStealthSession> stealthSession;
+		boost::shared_ptr<TemporaryConfigFile> configFile;
+
+		for (;;) {
 			RSProtocolItem item;
 			connection->syncRead(item);
-			
-			try
-			{				
-				switch (item.procEvent)
-				{
+
+			try	{				
+				switch (item.procEvent) {
 				case ProcessStart:
 					std::cout << "process start: process ID = " << item.processID << ", base addr = 0x" << std::hex << item.baseAddress << std::endl;
-					stealthSession.handleProcessStart(item);
+					configFile = boost::make_shared<TemporaryConfigFile>(item.serializedConfigFile);
+					stealthSession = boost::make_shared<RemoteStealthSession>(configFile->getFileName());
+					stealthSession->handleProcessStart(item.processID, item.baseAddress);
 					break;
 
 				case ProcessAttach:
-					stealthSession.handleDbgAttach(item);
+					configFile = boost::make_shared<TemporaryConfigFile>(item.serializedConfigFile);
+					stealthSession = boost::make_shared<RemoteStealthSession>(configFile->getFileName());
+					stealthSession->handleDbgAttach(item.processID);
 					break;
 
 				case ProcessExit:
-					stealthSession.handleProcessExit();
+					stealthSession->handleProcessExit();
 					break;
 				}
 			}
-			catch (std::exception& e)
-			{
+			catch (std::exception& e) {
+				std::cerr << "Error while handling protocol item: " << e.what() << std::endl;
 				connection->syncWrite(RSProtocolResponse(false, e.what()));
+				return;
 			}
-			// send response
 			connection->syncWrite(RSProtocolResponse(true, ""));
 			if (item.procEvent == ProcessExit) return;
 		}
 	}
-	catch (const std::exception& e)
-	{
+	catch (const std::exception& e)	{
 		std::cerr << "Error while handling connection: " << e.what() << std::endl;
 	}
 }

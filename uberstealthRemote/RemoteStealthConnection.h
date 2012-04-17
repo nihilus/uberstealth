@@ -11,7 +11,7 @@
 #include <iostream>
 #include <sstream>
 
-namespace remotestealth
+namespace uberstealth
 {
 	// provides a mechanism to send/receive our protocol item over a socket
 	class RemoteStealthConnection
@@ -84,6 +84,4 @@ namespace remotestealth
 		boost::asio::ip::tcp::socket socket_;
 		static const int HeaderLength = 8;
 	};
-
-	typedef boost::shared_ptr<RemoteStealthConnection> RemoteStealthConnectionPtr;
 }

@@ -41,7 +41,14 @@ namespace std
 }
 
 namespace uberstealth {
-		
+	
+class IDALogger {
+public:
+	void logString(const char* str, ...) const {
+		// TODO!!!
+	}
+};
+
 class IDAEngine
 {
 public:

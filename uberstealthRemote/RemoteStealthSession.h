@@ -4,23 +4,23 @@
 
 #include <iostream>
 #include "RemoteStealthProtocol.h"
+#include "RemoteStealthLogger.h"
 #include <uberstealth/ResourceItem.h>
+#include <uberstealth/StealthSession.h>
 
-namespace remotestealth {
+namespace uberstealth {
 
-	class RemoteStealthSession {
+	class RemoteStealthSession : public StealthSession<RemoteStealthLogger> {
 	public:
-		RemoteStealthSession();
-		void handleDbgAttach(const RSProtocolItem& item);
-		void handleProcessStart(const RSProtocolItem& item);
+		RemoteStealthSession(const std::string& configFile);
+		void handleBreakPoint(unsigned int threadID, uintptr_t address);
+		void handleException(unsigned int exceptionCode);
 
 	private:		
-		void logString(const std::string& str);
 		ResourceItem getRDTSCDriverResource();
 		ResourceItem getStealthDriverResource();
 		std::string getStealthDllPath();
 		std::string serializeConfig(const std::string& configStr);
-
-		std::string _stealthDll;
+		std::string stealthDll_;
 	};
 }

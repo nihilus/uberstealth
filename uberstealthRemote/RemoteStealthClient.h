@@ -7,10 +7,8 @@
 #include "RemoteStealthConnection.h"
 #include "RemoteStealthProtocol.h"
 
-namespace remotestealth
-{
-	class RemoteStealthClient
-	{
+namespace remotestealth {
+	class RemoteStealthClient {
 	public:
 		RemoteStealthClient(boost::asio::io_service& ioService,
 			boost::asio::ip::tcp::resolver::iterator endPointIterator);

@@ -10,7 +10,7 @@
 #pragma warning(default : 4512)
 #include <boost/asio.hpp>
 
-namespace remotestealth {
+namespace uberstealth {
 	enum ProcessEvent { ProcessStart, ProcessAttach, ProcessExit };
 
 	struct RSProtocolItem {

@@ -12,52 +12,36 @@ const std::string StealthDllFileName = "HideDebugger.dll";
 
 }
 
-remotestealth::RemoteStealthSession::RemoteStealthSession() {
+// TODO(jan.newger@newgre.net): wrap profile path string into a "profile file" class which will cleanup its temp file when destructed.
+uberstealth::RemoteStealthSession::RemoteStealthSession(const std::string& configFile) :
+	StealthSession(configFile)
+	{
 	wchar_t buffer[MAX_PATH];
-	GetModuleFileName(NULL, buffer, MAX_PATH);
+	if (!GetModuleFileName(NULL, buffer, MAX_PATH)) {
+		throw std::runtime_error("Unable to determine location of executable for current process.");
+	}
 	boost::filesystem::path p = buffer;
 	p.remove_leaf();
 	p /= StealthDllFileName;
-	_stealthDll = p.string();
+	stealthDll_ = p.string();
 }
 
-void remotestealth::RemoteStealthSession::handleDbgAttach(const RSProtocolItem& item) {
-	std::string configFile = serializeConfig(item.serializedConfigFile);
-	StealthSession::handleDbgAttach(item.processID, configFile, item.profile);
-}
-
-void remotestealth::RemoteStealthSession::handleProcessStart(const RSProtocolItem& item) {
-	std::string configFile = serializeConfig(item.serializedConfigFile);
-	StealthSession::handleProcessStart(item.processID, item.baseAddress, configFile, item.profile);
-}
-
-// Serialize config to config file and return path of file.
-std::string remotestealth::RemoteStealthSession::serializeConfig(const std::string& configStr) {
-	char tmpPath[MAX_PATH];
-	char tmpFileName[MAX_PATH];
-
-	GetTempPath(MAX_PATH, tmpPath);
-	if (!GetTempFileName(tmpPath, "h4x0r", 0, tmpFileName))
-		throw std::runtime_error("Error while trying to serialize configuration to file: unable to get path for temp file");
-
-	std::ofstream ofs(tmpFileName);
-	ofs.write(configStr.c_str(), configStr.length());
-	cout << "saving config to file: " << tmpFileName << endl;
-	return std::string(tmpFileName);
-}
-
-void remotestealth::RemoteStealthSession::logString(const std::string& str) {
-	std::cout << str << std::endl;
-}
-
-ResourceItem remotestealth::RemoteStealthSession::getRDTSCDriverResource() {
+ResourceItem uberstealth::RemoteStealthSession::getRDTSCDriverResource() {
 	return ResourceItem(GetModuleHandle(NULL), IDR_RDTSC, "DRV");
 }
 
-ResourceItem remotestealth::RemoteStealthSession::getStealthDriverResource() {
+ResourceItem uberstealth::RemoteStealthSession::getStealthDriverResource() {
 	return ResourceItem(GetModuleHandle(NULL), IDR_STEALTH, "DRV");
 }
 
-std::string remotestealth::RemoteStealthSession::getStealthDllPath() {
-	return _stealthDll;
+std::string uberstealth::RemoteStealthSession::getStealthDllPath() {
+	return stealthDll_;
+}
+
+void uberstealth::RemoteStealthSession::handleBreakPoint(unsigned int threadID, uintptr_t address) {
+	// TODO(jan.newger@newgre.net): implement.
+}
+
+void uberstealth::RemoteStealthSession::handleException(unsigned int exceptionCode) {
+	// TODO(jan.newger@newgre.net): implement.
 }

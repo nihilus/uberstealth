@@ -60,7 +60,7 @@ private:
 
 public:
 	HideDebuggerProfile(const boost::property_tree::ptree& pt) : pt_(pt) {}
-	HideDebuggerProfile() {};
+	HideDebuggerProfile() {}
 
 	ENABLED_ACCESSORS(BlockInput)
 	ENABLED_ACCESSORS(DbgPrintException)

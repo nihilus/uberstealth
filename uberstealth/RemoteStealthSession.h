@@ -11,30 +11,28 @@
 
 namespace uberstealth {
 
-class RemoteStealthSession : public StealthSession<IDAEngine>
+class RemoteStealthSession : public StealthSession<IDALogger>
 {
 public:
 	RemoteStealthSession(const std::string& profilePath) :
-		StealthSession<IDAEngine>(profilePath),
-		_resolver(boost::asio::ip::tcp::resolver(_ioService)) {};
+		StealthSession<IDALogger>(profilePath),
+		resolver_(boost::asio::ip::tcp::resolver(ioService_)) {}
 	void handleDbgAttach(unsigned int processID, const std::string& configFile, const std::string profile);
 	void handleProcessStart(unsigned int processID, uintptr_t baseAddress, const std::string& configFile, const std::string profile);
 	void handleProcessExit();
 
-	// TODO: implement.
+	// The remote stealth server doesn't have access to the debugging engine of IDA so these methods are implemented on the client side.
 	void handleBreakPoint(unsigned int /*threadID*/, uintptr_t /*address*/) {}
 	void handleException(unsigned int /*exceptionCode*/) {}
 
 private:
-	typedef boost::shared_ptr<remotestealth::RemoteStealthClient> RemoteStealthClient_Ptr;
-
 	std::string readConfigFile(const std::string& fileName) const;
 	void sendRemoteCommand(const remotestealth::RSProtocolItem& item);
 	void connectToServer();
 
-	RemoteStealthClient_Ptr _client;
-	boost::asio::io_service _ioService;
-	boost::asio::ip::tcp::resolver _resolver;
+	boost::shared_ptr<remotestealth::RemoteStealthClient> client_;
+	boost::asio::io_service ioService_;
+	boost::asio::ip::tcp::resolver resolver_;
 };
 
 }

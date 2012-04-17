@@ -18,13 +18,13 @@
 
 namespace uberstealth {
 
-template <typename EngineT>
+template <typename EngineT, typename LoggerT>
 class LocalStealthSession :
-	public StealthSession<EngineT>,
+	public StealthSession<LoggerT>,
 	public boost::noncopyable {
 public:
 	LocalStealthSession(const std::string profilePath) :
-		StealthSession<EngineT>(profilePath),
+		StealthSession<LoggerT>(profilePath),
 		rtlDispatchExceptionAddr_(0),
 		ntContinueCallAddr_(0) {}
 	
@@ -301,12 +301,13 @@ private:
 	std::set<BPHit> sehHandlerBps_;
 	std::set<BPHit> postSEHBps_;
 	NCodeHookIA32 nCodeHook_;
+	EngineT engine_;
 };
 
-template <typename EngineT>
-DbgUiConvertStateChangeStructureFPtr uberstealth::LocalStealthSession<EngineT>::origDbgUiConvStateChngStruct;
+template <typename EngineT, typename LoggerT>
+DbgUiConvertStateChangeStructureFPtr uberstealth::LocalStealthSession<EngineT, LoggerT>::origDbgUiConvStateChngStruct;
 
-template <typename EngineT>
-DebugActiveProcessFPtr uberstealth::LocalStealthSession<EngineT>::origDebugActiveProcess;
+template <typename EngineT, typename LoggerT>
+DebugActiveProcessFPtr uberstealth::LocalStealthSession<EngineT, LoggerT>::origDebugActiveProcess;
 
 }

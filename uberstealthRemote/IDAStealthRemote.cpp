@@ -18,7 +18,7 @@ int _tmain(int argc, char* argv[]) {
 		std::cout << "Starting server..." << std::endl;
 
 		boost::asio::io_service ioService;
-		remotestealth::RemoteStealthServer server(ioService, port);
+		uberstealth::RemoteStealthServer server(ioService, port);
 		server.run();
 	}
 	catch (const std::exception& e) {

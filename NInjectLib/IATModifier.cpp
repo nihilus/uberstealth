@@ -6,8 +6,7 @@
 using namespace std;
 
 IATModifier::IATModifier(const Process& process)
-	: process_(process), importDescrTblAddr_(NULL), importDescrTblSize_(0)
-{
+	: process_(process), importDescrTblAddr_(NULL), importDescrTblSize_(0) {
 }
 
 IATModifier::~IATModifier()
@@ -42,9 +41,8 @@ void IATModifier::writeIAT(const std::string& dll)
 	writeIAT(dlls);
 }
 
-// write one or more new import descriptors by allocating a new import descriptor table
-void IATModifier::writeIAT(const vector<string>& dlls)
-{
+// Write one or more new import descriptors by allocating a new import descriptor table.
+void IATModifier::writeIAT(const vector<string>& dlls) {
 	if (dlls.empty()) throw IATModifierException("DLL path list must not be empty");
 	if (importDescrTblAddr_ == NULL) throw IATModifierException("Import descriptor must not be NULL");
 	

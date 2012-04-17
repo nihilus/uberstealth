@@ -708,10 +708,6 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\DebugSession.h"
-			>
-		</File>
-		<File
 			RelativePath="..\RDTSCEmu\driver\objfre_wxp_x86\i386\RDTSCEmu.sys"
 			>
 		</File>

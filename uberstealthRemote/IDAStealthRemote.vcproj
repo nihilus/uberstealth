@@ -189,6 +189,10 @@
 				RelativePath=".\RemoteStealthSession.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\TemporaryConfigFile.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -201,6 +205,10 @@
 			</File>
 			<File
 				RelativePath=".\RemoteStealthConnection.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RemoteStealthLogger.h"
 				>
 			</File>
 			<File
@@ -221,6 +229,10 @@
 			</File>
 			<File
 				RelativePath="..\uberstealth\StealthSession.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TemporaryConfigFile.h"
 				>
 			</File>
 			<File
@@ -335,6 +347,26 @@
 			</File>
 			<File
 				RelativePath="..\uberstealth\ResourceItem.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="common"
+			>
+			<File
+				RelativePath="..\common\InjectionBeacon.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\common\InjectionBeacon.h"
+				>
+			</File>
+			<File
+				RelativePath="..\common\StringHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\common\StringHelper.h"
 				>
 			</File>
 		</Filter>
