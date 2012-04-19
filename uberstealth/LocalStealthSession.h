@@ -120,25 +120,25 @@ public:
 			engine_.removeBreakpoint(address);
 			sehHandlerBps_.erase(sehCit);
 			if (currentProfile_.getLogSEHEnabled()) {
-				engine_.logString("uberstealth: debugger reached top-level SEH handler at 0x%X\n", address);
+				logger_.logString("uberstealth: debugger reached top-level SEH handler at 0x%X\n", address);
 				if (!currentProfile_.getHaltInSEHHandlerEnabled()) {
 					engine_.continueProcess();
 				}
 			}
 			if (currentProfile_.getHaltInSEHHandlerEnabled()) {
-				engine_.logString("uberstealth: debugger has been halted in top-level SEH handler\n");
+				logger_.logString("uberstealth: debugger has been halted in top-level SEH handler\n");
 			}
 		} else if (postSEHCit != postSEHBps_.end())	{		
 			engine_.removeBreakpoint(address);
 			postSEHBps_.erase(postSEHCit);
 			if (currentProfile_.getLogSEHEnabled()) {
-				engine_.logString("uberstealth: debugger reached new location after the SEH handler (possibly) modified EIP at 0x%X.\n", address);
+				logger_.logString("uberstealth: debugger reached new location after the SEH handler (possibly) modified EIP at 0x%X.\n", address);
 				if (!currentProfile_.getHaltAfterSEHHandlerEnabled()) {
 					engine_.continueProcess();
 				}
 			}
 			if (currentProfile_.getHaltAfterSEHHandlerEnabled()) {
-				engine_.logString("uberstealth: debugger has been halted at instruction pointer after it was (possibly) modified by SEH handler.\n");
+				logger_.logString("uberstealth: debugger has been halted at instruction pointer after it was (possibly) modified by SEH handler.\n");
 			}
 		}
 	}
@@ -176,7 +176,9 @@ private:
 	}
 
 	uintptr_t getRtlDispatchExceptionAddr() const {
-		if (rtlDispatchExceptionAddr_) return rtlDispatchExceptionAddr_;
+		if (rtlDispatchExceptionAddr_) {
+			return rtlDispatchExceptionAddr_;
+		}
 
 		// We need to disassemble the beginning of KiUserExceptionDispatcher to get RtlDispatchException.
 		_DecodedInst instructions[20];
@@ -309,5 +311,4 @@ DbgUiConvertStateChangeStructureFPtr uberstealth::LocalStealthSession<EngineT, L
 
 template <typename EngineT, typename LoggerT>
 DebugActiveProcessFPtr uberstealth::LocalStealthSession<EngineT, LoggerT>::origDebugActiveProcess;
-
 }

@@ -7,10 +7,10 @@
 
 void uberstealth::RemoteStealthSession::handleDbgAttach(unsigned int processID, const std::string& configFile, const std::string profile) {
 	connectToServer();
-	sendRemoteCommand(remotestealth::RSProtocolItem(processID, 0, remotestealth::ProcessAttach, readConfigFile(configFile), profile));
+	sendRemoteCommand(uberstealth::RSProtocolItem(processID, 0, uberstealth::ProcessAttach, readConfigFile(configFile), profile));
 }
 
-void uberstealth::RemoteStealthSession::sendRemoteCommand(const remotestealth::RSProtocolItem& item) {
+void uberstealth::RemoteStealthSession::sendRemoteCommand(const uberstealth::RSProtocolItem& item) {
 	try	{
 		client_->sendData(item);
 	} catch (const std::exception& e) {
@@ -27,7 +27,7 @@ void uberstealth::RemoteStealthSession::connectToServer() {
 		oss << currentProfile_.getRemoteTCPPortValue();
 		boost::asio::ip::tcp::resolver::query query(host.c_str(), oss.str());
 		boost::asio::ip::tcp::resolver::iterator iterator = resolver_.resolve(query);
-		client_ = boost::make_shared<remotestealth::RemoteStealthClient>(boost::ref(ioService_), iterator);
+		client_ = boost::make_shared<uberstealth::RemoteStealthClient>(boost::ref(ioService_), iterator);
 		client_->connect();
 	} catch (const std::exception& e) {
 		// TODO: should this really be catched here instead of letting it bubble up the stack?

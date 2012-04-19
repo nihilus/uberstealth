@@ -21,6 +21,6 @@ private:
 	INJECT_CODEPAYLOAD createUnloadLibCode();
 
 	std::string _fileName;
-	Process _process;
-	HMODULE _hDll;
+	Process process_;
+	HMODULE hDll_;
 };

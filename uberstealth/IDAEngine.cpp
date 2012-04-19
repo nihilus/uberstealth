@@ -23,11 +23,6 @@ namespace {
 	}
 }
 
-uberstealth::IDAEngine::IDAEngine() {
-	hIDAWnd_ = (HWND)callui(ui_get_hwnd).vptr;
-	idaMainThread_ = GetWindowThreadProcessId(hIDAWnd_, NULL);
-}
-
 uberstealth::IDAEngine::~IDAEngine() {
 	restoreExceptions();
 }
@@ -84,7 +79,9 @@ bool uberstealth::IDAEngine::continueProcess() const {
 	return continue_process();
 }
 
-void uberstealth::IDAEngine::logString(const char* str, ...) const {
+// IDALogger.
+
+void uberstealth::IDALogger::logString( const char* str, ... ) const {
 	char buffer[500];
 	va_list arglist;	
 	va_start(arglist, str);
@@ -93,14 +90,19 @@ void uberstealth::IDAEngine::logString(const char* str, ...) const {
 
 	if (GetCurrentThreadId() == idaMainThread_) {
 		msg(buffer);
-	}
-	else {
+	} else {
 		mutex_.lock();
 		messages_.push_back(std::string(buffer));
 		mutex_.unlock();
 		UINT_PTR id = SetTimer(0, 0, TimerIntervall, NULL);
 		SetTimer(hIDAWnd_, id, TimerIntervall, (TIMERPROC)timerCallbackProc);
 	}
+}
+
+uberstealth::IDALogger::IDALogger()
+{
+	hIDAWnd_ = (HWND)callui(ui_get_hwnd).vptr;
+	idaMainThread_ = GetWindowThreadProcessId(hIDAWnd_, NULL);
 }
 
 #endif

@@ -27,10 +27,10 @@ public:
 
 private:
 	std::string readConfigFile(const std::string& fileName) const;
-	void sendRemoteCommand(const remotestealth::RSProtocolItem& item);
+	void sendRemoteCommand(const uberstealth::RSProtocolItem& item);
 	void connectToServer();
 
-	boost::shared_ptr<remotestealth::RemoteStealthClient> client_;
+	boost::shared_ptr<uberstealth::RemoteStealthClient> client_;
 	boost::asio::io_service ioService_;
 	boost::asio::ip::tcp::resolver resolver_;
 };

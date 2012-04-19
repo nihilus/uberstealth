@@ -19,13 +19,13 @@ struct UNLOADLIB_DATA {
 
 InjectLibrary::InjectLibrary(const std::string& fileName, const Process& process) 
 	: _fileName(fileName),
-	_process(process) {
+	process_(process) {
 	if (fileName.length() >= MAX_PATH) throw std::runtime_error("Invalid library - filename too long!");
 }
 
 InjectLibrary::InjectLibrary(HMODULE hRemoteLib, const Process& process)
-	: _process(process),
-	_hDll(hRemoteLib) {
+	: process_(process),
+	hDll_(hRemoteLib) {
 }
 
 INJECT_DATAPAYLOAD InjectLibrary::createLoadLibData() {
@@ -91,7 +91,7 @@ INJECT_CODEPAYLOAD InjectLibrary::createLoadLibCode() {
 
 // Inject code into remote process to load the library.
 bool InjectLibrary::injectLib() {
-	GenericInjector injector(_process);
+	GenericInjector injector(process_);
 	INJECT_DATAPAYLOAD data = createLoadLibData();
 	INJECT_CODEPAYLOAD code = createLoadLibCode();
 	injector.doInjection(data, code);
@@ -102,15 +102,15 @@ bool InjectLibrary::injectLib() {
 	char* readAddress = (char*)injector.getAddrOfData();
 	readAddress += MAX_PATH + sizeof(HANDLE);
 	HMODULE hRemoteDll;
-	_process.readMemory(readAddress, (void*)&hRemoteDll, sizeof(HMODULE));
-	_hDll = hRemoteDll;
+	process_.readMemory(readAddress, (void*)&hRemoteDll, sizeof(HMODULE));
+	hDll_ = hRemoteDll;
 
-	return (_hDll == 0 ? false : true);
+	return (hDll_ == 0 ? false : true);
 }
 
 // Unload library from remote process.
 bool InjectLibrary::unloadLib() {
-	GenericInjector injector(_process);
+	GenericInjector injector(process_);
 	INJECT_CODEPAYLOAD code = createUnloadLibCode();
 	INJECT_DATAPAYLOAD data = createUnloadLibData();
 	bool errorFlag = false;
@@ -120,7 +120,7 @@ bool InjectLibrary::unloadLib() {
 	char* readAddress = (char*)injector.getAddrOfData();
 	readAddress += sizeof(void*) + sizeof(HMODULE);
 	int error;
-	_process.readMemory(readAddress, &error, sizeof(int));
+	process_.readMemory(readAddress, &error, sizeof(int));
 	errorFlag = (error != 0);
 	free(code.code);
 	free(data.data);
@@ -135,7 +135,7 @@ INJECT_DATAPAYLOAD InjectLibrary::createUnloadLibData() {
 #else
 	tmpData->freeLibrary = GetProcAddress(GetModuleHandle("kernel32.dll"), "FreeLibrary");
 #endif
-	tmpData->hDll = _hDll;
+	tmpData->hDll = hDll_;
 
 	INJECT_DATAPAYLOAD dataPayload;
 	dataPayload.data = tmpData;
@@ -187,9 +187,9 @@ INJECT_CODEPAYLOAD InjectLibrary::createUnloadLibCode() {
 #pragma warning(default: 4731 4740)
 
 const Process& InjectLibrary::getProcess() const {
-	return _process;
+	return process_;
 }
 
 HMODULE InjectLibrary::getDllHandle() const {
-	return _hDll;
+	return hDll_;
 }

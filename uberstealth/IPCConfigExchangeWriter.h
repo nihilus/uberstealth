@@ -8,14 +8,11 @@
 #include <iostream>
 #include "IPCConfigExchangeCommon.h"
 
-namespace uberstealth
-{
-	class IPCConfigExchangeWriter
-	{
+namespace uberstealth {
+	
+	class IPCConfigExchangeWriter {
 	public:
-
 		IPCConfigExchangeWriter(unsigned int processID);
-		~IPCConfigExchangeWriter() {}
 		void setProfileFile(const std::string& configFile);
 		void setIDAProcessID(unsigned int processID);
 		void setIPCPEHeaderData(const IPCPEHeaderData& headerData);
@@ -23,7 +20,6 @@ namespace uberstealth
 		void remove();
 
 	private:
-
 		boost::interprocess::managed_shared_memory segment_;
 		unsigned int processID_;
 	};

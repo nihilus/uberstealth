@@ -84,11 +84,10 @@ uberstealth::ProfileHelper::ProfileHelper() {
 // Determine the directory where all profile files are stored.
 // Note: this function must not throw since it might be invoked from static initializers.
 boost::filesystem::path uberstealth::ProfileHelper::getConfigPath() {
-	using namespace boost::filesystem;
 	try	{
 		wchar_t appDataPath[MAX_PATH];
 		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, appDataPath))) {
-			path p(appDataPath);
+			boost::filesystem::path p(appDataPath);
 			p /= "uberstealth";
 			if (!exists(p)) create_directory(p);
 			return p;
@@ -96,7 +95,7 @@ boost::filesystem::path uberstealth::ProfileHelper::getConfigPath() {
 	}
 	catch (const std::exception&) {
 	}
-	return path();
+	return boost::filesystem::path();
 }
 
 std::string uberstealth::ProfileHelper::readLastProfile(const boost::filesystem::path& mainConfigFile) const {

@@ -10,6 +10,7 @@
 #include "uberstealth/IPCConfigExchangeCommon.h"
 
 namespace uberstealth {
+
 	class IPCConfigExchangeReader {
 	public:
 		IPCConfigExchangeReader();

@@ -44,30 +44,29 @@ namespace uberstealth {
 	
 class IDALogger {
 public:
-	void logString(const char* str, ...) const {
-		// TODO!!!
-	}
+	IDALogger();
+	void logString(const char* str, ...) const;
+
+private:
+	HWND hIDAWnd_;
+	unsigned int idaMainThread_;
 };
 
 class IDAEngine
 {
 public:
-	IDAEngine();
 	~IDAEngine();
 	bool setBreakpoint(uintptr_t address) const;
 	bool removeBreakpoint(uintptr_t address) const;
 	void setExceptionOption(unsigned int exceptionCode, bool ignore);
 	bool continueProcess() const;
-	void logString(const char* str, ...) const;
 
 private:	
-	struct ExceptionFilter 
-	{
+	struct ExceptionFilter 	{
 		ExceptionFilter(const boost::unordered_set<exception_info_t>* addedExceptions) :
 			addedExceptions_(addedExceptions) {}
 
-		bool operator()(const exception_info_t& exceptionInfo) const
-		{
+		bool operator()(const exception_info_t& exceptionInfo) const {
 			return addedExceptions_->find(exceptionInfo) != addedExceptions_->end();
 		}
 		const boost::unordered_set<exception_info_t>* addedExceptions_;
@@ -78,8 +77,6 @@ private:
 	void restoreExceptions();
 	
 	boost::unordered_set<exception_info_t> addedExceptions_;
-	HWND hIDAWnd_;
-	unsigned int idaMainThread_;
 };
 
 }

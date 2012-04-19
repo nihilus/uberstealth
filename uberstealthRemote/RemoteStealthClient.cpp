@@ -1,26 +1,20 @@
-#include <boost/bind.hpp>
-#include "HideDebugger/ObjectTextSerialization.h"
 #include "RemoteStealthClient.h"
+#include <boost/make_shared.hpp>
 
-remotestealth::RemoteStealthClient::RemoteStealthClient(boost::asio::io_service& ioService,
-														boost::asio::ip::tcp::resolver::iterator endPointIterator) :
-	ioService_(ioService)
-{
-	endPointIterator_ = endPointIterator;
-}
+uberstealth::RemoteStealthClient::RemoteStealthClient(boost::asio::io_service& ioService, boost::asio::ip::tcp::resolver::iterator endPointIterator) :
+	ioService_(ioService),
+	endPointIterator_(endPointIterator) {}
 
-void remotestealth::RemoteStealthClient::sendData(const RSProtocolItem& item)
-{
+void uberstealth::RemoteStealthClient::sendData(const RSProtocolItem& item) {
 	connection_->syncWrite(item);
-	
 	RSProtocolResponse response;
 	connection_->syncRead(response);
-	if (!response.success)
+	if (!response.success) {
 		throw std::runtime_error("Error while performing remote command: " + response.error);
+	}
 }
 
-void remotestealth::RemoteStealthClient::connect()
-{
-	connection_ = RemoteStealthConnectionPtr(new RemoteStealthConnection(ioService_));	
+void uberstealth::RemoteStealthClient::connect() {
+	connection_ = boost::make_shared<RemoteStealthConnection>(boost::ref(ioService_));	
 	connection_->socket().connect(*endPointIterator_);
 }
