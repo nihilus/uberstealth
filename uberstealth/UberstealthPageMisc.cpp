@@ -106,12 +106,12 @@ void uberstealth::UberstealthPageMisc::enableControls(bool enabled) {
 
 void uberstealth::UberstealthPageMisc::loadProfile(const uberstealth::HideDebuggerProfile& profile) {
 	if (m_hWnd) {
-		rdbPatchingMethod_ = profile.getInlinePatchingMethodValue();
-		passExceptions_ = profile.getPassUnknownExceptionsEnabled();
-		tcpPort_ = profile.getRemoteTCPPortValue();
-		haltInSEH_ = profile.getHaltInSEHHandlerEnabled();
-		haltAfterSEH_ = profile.getHaltAfterSEHHandlerEnabled();
-		logSEH_ = profile.getLogSEHEnabled();
+		guiData_.patchingMethod_ = profile.getInlinePatchingMethodValue();
+		guiData_.passExceptions_ = profile.getPassUnknownExceptionsEnabled();
+		guiData_.tcpPort_ = profile.getRemoteTCPPortValue();
+		guiData_.haltInSEH_ = profile.getHaltInSEHHandlerEnabled();
+		guiData_.haltAfterSEH_ = profile.getHaltAfterSEHHandlerEnabled();
+		guiData_.logSEH_ = profile.getLogSEHEnabled();
 		DoDataExchange(FALSE);
 	}
 }
@@ -119,12 +119,12 @@ void uberstealth::UberstealthPageMisc::loadProfile(const uberstealth::HideDebugg
 void uberstealth::UberstealthPageMisc::flushProfile(uberstealth::HideDebuggerProfile& profile) {
 	if (m_hWnd) {
 		if (DoDataExchange(TRUE)) {
-			profile.setPassUnknownExceptionsEnabled(passExceptions_);
-			profile.setInlinePatchingMethodValue((InlinePatching)rdbPatchingMethod_);
-			profile.setRemoteTCPPortValue(tcpPort_);
-			profile.setHaltInSEHHandlerEnabled(haltInSEH_);
-			profile.setHaltAfterSEHHandlerEnabled(haltAfterSEH_);
-			profile.setLogSEHEnabled(logSEH_);
+			profile.setPassUnknownExceptionsEnabled(guiData_.passExceptions_);
+			profile.setInlinePatchingMethodValue((InlinePatching)guiData_.patchingMethod_);
+			profile.setRemoteTCPPortValue(guiData_.tcpPort_);
+			profile.setHaltInSEHHandlerEnabled(guiData_.haltInSEH_);
+			profile.setHaltAfterSEHHandlerEnabled(guiData_.haltAfterSEH_);
+			profile.setLogSEHEnabled(guiData_.logSEH_);
 		}
 	}
 }
@@ -145,7 +145,6 @@ BOOL uberstealth::UberstealthPageMisc::OnInitDialog(UINT /*uMsg*/, WPARAM /*wPar
 	return TRUE;
 }
 
-// Switch profile to profile selected in combobox.
 void uberstealth::UberstealthPageMisc::switchProfile() {
 	int itemID = cboProfiles_.GetCurSel();
 	if (itemID != CB_ERR) {		
@@ -167,23 +166,10 @@ void uberstealth::UberstealthPageMisc::initComboBox() {
 }
 
 bool uberstealth::UberstealthPageMisc::isProfileDirty() {
-	if (m_hWnd)	{
-		return (IsDlgButtonChecked(IDC_PASS_EXCEPTIONS) == BST_CHECKED ? true : false) != passExceptions_ ||
-			   (IsDlgButtonChecked(IDC_HALT_IN_SEH) == BST_CHECKED ? true : false) != haltInSEH_ ||
-			   (IsDlgButtonChecked(IDC_HALT_AFTER_SEH) == BST_CHECKED ? true : false) != haltAfterSEH_ ||
-			   (IsDlgButtonChecked(IDC_LOG_SEH) == BST_CHECKED ? true : false) != logSEH_ ||
-			   getPatchingMethod() != rdbPatchingMethod_ ||
-			   getTCPPort() != tcpPort_;
+	PageMiscGuiData oldguiData = guiData_;
+	if (m_hWnd && DoDataExchange(TRUE)) {
+		return oldguiData != guiData_;
+	} else {
+		return false;
 	}
-	return false;
-}
-
-int uberstealth::UberstealthPageMisc::getPatchingMethod() {
-	// TODO(jan.newger@newgre.net): read actual value from control.
-	return rdbPatchingMethod_;
-}
-
-int uberstealth::UberstealthPageMisc::getTCPPort() {
-	// TODO(jan.newger@newgre.net): read actual value from control.
-	return tcpPort_;
 }

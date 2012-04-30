@@ -6,11 +6,10 @@
 // Otherwise, weird compiler errors will appear!
 
 #include "WTLWrapper.h"
-
+#include <iostream>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 #include <common/StringHelper.h>
-#include <iostream>
 #include "IDACommon.h"
 #include "IDAEngine.h"
 #include "LocalStealthSession.h"

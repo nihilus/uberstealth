@@ -43,21 +43,38 @@ private:
 	END_MSG_MAP()
 
 	CComboBox cboProfiles_;
-	int rdbPatchingMethod_;
-	bool passExceptions_;
-	int tcpPort_;
-	bool haltInSEH_;
-	bool haltAfterSEH_;
-	bool logSEH_;
+
+	struct PageMiscGuiData {
+		int patchingMethod_;
+		bool passExceptions_;
+		int tcpPort_;
+		bool haltInSEH_;
+		bool haltAfterSEH_;
+		bool logSEH_;
+
+		bool operator==(const PageMiscGuiData& rhs) const {
+			return patchingMethod_ == rhs.patchingMethod_ &&
+				passExceptions_ == rhs.passExceptions_ &&
+				tcpPort_ == rhs.tcpPort_ &&
+				haltInSEH_ == rhs.haltInSEH_ &&
+				haltAfterSEH_ == rhs.haltAfterSEH_ &&
+				logSEH_ == rhs.logSEH_;
+		}
+		bool operator!=(const PageMiscGuiData& rhs) const {
+			return !operator==(rhs);
+		}
+	};
+
+	PageMiscGuiData guiData_;
 
 	BEGIN_DDX_MAP(UberstealthPageMisc)
 		DDX_CONTROL_HANDLE(IDC_PROFILES, cboProfiles_)
-		DDX_RADIO(IDC_AUTO_SELECTION, rdbPatchingMethod_)
-		DDX_CHECK(IDC_PASS_EXCEPTIONS, passExceptions_)
-		DDX_CHECK(IDC_HALT_IN_SEH, haltInSEH_)
-		DDX_CHECK(IDC_HALT_AFTER_SEH, haltAfterSEH_)
-		DDX_CHECK(IDC_LOG_SEH, logSEH_)
-		DDX_INT(IDC_TCP_PORT, tcpPort_)
+		DDX_RADIO(IDC_AUTO_SELECTION, guiData_.patchingMethod_)
+		DDX_CHECK(IDC_PASS_EXCEPTIONS, guiData_.passExceptions_)
+		DDX_CHECK(IDC_HALT_IN_SEH, guiData_.haltInSEH_)
+		DDX_CHECK(IDC_HALT_AFTER_SEH, guiData_.haltAfterSEH_)
+		DDX_CHECK(IDC_LOG_SEH, guiData_.logSEH_)
+		DDX_INT(IDC_TCP_PORT, guiData_.tcpPort_)
 	END_DDX_MAP()
 };
 
