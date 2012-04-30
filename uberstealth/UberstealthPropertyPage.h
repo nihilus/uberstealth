@@ -13,23 +13,19 @@ template <class baseT, int idd>
 class UberstealthPropertyPage : 
 	public CPropertyPageImpl<baseT>,
 	public CWinDataExchange<baseT>,
-	public ProfileEventConsumer
-{
+	public ProfileEventConsumer {
 public:
 	enum { IDD = idd };
 
 	UberstealthPropertyPage(ConfigProvider* configProvider) :
 		configProvider_(configProvider),
-		enableState_(false)
-	{
+		enableState_(false) {
 		configProvider_->addListener(this);
 	}
 
-	void changeGlobalEnableState(bool enableState)
-	{
+	void changeGlobalEnableState(bool enableState) {
 		enableState_ = enableState;
-		if (m_hWnd)
-		{
+		if (m_hWnd) {
 			enableControls(enableState);
 		}
 	}

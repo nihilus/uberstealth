@@ -13,7 +13,7 @@
 #endif
 #define UBERSTEALTH_SPECIAL_BUILD L"ALPHA"
 
-#define UBERSTEALTH_COPYRIGHT L"Copyright (C) 2011 Jan Newger"
+#define UBERSTEALTH_COPYRIGHT L"Copyright (C) 2011-2012 Jan Newger"
 
 #define VSTRING(s) L#s
 #define VERSION_STRING(a,b,c) VSTRING(a) L"." VSTRING(b) L"." VSTRING(c)

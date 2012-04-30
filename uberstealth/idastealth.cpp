@@ -20,8 +20,7 @@
 int idaapi callback(void* user_data, int notification_code, va_list va);
 
 namespace {
-	boost::shared_ptr<uberstealth::LocalStealthSession<uberstealth::IDAEngine,uberstealth::IDALogger>> session_;
-	uberstealth::ProfileHelper profileHelper_;
+	boost::shared_ptr<uberstealth::LocalStealthSession<uberstealth::IDAEngine, uberstealth::IDALogger>> session_;
 }
 
 /*********************************************************************
@@ -37,16 +36,14 @@ namespace {
 * Check are added here to ensure the plug-in is compatible with
 * the current disassembly.
 *********************************************************************/
-int __stdcall init()
-{
+int __stdcall init() {
 	if (inf.filetype != f_PE || !inf.is_32bit()) return PLUGIN_SKIP;
 	
 	std::string dashes;
 	dashes.resize(80, '-');
 	msg("%s\n%s\n%s\n", dashes.c_str(), (const char*)uberstealth::UnicodeToString(UBERSTEALTH_INFO_STRING), dashes.c_str());
 	
-	if (!hook_to_notification_point(HT_DBG, callback, NULL))
-	{
+	if (!hook_to_notification_point(HT_DBG, callback, NULL)) {
 		msg("uberstealth: Unable to hook to notification point\n");
 		return PLUGIN_SKIP;
 	}
@@ -60,15 +57,11 @@ int __stdcall init()
 * term is a plugin_t function. It is executed when the plugin is
 * unloading. Typically cleanup code is executed here.
 *********************************************************************/
-void __stdcall term()
-{
-	try
-	{
-		profileHelper_.writeLastProfile();
-	}
-	catch (const std::runtime_error& e)
-	{
-		msg("Error while saving last profile: %s\n", e.what());
+void __stdcall term() {
+	try	{
+		uberstealth::saveCurrentProfileName();
+	} catch (const std::runtime_error& e) {
+		msg("Error while saving last profile: %s.\n", e.what());
 	}
 	unhook_from_notification_point(HT_DBG, callback, NULL);
 }
@@ -83,8 +76,7 @@ void __stdcall term()
 *
 *   success RunPlugin(string name, long arg);
 *********************************************************************/
-void __stdcall run(int arg)
-{
+void __stdcall run(int arg) {
 
 	//  Uncomment the following code to allow plugin unloading.
 	//  This allows the editing/building of the plugin without
@@ -97,70 +89,56 @@ void __stdcall run(int arg)
 	//     (may be automatic if option was selected within wizard)
 	//  4. Run plugin via the menu, hotkey, or IDC statement
 	//
-	if (arg == 666)
-	{
+	if (arg == 666) {
 		PLUGIN.flags |= PLUGIN_UNL;
 		msg("Unloading uberstealth plugin...\n");
-	}
-	else
-	{
+	} else {
 		uberstealth::WTLWrapper& wtlWrapper = uberstealth::WTLWrapper::getInstance();
-		wtlWrapper.showGUI((HWND)callui(ui_get_hwnd).vptr, &profileHelper_);
+		wtlWrapper.showGUI((HWND)callui(ui_get_hwnd).vptr);
 	}
 }
 
-int idaapi callback(void*, int notification_code, va_list va)
-{
-	try
-	{
-		switch (notification_code)
-		{
-		case dbg_process_attach:
-			{
-				// TODO: instantiate RemoteStealthSession if appropriate
-				const debug_event_t* dbgEvent = va_arg(va, const debug_event_t*);
-				session_ = boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine, uberstealth::IDALogger>>(profileHelper_.getLastProfilePath());
-				session_->handleDbgAttach(dbgEvent->pid);
-			}
-			break;
+int idaapi callback(void*, int notification_code, va_list va) {
+	try	{
+		switch (notification_code) {
+		case dbg_process_attach: {
+			// TODO: instantiate RemoteStealthSession if appropriate
+			const debug_event_t* dbgEvent = va_arg(va, const debug_event_t*);
+			session_ = boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine, uberstealth::IDALogger>>(uberstealth::getCurrentProfileFile());
+			session_->handleDbgAttach(dbgEvent->pid);
+		}
+		break;
 
-		case dbg_process_start:
-			{
-				const debug_event_t* dbgEvent = va_arg(va, const debug_event_t*);
-				session_ = boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine, uberstealth::IDALogger>>(profileHelper_.getLastProfilePath());
-				session_->handleProcessStart(dbgEvent->pid, dbgEvent->modinfo.base);
-			}
-			break;
+		case dbg_process_start: {
+			const debug_event_t* dbgEvent = va_arg(va, const debug_event_t*);
+			session_ = boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine, uberstealth::IDALogger>>(uberstealth::getCurrentProfileFile());
+			session_->handleProcessStart(dbgEvent->pid, dbgEvent->modinfo.base);
+		}
+		break;
 
 		case dbg_process_exit:
 			va_arg(va, const debug_event_t*);
 			session_->handleProcessExit();
 			break;
 
-		case dbg_bpt:
-			{
-				thid_t tid = va_arg(va, thid_t);
-				ea_t breakpoint_ea = va_arg(va, ea_t);
-				va_arg(va, int*);
-				session_->handleBreakPoint(tid, breakpoint_ea);
-			}
-			break;
-
-		case dbg_exception:
-			{
-				const debug_event_t* dbgEvent = va_arg(va, const debug_event_t*);
-				va_arg(va, int*);
-				session_->handleException(dbgEvent->exc.code);
-			}
-			break;
+		case dbg_bpt: {
+			thid_t tid = va_arg(va, thid_t);
+			ea_t breakpoint_ea = va_arg(va, ea_t);
+			va_arg(va, int*);
+			session_->handleBreakPoint(tid, breakpoint_ea);
 		}
-	}
-	catch (const std::exception& e)
-	{
+		break;
+
+		case dbg_exception:	{
+			const debug_event_t* dbgEvent = va_arg(va, const debug_event_t*);
+			va_arg(va, int*);
+			session_->handleException(dbgEvent->exc.code);
+		}
+		break;
+		}
+	} catch (const std::exception& e) {
 		msg("uberstealth: Error while processing debug event: %s\n", e.what());
-	}
-	catch (...)
-	{
+	} catch (...) {
 		msg("uberstealth: Unknown error (this should never happen!)\n");
 	}
 	return 0;
@@ -181,8 +159,7 @@ char wanted_name[] 	= "uberstealth";
 char wanted_hotkey[] 	= "";
 
 /* defines the plugins interface to IDA */
-plugin_t PLUGIN =
-{
+plugin_t PLUGIN = {
 	IDP_INTERFACE_VERSION,
 	0,              // plugin flags
 	init,           // initialize

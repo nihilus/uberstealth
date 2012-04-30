@@ -23,7 +23,7 @@ class LocalStealthSession :
 	public StealthSession<LoggerT>,
 	public boost::noncopyable {
 public:
-	LocalStealthSession(const std::string profilePath) :
+	LocalStealthSession(const boost::filesystem::path& profilePath) :
 		StealthSession<LoggerT>(profilePath),
 		rtlDispatchExceptionAddr_(0),
 		ntContinueCallAddr_(0) {}
@@ -290,7 +290,7 @@ private:
 		if (currentProfile_.getDbgPrintExceptionEnabled()) {
 			origDbgUiConvStateChngStruct = nCodeHook_.createHookByName("ntdll.dll", "DbgUiConvertStateChangeStructure", DbgUiConvStateChngStructHook);
 		}
-		if (currentProfile_.getKillAntiAttachEnabled())  {
+		if (currentProfile_.getKillAntiAttachEnabled()) {
 			origDebugActiveProcess = nCodeHook_.createHookByName("kernel32.dll", "DebugActiveProcess", DebugActiveProcessHook);
 		}
 	}

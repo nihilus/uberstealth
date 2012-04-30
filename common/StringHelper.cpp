@@ -20,3 +20,7 @@ uberstealth::UnicodeToString::operator const char*() {
 	}
 	return as_;
 }
+
+uberstealth::UnicodeToString::operator std::string() {
+	return std::string(operator const char*());
+}

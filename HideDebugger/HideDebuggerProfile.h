@@ -28,7 +28,7 @@ private:
 	struct InlinePatchingTranslator	{
 		InlinePatching get_value(const std::string& value) const {
 			if (value == "AutoSelect") return AutoSelect;
-			else if (value == "ForceAbsolute")return ForceAbsolute;
+			else if (value == "ForceAbsolute") return ForceAbsolute;
 			else throw std::runtime_error("Unable to convert given string to InlinePatching enum (" + value + ")");
 		}
 
@@ -45,7 +45,7 @@ private:
 	struct RDTSCModeTranslator {
 		RDTSCMode get_value(const std::string& value) const	{
 			if (value == "Constant") return constant;
-			else if (value == "Increasing")return increasing;
+			else if (value == "Increasing") return increasing;
 			else throw std::runtime_error("Unable to convert given string to RDTSCMode enum (" + value + ")");
 		}
 
@@ -116,37 +116,20 @@ public:
 	VALUE_ACCESSORS(GetTickCountDelta, int, 1)
 	VALUE_ACCESSORS(RemoteTCPPort, int, 4242)
 
-	static HideDebuggerProfile readProfile(const std::string& fileName);
+	static HideDebuggerProfile readProfileFromFile(const boost::filesystem::path& fileName);
 	static HideDebuggerProfile readProfileByName(const std::string& profileName);
-	static void writeProfile(const HideDebuggerProfile& profile, const std::string& fileName);
+	static void writeProfileToFile(const HideDebuggerProfile& profile, const boost::filesystem::path& fileName);
 	static void writeProfileByName(const HideDebuggerProfile& profile, const std::string& profileName);
-	static bool deleteProfileByName(const std::string& profileName);
-	static std::vector<std::string> getProfiles();
 
 private:
 	boost::property_tree::ptree pt_;
 };
 
-// Provides some helper functionality for retrieving the profiles path and storing the profile which was used in the last session.
-class ProfileHelper {
-public:
-	ProfileHelper();
-	static boost::filesystem::path getConfigPath();
-	// Returns the filename of the profile used in the last session.
-	std::string getLastProfileFilename() const { return lastProfile_; }
-	void setLastProfileFilename(const std::string& profileFilename) { lastProfile_ = profileFilename; }
-	// Returns the full path of the profile used in the last session.
-	std::string getLastProfilePath() const { return (profilesPath_ / lastProfile_).string(); }
-	// Write the last used profile to the main config file.
-	void writeLastProfile();
-
-private:
-	std::string readLastProfile(const boost::filesystem::path& mainConfigFile) const;
-	void writeLastProfile(const std::string& lastProfile, const boost::filesystem::path& mainConfigFile) const;
-
-	boost::filesystem::path profilesPath_;
-	boost::filesystem::path mainConfigFile_;
-	std::string lastProfile_;
-};
+bool deleteProfileByName(const std::string& profileName);
+void setCurrentProfileName(const std::string& profileName);
+boost::filesystem::path getCurrentProfileFile();
+std::string getCurrentProfileName();
+std::vector<std::string> getProfileNames();
+void saveCurrentProfileName();
 
 }

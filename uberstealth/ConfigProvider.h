@@ -10,60 +10,47 @@
 
 namespace uberstealth {
 
-class ConfigProvider
-{
+class ConfigProvider {
 public:
-	ConfigProvider(const ProfileHelper* profileHelper)
-	{
-		currentProfileFileName_ = profileHelper->getLastProfileFilename();
-		currentProfile_ = HideDebuggerProfile::readProfileByName(currentProfileFileName_);
+	ConfigProvider() {
+		currentProfile_ = HideDebuggerProfile::readProfileFromFile(getCurrentProfileFile());
 	}
 
-	void addListener(uberstealth::ProfileEventConsumer* consumer)
-	{
+	void addListener(uberstealth::ProfileEventConsumer* consumer) {
 		consumers_.push_back(consumer);
 	}
 
 	// Send loadProfile event to all listeners.
-	void triggerLoadEvent()
-	{
-		BOOST_FOREACH(uberstealth::ProfileEventConsumer* consumer, consumers_)
-		{
+	void triggerLoadEvent()	{
+		BOOST_FOREACH(uberstealth::ProfileEventConsumer* consumer, consumers_) {
 			consumer->loadProfile(currentProfile_);
 		}
 	}
 
 	// Send flushProfile event to all listeners.
-	void triggerFlushProfileEvent()
-	{
-		BOOST_FOREACH(uberstealth::ProfileEventConsumer* consumer, consumers_)
-		{
+	void triggerFlushProfileEvent()	{
+		BOOST_FOREACH(uberstealth::ProfileEventConsumer* consumer, consumers_) {
 			consumer->flushProfile(currentProfile_);
 		}
 	}
 
 	// Send global enable state changed event to all listeners.
-	void triggerChangeGlobalEnableState(bool globalEnable)
-	{
-		BOOST_FOREACH(uberstealth::ProfileEventConsumer* consumer, consumers_)
-		{
+	void triggerChangeGlobalEnableState(bool globalEnable) {
+		BOOST_FOREACH(uberstealth::ProfileEventConsumer* consumer, consumers_) {
 			consumer->changeGlobalEnableState(globalEnable);
 		}
 	}
 
 	// Switch profile and trigger loadProfile event.
-	void triggerSwitchProfile(const std::string& profileName)
-	{
+	void triggerSwitchProfile(const std::string& profileName) {
 		currentProfile_ = uberstealth::HideDebuggerProfile::readProfileByName(profileName);
 		triggerLoadEvent();
 	}
 
 	// Query all consumers to determine if the current profile has unchanged modifications.
-	bool isProfileModified() const
-	{
+	bool isProfileModified() const {
 		bool modified = false;
-		BOOST_FOREACH(uberstealth::ProfileEventConsumer* consumer, consumers_)
-		{
+		BOOST_FOREACH(uberstealth::ProfileEventConsumer* consumer, consumers_) {
 			modified |= consumer->isProfileDirty();
 		}
 		return modified;
@@ -74,7 +61,6 @@ public:
 private:
 	std::vector<uberstealth::ProfileEventConsumer*> consumers_;
 	uberstealth::HideDebuggerProfile currentProfile_;
-	std::string currentProfileFileName_;
 };
 
 }

@@ -6,25 +6,20 @@
 #include <common/StringHelper.h>
 #include "WTLInputBox.h"
 
-LRESULT uberstealth::UberstealthPageMisc::OnAddProfileClick(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-{
+LRESULT uberstealth::UberstealthPageMisc::OnAddProfileClick(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/) {
 	WTLInputBox inputBox;
 	inputBox.DoModal(m_hWnd);
 	std::string input = inputBox.getInput();
-	if (input.length())
-	{
-		try
-		{
+	if (input.length()) {
+		try	{
 			// If profile was modified, let user decide if it should be saved before creating a new one.
-			if (configProvider_->isProfileModified())
-			{
+			if (configProvider_->isProfileModified()) {
 				SaveChangesDialog saveChangesDlg;
 				saveChangesDlg.DoModal(m_hWnd);
-				switch (saveChangesDlg.getAnswer())
-				{
+				switch (saveChangesDlg.getAnswer())	{
 				case SaveChangesDialog::Save:
 					configProvider_->triggerFlushProfileEvent();
-					HideDebuggerProfile::writeProfileByName(configProvider_->getCurrentProfile(),  profileHelper_->getLastProfileFilename());
+					HideDebuggerProfile::writeProfileByName(configProvider_->getCurrentProfile(),  getCurrentProfileName());
 					HideDebuggerProfile::writeProfileByName(configProvider_->getCurrentProfile(), input);
 					break;
 
@@ -36,59 +31,47 @@ LRESULT uberstealth::UberstealthPageMisc::OnAddProfileClick(WORD /*wNotifyCode*/
 				case SaveChangesDialog::Cancel:
 					return 0;
 				}
-				profileHelper_->setLastProfileFilename(input);
+				setCurrentProfileName(input);
 				int item = cboProfiles_.AddString(uberstealth::StringToUnicode(input));
 				cboProfiles_.SetCurSel(item);
-			}
-			else
-			{
+			} else {
 				HideDebuggerProfile::writeProfileByName(configProvider_->getCurrentProfile(), input);
-				profileHelper_->setLastProfileFilename(input);
+				setCurrentProfileName(input);
 				int item = cboProfiles_.AddString(uberstealth::StringToUnicode(input));
 				cboProfiles_.SetCurSel(item);
 			}
-		}
-		catch (const std::runtime_error& e)
-		{
+		} catch (const std::runtime_error& e) {
 			MessageBox(StringToUnicode("Error while writing new profile file: " + std::string(e.what())), L"Error", MB_ICONERROR);
 		}
 	}
 	return 0;
 }
 
-LRESULT uberstealth::UberstealthPageMisc::OnDelProfileClick(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-{
+LRESULT uberstealth::UberstealthPageMisc::OnDelProfileClick(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/) {
 	int itemID = cboProfiles_.GetCurSel();
-	if (itemID != CB_ERR)
-	{
+	if (itemID != CB_ERR) {
 		WTL::CString itemText;
 		cboProfiles_.GetLBText(itemID, itemText);
-		if (uberstealth::HideDebuggerProfile::deleteProfileByName(std::string(CT2A(itemText, CP_UTF8))))
-		{
+		if (deleteProfileByName(std::string(CT2A(itemText, CP_UTF8)))) {
 			cboProfiles_.DeleteString(itemID);
 			itemID = itemID > 0 ? --itemID : 0;
 			cboProfiles_.SetCurSel(itemID);
 			switchProfile();
-		}
-		else
-		{
+		} else {
 			MessageBox(L"Unable to delete selected file.", L"Error", MB_ICONERROR);
 		}
 	}
 	return 0;
 }
 
-LRESULT uberstealth::UberstealthPageMisc::OnProfilesSelChange(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-{
-	if (configProvider_->isProfileModified())
-	{
+LRESULT uberstealth::UberstealthPageMisc::OnProfilesSelChange(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/) {
+	if (configProvider_->isProfileModified()) {
 		SaveChangesDialog saveChangesDlg;
 		saveChangesDlg.DoModal(m_hWnd);
-		switch (saveChangesDlg.getAnswer())
-		{
+		switch (saveChangesDlg.getAnswer())	{
 		case SaveChangesDialog::Save:
 			configProvider_->triggerFlushProfileEvent();
-			HideDebuggerProfile::writeProfileByName(configProvider_->getCurrentProfile(),  profileHelper_->getLastProfileFilename());
+			HideDebuggerProfile::writeProfileByName(configProvider_->getCurrentProfile(),  getCurrentProfileName());
 			break;
 
 		case SaveChangesDialog::DontSave:
@@ -102,8 +85,7 @@ LRESULT uberstealth::UberstealthPageMisc::OnProfilesSelChange(WORD /*wNotifyCode
 	return 0;
 }
 
-void uberstealth::UberstealthPageMisc::enableControls(bool enabled)
-{
+void uberstealth::UberstealthPageMisc::enableControls(bool enabled) {
 	BOOL state = enabled ? TRUE : FALSE;
 #ifdef OLLYSTEALTH
 	::EnableWindow(GetDlgItem(IDC_TCP_PORT), FALSE);
@@ -122,10 +104,8 @@ void uberstealth::UberstealthPageMisc::enableControls(bool enabled)
 	::EnableWindow(GetDlgItem(IDC_FORCE_ABS), state);
 }
 
-void uberstealth::UberstealthPageMisc::loadProfile(const uberstealth::HideDebuggerProfile& profile)
-{
-	if (m_hWnd)
-	{
+void uberstealth::UberstealthPageMisc::loadProfile(const uberstealth::HideDebuggerProfile& profile) {
+	if (m_hWnd) {
 		rdbPatchingMethod_ = profile.getInlinePatchingMethodValue();
 		passExceptions_ = profile.getPassUnknownExceptionsEnabled();
 		tcpPort_ = profile.getRemoteTCPPortValue();
@@ -136,12 +116,9 @@ void uberstealth::UberstealthPageMisc::loadProfile(const uberstealth::HideDebugg
 	}
 }
 
-void uberstealth::UberstealthPageMisc::flushProfile(uberstealth::HideDebuggerProfile& profile)
-{
-	if (m_hWnd)
-	{
-		if (DoDataExchange(TRUE))
-		{
+void uberstealth::UberstealthPageMisc::flushProfile(uberstealth::HideDebuggerProfile& profile) {
+	if (m_hWnd) {
+		if (DoDataExchange(TRUE)) {
 			profile.setPassUnknownExceptionsEnabled(passExceptions_);
 			profile.setInlinePatchingMethodValue((InlinePatching)rdbPatchingMethod_);
 			profile.setRemoteTCPPortValue(tcpPort_);
@@ -152,8 +129,7 @@ void uberstealth::UberstealthPageMisc::flushProfile(uberstealth::HideDebuggerPro
 	}
 }
 
-BOOL uberstealth::UberstealthPageMisc::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
-{
+BOOL uberstealth::UberstealthPageMisc::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled) {
 	DoDataExchange(FALSE);
 	initComboBox();
 
@@ -170,35 +146,28 @@ BOOL uberstealth::UberstealthPageMisc::OnInitDialog(UINT /*uMsg*/, WPARAM /*wPar
 }
 
 // Switch profile to profile selected in combobox.
-void uberstealth::UberstealthPageMisc::switchProfile()
-{
+void uberstealth::UberstealthPageMisc::switchProfile() {
 	int itemID = cboProfiles_.GetCurSel();
-	if (itemID != CB_ERR)
-	{		
+	if (itemID != CB_ERR) {		
 		WTL::CString itemText;
 		cboProfiles_.GetLBText(itemID, itemText);
 		std::string profile = std::string(CT2A(itemText, CP_UTF8));
 		configProvider_->triggerSwitchProfile(profile);
-		profileHelper_->setLastProfileFilename(profile);
+		setCurrentProfileName(profile);
 	}
 }
 
-void uberstealth::UberstealthPageMisc::initComboBox()
-{
-	BOOST_FOREACH(const std::string& profile, uberstealth::HideDebuggerProfile::getProfiles())
-	{
+void uberstealth::UberstealthPageMisc::initComboBox() {
+	BOOST_FOREACH(const std::string& profile, getProfileNames()) {
 		int itemID = cboProfiles_.AddString(StringToUnicode(profile));
-		if (profile == profileHelper_->getLastProfileFilename())
-		{
+		if (profile == getCurrentProfileName()) {
 			cboProfiles_.SetCurSel(itemID);
 		}
 	}
 }
 
-bool uberstealth::UberstealthPageMisc::isProfileDirty()
-{
-	if (m_hWnd)
-	{
+bool uberstealth::UberstealthPageMisc::isProfileDirty() {
+	if (m_hWnd)	{
 		return (IsDlgButtonChecked(IDC_PASS_EXCEPTIONS) == BST_CHECKED ? true : false) != passExceptions_ ||
 			   (IsDlgButtonChecked(IDC_HALT_IN_SEH) == BST_CHECKED ? true : false) != haltInSEH_ ||
 			   (IsDlgButtonChecked(IDC_HALT_AFTER_SEH) == BST_CHECKED ? true : false) != haltAfterSEH_ ||
@@ -209,14 +178,12 @@ bool uberstealth::UberstealthPageMisc::isProfileDirty()
 	return false;
 }
 
-int uberstealth::UberstealthPageMisc::getPatchingMethod()
-{
+int uberstealth::UberstealthPageMisc::getPatchingMethod() {
 	// TODO: read actual value from control.
 	return rdbPatchingMethod_;
 }
 
-int uberstealth::UberstealthPageMisc::getTCPPort()
-{
+int uberstealth::UberstealthPageMisc::getTCPPort() {
 	// TODO: read actual value from control.
 	return tcpPort_;
 }

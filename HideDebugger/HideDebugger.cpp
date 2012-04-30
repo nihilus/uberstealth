@@ -782,7 +782,7 @@ void applyConfigFromFile(const std::string& configFile)
 {
 	try
 	{
-		uberstealth::HideDebuggerProfile profile = uberstealth::HideDebuggerProfile::readProfile(configFile);
+		uberstealth::HideDebuggerProfile profile = uberstealth::HideDebuggerProfile::readProfileFromFile(configFile);
 
 		bool forceAbsJumps = profile.getInlinePatchingMethodValue() == uberstealth::ForceAbsolute;
 		nCodeHook.forceAbsoluteJumps(forceAbsJumps);

@@ -35,6 +35,7 @@ public:
 	}
 
 	operator const char*();
+	operator std::string();
 	
 private:
 	const std::wstring& s_;

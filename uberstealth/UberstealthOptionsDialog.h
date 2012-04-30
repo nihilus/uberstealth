@@ -14,18 +14,15 @@
 
 namespace uberstealth {
 
-class UberstealthOptionsDialog : public CPropertySheetImpl<UberstealthOptionsDialog>
-{
+class UberstealthOptionsDialog : public CPropertySheetImpl<UberstealthOptionsDialog> {
 public:
-	UberstealthOptionsDialog(LPCTSTR title, ProfileHelper* profileHelper) :
-		CPropertySheetImpl(title),
-		profileHelper_(profileHelper)
-	{
-		configProvider_ = boost::make_shared<ConfigProvider>(profileHelper);
+	UberstealthOptionsDialog(LPCTSTR title) :
+		CPropertySheetImpl(title) {
+		configProvider_ = boost::make_shared<ConfigProvider>();
 		page1_ = boost::shared_ptr<UberstealthPage1>(new UberstealthPage1(configProvider_.get()));
 		page2_ = boost::shared_ptr<UberstealthPage2>(new UberstealthPage2(configProvider_.get()));
 		page3_ = boost::shared_ptr<UberstealthDriversPage>(new UberstealthDriversPage(configProvider_.get()));
-		page4_ = boost::shared_ptr<UberstealthPageMisc>(new UberstealthPageMisc(configProvider_.get(), profileHelper));
+		page4_ = boost::shared_ptr<UberstealthPageMisc>(new UberstealthPageMisc(configProvider_.get()));
 		pageAbout_ = boost::shared_ptr<UberstealthAboutPage>(new UberstealthAboutPage());
 		AddPage(*page1_);
 		AddPage(*page2_);
@@ -42,18 +39,16 @@ private:
 		CHAIN_MSG_MAP(CPropertySheetImpl<UberstealthOptionsDialog>)
 	END_MSG_MAP()
 
-	LRESULT OnShowWindow(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
-	{
+	LRESULT OnShowWindow(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled) {
 		if (wParam == TRUE) CenterWindow();
 		bHandled = FALSE;
 		return 0;
 	}
 
-	LRESULT OnOkButton(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& bHandled)
-	{
+	LRESULT OnOkButton(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& bHandled) {
 		bHandled = FALSE;
 		configProvider_->triggerFlushProfileEvent();
-		HideDebuggerProfile::writeProfileByName(configProvider_->getCurrentProfile(), profileHelper_->getLastProfileFilename());
+		HideDebuggerProfile::writeProfileByName(configProvider_->getCurrentProfile(), getCurrentProfileName());
 		return 0;
 	}
 
@@ -63,7 +58,6 @@ private:
 	boost::shared_ptr<UberstealthPageMisc> page4_;
 	boost::shared_ptr<UberstealthAboutPage> pageAbout_;
 	boost::shared_ptr<ConfigProvider> configProvider_;
-	ProfileHelper* profileHelper_;
 };
 
 }

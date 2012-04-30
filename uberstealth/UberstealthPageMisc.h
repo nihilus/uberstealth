@@ -10,9 +10,8 @@ namespace uberstealth {
 class UberstealthPageMisc : public UberstealthPropertyPage<UberstealthPageMisc, IDD_DIALOG4>
 {
 public:
-	UberstealthPageMisc(ConfigProvider* configProvider, ProfileHelper* profileHelper) :
-		UberstealthPropertyPage<UberstealthPageMisc, IDD_DIALOG4>(configProvider),
-		profileHelper_(profileHelper) {}
+	UberstealthPageMisc(ConfigProvider* configProvider) :
+		UberstealthPropertyPage<UberstealthPageMisc, IDD_DIALOG4>(configProvider) {}
 
 	void loadProfile(const uberstealth::HideDebuggerProfile& profile);
 	void flushProfile(uberstealth::HideDebuggerProfile& profile);
@@ -50,7 +49,6 @@ private:
 	bool haltInSEH_;
 	bool haltAfterSEH_;
 	bool logSEH_;
-	ProfileHelper* profileHelper_;
 
 	BEGIN_DDX_MAP(UberstealthPageMisc)
 		DDX_CONTROL_HANDLE(IDC_PROFILES, cboProfiles_)

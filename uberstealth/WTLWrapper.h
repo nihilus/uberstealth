@@ -20,39 +20,30 @@
 
 namespace uberstealth {
 
-	class WTLWrapper : public boost::noncopyable
-{
+class WTLWrapper : public boost::noncopyable {
 public:
-
-	static WTLWrapper& getInstance()
-	{
+	static WTLWrapper& getInstance() {
 		static WTLWrapper instance_;
 		return instance_;
 	}
 
-	~WTLWrapper()
-	{
+	~WTLWrapper() {
 		module_.Term();
 		::CoUninitialize();
 	}
 
-	void showGUI(HWND hWndParent, ProfileHelper* profileHelper)
-	{
-		try
-		{
-			UberstealthOptionsDialog dlg(UBERSTEALTH_NAME, profileHelper);
+	void showGUI(HWND hWndParent)	{
+		try	{
+			UberstealthOptionsDialog dlg(UBERSTEALTH_NAME);
 			dlg.DoModal(hWndParent);
-		}
-		catch (const std::exception& e)
-		{
+		} catch (const std::exception& e) {
 			std::string err = "Error in options dialog: " + std::string(e.what());
 			::MessageBox(hWndParent, StringToUnicode(err), L"uberstealth", MB_ICONERROR);
 		}
 	}
 
 private:
-	WTLWrapper()
-	{
+	WTLWrapper() {
 		HRESULT hRes = ::CoInitialize(NULL);
 		ATLASSERT(SUCCEEDED(hRes));
 		AtlInitCommonControls(ICC_BAR_CLASSES | ICC_LINK_CLASS);

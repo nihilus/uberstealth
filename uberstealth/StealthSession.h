@@ -39,10 +39,10 @@ namespace uberstealth {
 template <typename LoggerT>
 class StealthSession {
 public:
-	StealthSession(const std::string& profilePath):
+	StealthSession(const boost::filesystem::path& profilePath):
 		hProcess_(INVALID_HANDLE_VALUE),
 		profilePath_(profilePath),
-		currentProfile_(HideDebuggerProfile::readProfileByName(profilePath)) {}
+		currentProfile_(HideDebuggerProfile::readProfileFromFile(profilePath)) {}
 	virtual ~StealthSession() {}
 	
 	void handleDbgAttach(unsigned int processId) {
@@ -67,7 +67,7 @@ public:
 				// TODO: move functionality of "remove" into destructor.
 				if (ipc_) ipc_->remove();
 				ipc_ = boost::make_shared<uberstealth::IPCConfigExchangeWriter>(processId);
-				ipc_->setProfileFile(profilePath_);
+				ipc_->setProfileFile(profilePath_.string());
 				ipc_->setIPCPEHeaderData(uberstealth::IPCPEHeaderData(baseAddress, iatMod.readNTHeaders()));
 				ipc_->setPERestoreRequired(true);
 				iatMod.writeIAT(getStealthDllPath());
@@ -189,7 +189,7 @@ private:
 			performCommonInit(processId);
 			if (ipc_) ipc_->remove();
 			ipc_ = boost::make_shared<uberstealth::IPCConfigExchangeWriter>(processId);
-			ipc_->setProfileFile(profilePath_);
+			ipc_->setProfileFile(profilePath_.string());
 			ipc_->setPERestoreRequired(false);
 
 			Process process(processId);
@@ -214,7 +214,7 @@ private:
 	DriverControl stealthDriver_;
 	HANDLE hProcess_;
 	boost::shared_ptr<InjectionBeacon> injectionBeacon_;
-	std::string profilePath_;
+	boost::filesystem::path profilePath_;
 };
 
 }
