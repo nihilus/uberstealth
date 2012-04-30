@@ -101,7 +101,7 @@ public:
 	GENERAL_ACCESSORS(RDTSCDriver, Load, bool, false)
 	GENERAL_ACCESSORS(RDTSCDriver, Unload, bool, false)
 	GENERAL_ACCESSORS(RDTSCDriver, CustomName, std::string, "RDTSCEMU")
-	// TODO: remove UseCustomName since its not needed anymore
+	// TODO(jan.newger@newgre.net): remove UseCustomName since its not needed anymore
 	GENERAL_ACCESSORS(RDTSCDriver, UseCustomName, bool, false)
 	GENERAL_ACCESSORS(RDTSCDriver, Delta, int, 1)
 
@@ -110,7 +110,7 @@ public:
 	GENERAL_ACCESSORS(StealthDriver, CustomName, std::string, "STEALTHDRIVER")
 	GENERAL_ACCESSORS(StealthDriver, NtQueryInformationProcess, bool, false)
 	GENERAL_ACCESSORS(StealthDriver, NtSetInformationThread, bool, false)
-	// TODO: remove UseCustomName since its not needed anymore
+	// TODO(jan.newger@newgre.net): remove UseCustomName since its not needed anymore
 	GENERAL_ACCESSORS(StealthDriver, UseCustomName, bool, false)
 
 	VALUE_ACCESSORS(GetTickCountDelta, int, 1)

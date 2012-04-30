@@ -1,7 +1,5 @@
 #include "StealthImplementation.h"
 
-// forward declarations
-
 NTSTATUS NtSetInformationThreadHook(__in HANDLE ThreadHandle,
 									__in THREADINFOCLASS ThreadInformationClass,
 									__in_bcount(ThreadInformationLength) PVOID ThreadInformation,
@@ -62,7 +60,7 @@ void hookEntry(void* zwFunction, void* hook, void** originalFunction)
 {
 	// first translate Zw* to Nt* function - the first instruction moves
 	// in each Zw* routine moves the corresponding Nt* syscall index to a register
-	// TODO: use disassembler to get Nt* index
+	// TODO(jan.newger@newgre.net): use disassembler to get Nt* index
 	unsigned int index = *(unsigned int*)((unsigned char*)zwFunction + 1);
 	void* oldEntry = (void*)InterlockedExchange((volatile LONG*)&mappedSysCallTable[index], (LONG)hook);
 	if (originalFunction) *originalFunction = oldEntry;

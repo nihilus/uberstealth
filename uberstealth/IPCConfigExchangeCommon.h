@@ -17,7 +17,7 @@ namespace uberstealth {
 	std::string getSegmentName(unsigned int processID);
 	std::string getSegmentName();
 	
-	// TODO: store everything else in this struct as well (path, profile, etc).
+	// TODO(jan.newger@newgre.net): store everything else in this struct as well (path, profile, etc).
 	struct IPCPEHeaderData {
 		IPCPEHeaderData() : imageBase(0) {}
 		IPCPEHeaderData(uintptr_t base, const IMAGE_NT_HEADERS& headers) :

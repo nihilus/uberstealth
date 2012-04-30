@@ -37,7 +37,7 @@ VOID hookInterrupt(PVOID newHandler, ULONG number, PUINT_PTR oldHandler)
 
 	UINT_PTR origHandler = (ULONG)(idt[number].highOffset) << 16 | idt[number].lowOffset;
 
-	// TODO: MAKE ATOMIC!!!!!!!!!!!!!!!!!
+	// TODO(jan.newger@newgre.net): MAKE ATOMIC!!!!!!!!!!!!!!!!!
 	idt[number].lowOffset = (USHORT)newHandler;
 	idt[number].highOffset = (USHORT)((ULONG)newHandler >> 16);
 	if (oldHandler) *oldHandler = origHandler;

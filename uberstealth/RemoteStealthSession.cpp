@@ -30,7 +30,7 @@ void uberstealth::RemoteStealthSession::connectToServer() {
 		client_ = boost::make_shared<uberstealth::RemoteStealthClient>(boost::ref(ioService_), iterator);
 		client_->connect();
 	} catch (const std::exception& e) {
-		// TODO: should this really be catched here instead of letting it bubble up the stack?
+		// TODO(jan.newger@newgre.net): should this really be catched here instead of letting it bubble up the stack?
 		logger_.logString("Error while connecting: %s.\n", e.what());
 	}
 }

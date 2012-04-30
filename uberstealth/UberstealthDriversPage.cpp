@@ -106,7 +106,7 @@ bool uberstealth::UberstealthDriversPage::isProfileDirty()
 
 int uberstealth::UberstealthDriversPage::getRDTSCMode() const
 {
-	// TODO: get actual index.
+	// TODO(jan.newger@newgre.net): get actual index.
 	return rdbIndex_;
 }
 

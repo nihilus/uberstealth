@@ -179,11 +179,11 @@ bool uberstealth::UberstealthPageMisc::isProfileDirty() {
 }
 
 int uberstealth::UberstealthPageMisc::getPatchingMethod() {
-	// TODO: read actual value from control.
+	// TODO(jan.newger@newgre.net): read actual value from control.
 	return rdbPatchingMethod_;
 }
 
 int uberstealth::UberstealthPageMisc::getTCPPort() {
-	// TODO: read actual value from control.
+	// TODO(jan.newger@newgre.net): read actual value from control.
 	return tcpPort_;
 }

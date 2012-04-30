@@ -6,7 +6,7 @@
 #include <plugin.h>
 #pragma warning(default : 4200)
 
-// TODO: NEEDS OFFICIAL IMPORT LIB!!!
+// TODO(jan.newger@newgre.net): NEEDS OFFICIAL IMPORT LIB!!!
 extern "C" __declspec(dllimport) int Run(t_status status,int pass);
 extern "C" __declspec(dllimport) int Setint3breakpoint(ulong addr, ulong type, int fnindex, int limit, int count, wchar_t *condition, wchar_t *expression, wchar_t *exprtype);
 

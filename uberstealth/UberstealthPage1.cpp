@@ -87,7 +87,7 @@ void uberstealth::UberstealthPage1::flushProfile(uberstealth::HideDebuggerProfil
 
 int uberstealth::UberstealthPage1::getTickCountDelta()
 {
-	// TODO: return acutal value from control.
+	// TODO(jan.newger@newgre.net): return acutal value from control.
 	return tickDelta_;
 }
 

@@ -102,7 +102,7 @@ int idaapi callback(void*, int notification_code, va_list va) {
 	try	{
 		switch (notification_code) {
 		case dbg_process_attach: {
-			// TODO: instantiate RemoteStealthSession if appropriate
+			// TODO(jan.newger@newgre.net): instantiate RemoteStealthSession if appropriate
 			const debug_event_t* dbgEvent = va_arg(va, const debug_event_t*);
 			session_ = boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine, uberstealth::IDALogger>>(uberstealth::getCurrentProfileFile());
 			session_->handleDbgAttach(dbgEvent->pid);

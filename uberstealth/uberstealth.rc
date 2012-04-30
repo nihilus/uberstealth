@@ -31,7 +31,7 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSM
 CAPTION "About uberstealth"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    CTEXT           "uberstealth is based on IDAStealth\nThx to everyone for suggestions and feedback\n\n",IDC_ABOUT_TXT,7,182,271,50
+    CTEXT           "\nuberstealth is based on IDAStealth\n\n\n",IDC_ABOUT_TXT,7,182,271,50
     CONTROL         "<a>http://code.google.com/uberstealth</a>",IDC_SYSLINK,
                     "SysLink",0x0,83,238,119,11
 END

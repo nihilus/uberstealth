@@ -27,15 +27,6 @@
 
 namespace uberstealth {
 
-// TODO:
-// 1) engine einfach als Parameter übergeben (kann aber auch template parameter bleiben=
-// 2) StealthSession braucht nur logging; LocalStealthSession braucht allerdings auch:
-	/*bool setBreakpoint(uintptr_t address) const;
-	bool removeBreakpoint(uintptr_t address) const;
-	void setExceptionOption(unsigned int exceptionCode, bool ignore) const;
-	bool continueProcess() const;*/
-// 3) -> 2 Klassen: a) Logger b) Debugger
-
 template <typename LoggerT>
 class StealthSession {
 public:
@@ -55,7 +46,7 @@ public:
 
 	void handleProcessStart(unsigned int processId, uintptr_t baseAddress) {
 		if (currentProfile_.getEnableDbgStartEnabled()) {
-			// TODO: the exception should NOT be catched here; instead it should bubble up to the caller which then needs to handle it!
+			// TODO(jan.newger@newgre.net): the exception should NOT be catched here; instead it should bubble up to the caller which then needs to handle it!
 			try	{
 				injectionBeacon_ = boost::make_shared<InjectionBeacon>(processId);
 				performCommonInit(processId);
@@ -64,7 +55,7 @@ public:
 				Process process(processId);
 				IATModifier iatMod(process);
 				iatMod.setImageBase(baseAddress);
-				// TODO: move functionality of "remove" into destructor.
+				// TODO(jan.newger@newgre.net): move functionality of "remove" into destructor.
 				if (ipc_) ipc_->remove();
 				ipc_ = boost::make_shared<uberstealth::IPCConfigExchangeWriter>(processId);
 				ipc_->setProfileFile(profilePath_.string());
@@ -93,7 +84,9 @@ protected:
 	virtual std::string getStealthDllPath() =0;
 
 	void handleRtlGetNtGlobalFlags(unsigned int processID) {
-		if (!currentProfile_.getRtlGetNtGlobalFlagsEnabled()) return;
+		if (!currentProfile_.getRtlGetNtGlobalFlagsEnabled()) {
+			return;
+		}
 
 		// assume that ntdll is loaded to the same IBA across processes on ASLR systems
 		HMODULE hNtDll = LoadLibrary(L"ntdll.dll");

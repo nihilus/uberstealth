@@ -15,7 +15,7 @@
 #include "resource.h"
 #include "version.h"
 
-// TODO: NEEDS official import library!
+// TODO(jan.newger@newgre.net): NEEDS official import library!
 extern "C" __declspec(dllimport) const HWND _hwollymain;
 extern "C" __declspec(dllimport) t_run _run;
 extern "C" __declspec(dllimport) ulong _processid;
@@ -52,7 +52,7 @@ extc _export void cdecl ODBG2_Pluginmainloop(DEBUG_EVENT* debugEvent)
 {
 	if (!debugEvent) return;
 
-	// TODO: wrap the rest of the procedure in try...catch! do the same for IDAStealth.cpp!
+	// TODO(jan.newger@newgre.net): wrap the rest of the procedure in try...catch! do the same for IDAStealth.cpp!
 	switch (debugEvent->dwDebugEventCode)
 	{
 		case CREATE_PROCESS_DEBUG_EVENT:
@@ -71,7 +71,7 @@ extc _export void cdecl ODBG2_Pluginmainloop(DEBUG_EVENT* debugEvent)
 		case EXCEPTION_DEBUG_EVENT:
 			if (debugEvent->dwDebugEventCode == EXCEPTION_BREAKPOINT)
 			{
-				// TODO: do we catch breakpoints set by ollydbg here as well?
+				// TODO(jan.newger@newgre.net): do we catch breakpoints set by ollydbg here as well?
 				session_->handleBreakPoint(debugEvent->dwThreadId, reinterpret_cast<uintptr_t>(debugEvent->u.Exception.ExceptionRecord.ExceptionAddress));
 			}
 			break;

@@ -10,15 +10,15 @@
 
 namespace uberstealth {
 
-class UberstealthAboutPage : public CPropertyPageImpl<UberstealthAboutPage>
-{
+class UberstealthAboutPage : public CPropertyPageImpl<UberstealthAboutPage> {
 public:
 	enum { IDD = IDD_ABOUT };
 	
 	UberstealthAboutPage() : hGlobal_(NULL) {}
-	~UberstealthAboutPage()
-	{
-		if (hGlobal_) GlobalFree(hGlobal_);
+	~UberstealthAboutPage()	{
+		if (hGlobal_) {
+			GlobalFree(hGlobal_);
+		}
 	}
 
 private:
@@ -31,8 +31,7 @@ private:
 
 	// Draw picture manually, because if we let windows draw it via the picture box
 	// there are some nasty artifacts in the logo; no idea why.
-	LRESULT OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
-	{
+	LRESULT OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 		PAINTSTRUCT ps;
 		HDC dc = BeginPaint(&ps);
 		RECT r;
@@ -45,8 +44,7 @@ private:
 	// Nasty trick to get the module handle of our plugin.
 	static void arbitraryAddress() {}
 
-	BOOL OnInitDialog(HWND /*hwndFocus*/, LPARAM /*lParam*/)
-	{
+	BOOL OnInitDialog(HWND /*hwndFocus*/, LPARAM /*lParam*/) {
 		HMODULE hModule;
 		GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCWSTR)&arbitraryAddress, &hModule);
 		ResourceItem ri(hModule, IDR_LOGO, "JPG");
@@ -63,7 +61,7 @@ private:
 		logo_.Load(jpegStream);
 		jpegStream->Release();
 
-		// initialize syslink control
+		// Initialize syslink control.
 		linkCtrl_ = GetDlgItem(IDC_SYSLINK);
 		LITEM item;
 		item.mask = LIF_ITEMINDEX | LIF_URL;
@@ -80,8 +78,7 @@ private:
 		return FALSE;
 	}
 
-	LRESULT OnLinkClick(LPNMHDR pnmh)
-	{
+	LRESULT OnLinkClick(LPNMHDR pnmh) {
 		PNMLINK pNMLink = (PNMLINK)pnmh;
 		ShellExecuteW(m_hWnd, L"open", pNMLink->item.szUrl, NULL, NULL, SW_SHOWNORMAL);
 		return 0;
