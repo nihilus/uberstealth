@@ -43,8 +43,7 @@
 // FILE_READ_ACCESS
 // FILE_WRITE_ACCESS
 
-enum RDTSCMode
-{
+enum RDTSCMode {
 	constant,
 	increasing
 };

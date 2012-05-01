@@ -40,9 +40,7 @@
 // FILE_READ_ACCESS
 // FILE_WRITE_ACCESS
 
-// hook flags
-enum StealthHook
-{
+enum StealthHook {
 	SH_NtSetInformationThread,
 	SH_NtQueryInformationProcess
 };

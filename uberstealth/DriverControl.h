@@ -5,10 +5,8 @@
 #include <iostream>
 #include "ResourceItem.h"
 
-class DriverControl
-{
+class DriverControl {
 public:
-
 	DriverControl();
 	void startDriver(const ResourceItem& ri, const std::string& driverName);
 	void stopDriver();
@@ -17,10 +15,9 @@ public:
 	bool isRunning() const { return running_; }
 
 private:
-	
+	void controlDriver(const std::string& driverPath, const std::string& driverName, bool load) const;
+	void throwSysError(unsigned int lastError, const std::string& msg) const;
 	bool running_;
 	std::string driverPath_;
 	std::string driverName_;
-	void controlDriver(const std::string& driverPath, const std::string& driverName, bool load) const;
-	void throwSysError(unsigned int lastError, const std::string& msg) const;
 };
