@@ -4,10 +4,10 @@
 
 int _tmain(int argc, char* argv[]) {
 	try {		
-		std::cout << REMOTESTEALTH_INFO_STRING << std::endl << std::endl;
+		std::wcout << REMOTESTEALTH_INFO_STRING << std::endl << std::endl;
 
 		if (!boost::filesystem::exists("HideDebugger.dll")) {
-			std::cout << "HideDebugger.dll not found...terminating" << std::endl;
+			std::cout << "HideDebugger.dll not found...terminating." << std::endl;
 			return 1;
 		}
 

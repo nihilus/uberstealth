@@ -19,7 +19,7 @@
 int idaapi callback(void* user_data, int notification_code, va_list va);
 
 namespace {
-	boost::shared_ptr<uberstealth::LocalStealthSession<uberstealth::IDAEngine, uberstealth::IDALogger>> session_;
+	boost::shared_ptr<uberstealth::StealthSession<uberstealth::IDALogger>> session_;
 }
 
 /*********************************************************************
@@ -36,8 +36,9 @@ namespace {
 * the current disassembly.
 *********************************************************************/
 int __stdcall init() {
-	if (inf.filetype != f_PE || !inf.is_32bit()) return PLUGIN_SKIP;
-	
+	if (inf.filetype != f_PE || !inf.is_32bit()) {
+		return PLUGIN_SKIP;
+	}
 	std::string dashes;
 	dashes.resize(80, '-');
 	msg("%s\n%s\n%s\n", dashes.c_str(), (const char*)uberstealth::UnicodeToString(UBERSTEALTH_INFO_STRING), dashes.c_str());
@@ -46,7 +47,6 @@ int __stdcall init() {
 		msg("uberstealth: Unable to hook to notification point\n");
 		return PLUGIN_SKIP;
 	}
-	
 	return PLUGIN_KEEP;
 }
 
@@ -98,19 +98,23 @@ void __stdcall run(int arg) {
 }
 
 int idaapi callback(void*, int notification_code, va_list va) {
+	using uberstealth::LocalStealthSession;
+	using uberstealth::IDAEngine;
+	using uberstealth::IDALogger;
+
 	try	{
 		switch (notification_code) {
 		case dbg_process_attach: {
 			// TODO(jan.newger@newgre.net): instantiate RemoteStealthSession if appropriate
 			const debug_event_t* dbgEvent = va_arg(va, const debug_event_t*);
-			session_ = boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine, uberstealth::IDALogger>>(uberstealth::getCurrentProfileFile());
+			session_ = boost::make_shared<LocalStealthSession<IDAEngine, IDALogger>>(uberstealth::getCurrentProfileFile());
 			session_->handleDbgAttach(dbgEvent->pid);
 		}
 		break;
 
 		case dbg_process_start: {
 			const debug_event_t* dbgEvent = va_arg(va, const debug_event_t*);
-			session_ = boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine, uberstealth::IDALogger>>(uberstealth::getCurrentProfileFile());
+			session_ = boost::make_shared<LocalStealthSession<IDAEngine, IDALogger>>(uberstealth::getCurrentProfileFile());
 			session_->handleProcessStart(dbgEvent->pid, dbgEvent->modinfo.base);
 		}
 		break;

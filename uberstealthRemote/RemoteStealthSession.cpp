@@ -12,10 +12,8 @@ const std::string StealthDllFileName = "HideDebugger.dll";
 
 }
 
-// TODO(jan.newger@newgre.net): wrap profile path string into a "profile file" class which will cleanup its temp file when destructed.
-uberstealth::RemoteStealthSession::RemoteStealthSession(const std::string& configFile) :
-	StealthSession(configFile)
-	{
+uberstealth::RemoteStealthSession::RemoteStealthSession(const boost::filesystem::path& configFile) :
+	StealthSession(configFile) {
 	wchar_t buffer[MAX_PATH];
 	if (!GetModuleFileName(NULL, buffer, MAX_PATH)) {
 		throw std::runtime_error("Unable to determine location of executable for current process.");
@@ -38,10 +36,10 @@ std::string uberstealth::RemoteStealthSession::getStealthDllPath() {
 	return stealthDll_;
 }
 
-void uberstealth::RemoteStealthSession::handleBreakPoint(unsigned int threadID, uintptr_t address) {
+void uberstealth::RemoteStealthSession::handleBreakPoint(unsigned int /*threadID*/, uintptr_t /*address*/) {
 	// TODO(jan.newger@newgre.net): implement.
 }
 
-void uberstealth::RemoteStealthSession::handleException(unsigned int exceptionCode) {
+void uberstealth::RemoteStealthSession::handleException(unsigned int /*exceptionCode*/) {
 	// TODO(jan.newger@newgre.net): implement.
 }

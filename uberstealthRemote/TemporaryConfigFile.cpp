@@ -1,7 +1,5 @@
 #include "TemporaryConfigFile.h"
 #include <Windows.h>
-#include <boost/filesystem.hpp>
-#include <common/StringHelper.h>
 
 TemporaryConfigFile::TemporaryConfigFile(const std::string& serializedConfig) {
 	wchar_t tmpPath[MAX_PATH];
@@ -9,8 +7,8 @@ TemporaryConfigFile::TemporaryConfigFile(const std::string& serializedConfig) {
 	GetTempPath(MAX_PATH, tmpPath);
 	if (!GetTempFileName(tmpPath, L"h4x0r", 0, tmpFileName))
 		throw std::runtime_error("Error while trying to serialize configuration to file: unable to get path for temp file.");
-	fileName_ = (const char*)uberstealth::UnicodeToString(tmpFileName);
-	std::ofstream ofs(fileName_.c_str());
+	fileName_ = boost::filesystem::path(tmpFileName);
+	std::ofstream ofs(fileName_.string().c_str());
 	ofs.write(serializedConfig.c_str(), serializedConfig.length());
 }
 

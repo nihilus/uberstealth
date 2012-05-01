@@ -3,14 +3,15 @@
 #pragma once
 
 #include <iostream>
+#include <boost/filesystem.hpp>
 #include <boost/noncopyable.hpp>
 
 class TemporaryConfigFile : public boost::noncopyable {
 public:
 	TemporaryConfigFile(const std::string& serializedConfig);
 	~TemporaryConfigFile();
-	std::string getFileName() const { return fileName_; }
+	boost::filesystem::path getFileName() const { return fileName_; }
 
 private:
-	std::string fileName_;
+	boost::filesystem::path fileName_;
 };
