@@ -6,11 +6,11 @@
 
 // The driver is NOT unloaded if the class is destroyed because the user might
 // want to use it although this controller class has gone out of scope.
-DriverControl::DriverControl() :
+uberstealth::DriverControl::DriverControl() :
 	running_(false) {}
 
 // start or stop given driver
-void DriverControl::controlDriver(const std::string& driverPath, const std::string& driverName, bool load) const {
+void uberstealth::DriverControl::controlDriver(const std::string& driverPath, const std::string& driverName, bool load) const {
 	using uberstealth::StringToUnicode;
 	SC_HANDLE hSCManager = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
 	if (hSCManager == NULL) {
@@ -59,7 +59,7 @@ void DriverControl::controlDriver(const std::string& driverPath, const std::stri
 
 // extracts the driver file and starts it with the given name
 // if no name is given, a random name is generated
-void DriverControl::startDriver(const ResourceItem& ri, const std::string& driverName) {
+void uberstealth::DriverControl::startDriver(const ResourceItem& ri, const std::string& driverName) {
 	if (running_) {
 		return;
 	}
@@ -83,7 +83,7 @@ void DriverControl::startDriver(const ResourceItem& ri, const std::string& drive
 	}
 }
 
-void DriverControl::stopDriver() {
+void uberstealth::DriverControl::stopDriver() {
 	if (!running_) {
 		return;
 	}
@@ -93,7 +93,7 @@ void DriverControl::stopDriver() {
 }
 
 // Send IOCTL command to driver.
-void DriverControl::setMode(unsigned int ioctlCode, void* param, size_t paramSize) const {
+void uberstealth::DriverControl::setMode(unsigned int ioctlCode, void* param, size_t paramSize) const {
 	std::string device = "\\\\.\\" + driverName_;
 	HANDLE hDevice = CreateFile(uberstealth::StringToUnicode(device), GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hDevice != INVALID_HANDLE_VALUE) {
@@ -110,7 +110,7 @@ void DriverControl::setMode(unsigned int ioctlCode, void* param, size_t paramSiz
 	}
 }
 
-void DriverControl::throwSysError(unsigned int lastError, const std::string& msg) const {
+void uberstealth::DriverControl::throwSysError(unsigned int lastError, const std::string& msg) const {
 	std::ostringstream oss;
 	oss << msg << ", system error code was: " << lastError;
 	throw std::runtime_error(oss.str());

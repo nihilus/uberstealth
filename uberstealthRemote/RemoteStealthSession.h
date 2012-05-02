@@ -13,13 +13,13 @@ namespace uberstealth {
 	class RemoteStealthSession : public StealthSession<RemoteStealthLogger> {
 	public:
 		RemoteStealthSession(const boost::filesystem::path& configFile);
-		void handleBreakPoint(unsigned int threadID, uintptr_t address);
-		void handleException(unsigned int exceptionCode);
+		virtual void handleBreakPoint(unsigned int threadID, uintptr_t address);
+		virtual void handleException(unsigned int exceptionCode);
 
 	private:
-		ResourceItem getRDTSCDriverResource();
-		ResourceItem getStealthDriverResource();
-		std::string getStealthDllPath();
+		virtual ResourceItem getRDTSCDriverResource();
+		virtual ResourceItem getStealthDriverResource();
+		virtual std::string getStealthDllPath();
 		std::string serializeConfig(const std::string& configStr);
 		std::string stealthDll_;
 	};

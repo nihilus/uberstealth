@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <iostream>
+
 namespace uberstealth {
 
 class RemoteStealthLogger

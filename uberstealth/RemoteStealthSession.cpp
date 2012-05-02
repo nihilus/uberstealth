@@ -50,11 +50,11 @@ void uberstealth::RemoteStealthSession::handleProcessExit() {
 
 }
 
-ResourceItem uberstealth::RemoteStealthSession::getRDTSCDriverResource() {
+uberstealth::ResourceItem uberstealth::RemoteStealthSession::getRDTSCDriverResource() {
 	throw std::runtime_error("not implemented");
 }
 
-ResourceItem uberstealth::RemoteStealthSession::getStealthDriverResource() {
+uberstealth::ResourceItem uberstealth::RemoteStealthSession::getStealthDriverResource() {
 	throw std::runtime_error("not implemented");
 }
 

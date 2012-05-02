@@ -5,6 +5,8 @@
 #include <iostream>
 #include "ResourceItem.h"
 
+namespace uberstealth {
+
 class DriverControl {
 public:
 	DriverControl();
@@ -21,3 +23,5 @@ private:
 	std::string driverPath_;
 	std::string driverName_;
 };
+
+}

@@ -1,12 +1,12 @@
 #include "ResourceItem.h"
 #include <common/StringHelper.h>
 
-ResourceItem::ResourceItem(HMODULE hModule, int resourceID, const std::string& resourceType) :
+uberstealth::ResourceItem::ResourceItem(HMODULE hModule, int resourceID, const std::string& resourceType) :
 	hModule_(hModule),
 	resID_(resourceID),
 	resType_(resourceType) {}
 
-void* ResourceItem::getData() const {
+void* uberstealth::ResourceItem::getData() const {
 	HRSRC hResInfo = FindResource(hModule_, (LPCWSTR)resID_, uberstealth::StringToUnicode(resType_));
 	if (!hResInfo) {
 		return NULL;
@@ -23,7 +23,7 @@ void* ResourceItem::getData() const {
 	return dataPtr;
 }
 
-bool ResourceItem::saveDataToFile(const std::string& fileName) const {
+bool uberstealth::ResourceItem::saveDataToFile(const std::string& fileName) const {
 	void* dataPtr = getData();
 	if (!dataPtr) {
 		return false;

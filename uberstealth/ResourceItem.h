@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include <iostream>
 #include <Windows.h>
+#include <iostream>
 
-class ResourceItem
-{
+namespace uberstealth {
+
+class ResourceItem {
 public:
 	ResourceItem(HMODULE hModule, int resourceID, const std::string& resourceType);
-
 	void* getData() const;
 	bool saveDataToFile(const std::string& fileName) const;
 	size_t getDataSize() const { return size_; };
@@ -20,3 +20,5 @@ private:
 	std::string resType_;
 	mutable size_t size_;
 };
+
+}

@@ -26,12 +26,10 @@ public:
 	void handleBreakPoint(unsigned int /*threadID*/, uintptr_t /*address*/) {}
 	void handleException(unsigned int /*exceptionCode*/) {}
 
-protected:
+private:
 	virtual ResourceItem getRDTSCDriverResource();
 	virtual ResourceItem getStealthDriverResource();
 	virtual std::string getStealthDllPath();
-
-private:
 	std::string readConfigFile(const std::string& fileName) const;
 	void sendRemoteCommand(const uberstealth::RSProtocolItem& item);
 	void connectToServer();
