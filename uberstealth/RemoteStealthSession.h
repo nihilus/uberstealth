@@ -5,6 +5,7 @@
 #pragma once
 
 #include "IDAEngine.h"
+#include "ResourceItem.h"
 #include "StealthSession.h"
 #include <uberstealthRemote/RemoteStealthClient.h>
 #include <uberstealthRemote/RemoteStealthConnection.h>
@@ -14,7 +15,7 @@ namespace uberstealth {
 class RemoteStealthSession : public StealthSession<IDALogger>
 {
 public:
-	RemoteStealthSession(const std::string& profilePath) :
+	RemoteStealthSession(const boost::filesystem::path& profilePath) :
 		StealthSession<IDALogger>(profilePath),
 		resolver_(boost::asio::ip::tcp::resolver(ioService_)) {}
 	void handleDbgAttach(unsigned int processID, const std::string& configFile, const std::string profile);
@@ -24,6 +25,11 @@ public:
 	// The remote stealth server doesn't have access to the debugging engine of IDA so these methods are implemented on the client side.
 	void handleBreakPoint(unsigned int /*threadID*/, uintptr_t /*address*/) {}
 	void handleException(unsigned int /*exceptionCode*/) {}
+
+protected:
+	virtual ResourceItem getRDTSCDriverResource();
+	virtual ResourceItem getStealthDriverResource();
+	virtual std::string getStealthDllPath();
 
 private:
 	std::string readConfigFile(const std::string& fileName) const;

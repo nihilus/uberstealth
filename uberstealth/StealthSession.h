@@ -36,7 +36,7 @@ public:
 		currentProfile_(HideDebuggerProfile::readProfileFromFile(profilePath)) {}
 	virtual ~StealthSession() {}
 	
-	void handleDbgAttach(unsigned int processId) {
+	virtual void handleDbgAttach(unsigned int processId) {
 		if (currentProfile_.getEnableDbgAttachEnabled()) {
 			// We need to start dll injection in a background thread because the dll injection
 			// will block until the debuggee is resumed.
@@ -44,7 +44,7 @@ public:
 		}
 	}
 
-	void handleProcessStart(unsigned int processId, uintptr_t baseAddress) {
+	virtual void handleProcessStart(unsigned int processId, uintptr_t baseAddress) {
 		if (currentProfile_.getEnableDbgStartEnabled()) {
 			// TODO(jan.newger@newgre.net): the exception should NOT be catched here; instead it should bubble up to the caller which then needs to handle it!
 			try	{
@@ -88,7 +88,7 @@ protected:
 			return;
 		}
 
-		// assume that ntdll is loaded to the same IBA across processes on ASLR systems
+		// Assume that ntdll is loaded to the same IBA across processes on ASLR systems.
 		HMODULE hNtDll = LoadLibrary(L"ntdll.dll");
 		LPVOID address = GetProcAddress(hNtDll, "RtlGetNtGlobalFlags");
 		if (address) {
@@ -97,8 +97,7 @@ protected:
 			try	{
 				Process process(processID);
 				process.writeMemory(address, opcodes, 3);
-			}
-			catch (const MemoryAccessException& e){
+			} catch (const MemoryAccessException& e){
 				logger_.logString("Error while trying to patch RtlGetNtGlobalFlags: %s.\n", e.what());
 			}
 		}

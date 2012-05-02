@@ -13,6 +13,7 @@
 #include "IDACommon.h"
 #include "IDAEngine.h"
 #include "LocalStealthSession.h"
+#include "RemoteStealthSession.h"
 #include "resource.h"
 #include "version.h"
 
@@ -20,6 +21,9 @@ int idaapi callback(void* user_data, int notification_code, va_list va);
 
 namespace {
 	boost::shared_ptr<uberstealth::StealthSession<uberstealth::IDALogger>> session_;
+
+	enum DebuggerState { LocalWin32, RemoteWin32, Other };
+	DebuggerState debuggerState_ = Other;
 }
 
 /*********************************************************************
@@ -44,7 +48,7 @@ int __stdcall init() {
 	msg("%s\n%s\n%s\n", dashes.c_str(), (const char*)uberstealth::UnicodeToString(UBERSTEALTH_INFO_STRING), dashes.c_str());
 	
 	if (!hook_to_notification_point(HT_DBG, callback, NULL)) {
-		msg("uberstealth: Unable to hook to notification point\n");
+		msg("uberstealth: Unable to hook to notification point.\n");
 		return PLUGIN_SKIP;
 	}
 	return PLUGIN_KEEP;
@@ -58,6 +62,7 @@ int __stdcall init() {
 *********************************************************************/
 void __stdcall term() {
 	try	{
+		// TODO(jan.newger@newgre.net): this should be handled automatically (e.g. vial static finalizers / RAII).
 		uberstealth::saveCurrentProfileName();
 	} catch (const std::runtime_error& e) {
 		msg("Error while saving last profile: %s.\n", e.what());
@@ -97,45 +102,93 @@ void __stdcall run(int arg) {
 	}
 }
 
-int idaapi callback(void*, int notification_code, va_list va) {
-	using uberstealth::LocalStealthSession;
-	using uberstealth::IDAEngine;
-	using uberstealth::IDALogger;
+bool isLocalWindbg() {
+	netnode nn("$ windbg_params");
+	ulong value = nn.altval(2);
+	return !value;
+}
 
+bool isWin32RemoteDebugger() {
+	return dbg->is_remote() && dbg->id == DEBUGGER_ID_X86_IA32_WIN32_USER;
+}
+
+bool isLocalWin32Debugger() {
+	return (!dbg->is_remote() && dbg->id == DEBUGGER_ID_X86_IA32_WIN32_USER) || isLocalWindbg();
+}
+
+void updateDebuggerState() {
+	if (isLocalWin32Debugger()) {
+		debuggerState_ = LocalWin32;
+	}
+	else if (isWin32RemoteDebugger()) {
+		debuggerState_ = RemoteWin32;
+	} else {
+		debuggerState_ = Other;
+	}
+}
+
+DebuggerState getDebuggerState() {
+	return debuggerState_;
+}
+
+boost::shared_ptr<uberstealth::StealthSession<uberstealth::IDALogger>> createSession(DebuggerState debuggerState) {
+	switch (debuggerState) {
+	case LocalWin32:
+		return boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine, uberstealth::IDALogger>>(uberstealth::getCurrentProfileFile());
+		break;
+	case RemoteWin32:
+		return boost::make_shared<uberstealth::RemoteStealthSession>(uberstealth::getCurrentProfileFile());
+		break;
+	}
+}
+
+int idaapi callback(void*, int notification_code, va_list va) {
 	try	{
 		switch (notification_code) {
 		case dbg_process_attach: {
 			// TODO(jan.newger@newgre.net): instantiate RemoteStealthSession if appropriate
 			const debug_event_t* dbgEvent = va_arg(va, const debug_event_t*);
-			session_ = boost::make_shared<LocalStealthSession<IDAEngine, IDALogger>>(uberstealth::getCurrentProfileFile());
-			session_->handleDbgAttach(dbgEvent->pid);
+			updateDebuggerState();
+			if (getDebuggerState() != Other) {
+				session_ = createSession(getDebuggerState());
+				session_->handleDbgAttach(dbgEvent->pid);
+			}
 		}
 		break;
 
 		case dbg_process_start: {
 			const debug_event_t* dbgEvent = va_arg(va, const debug_event_t*);
-			session_ = boost::make_shared<LocalStealthSession<IDAEngine, IDALogger>>(uberstealth::getCurrentProfileFile());
-			session_->handleProcessStart(dbgEvent->pid, dbgEvent->modinfo.base);
+			updateDebuggerState();
+			if (getDebuggerState() != Other) {
+				session_ = createSession(getDebuggerState());
+				session_->handleProcessStart(dbgEvent->pid, dbgEvent->modinfo.base);
+			}
 		}
 		break;
 
 		case dbg_process_exit:
 			va_arg(va, const debug_event_t*);
-			session_->handleProcessExit();
-			break;
+			if (getDebuggerState() != Other) {
+				session_->handleProcessExit();
+			}
+		break;
 
 		case dbg_bpt: {
 			thid_t tid = va_arg(va, thid_t);
 			ea_t breakpoint_ea = va_arg(va, ea_t);
 			va_arg(va, int*);
-			session_->handleBreakPoint(tid, breakpoint_ea);
+			if (getDebuggerState() != Other) {
+				session_->handleBreakPoint(tid, breakpoint_ea);
+			}
 		}
 		break;
 
 		case dbg_exception:	{
 			const debug_event_t* dbgEvent = va_arg(va, const debug_event_t*);
 			va_arg(va, int*);
-			session_->handleException(dbgEvent->exc.code);
+			if (getDebuggerState() != Other) {
+				session_->handleException(dbgEvent->exc.code);
+			}
 		}
 		break;
 		}

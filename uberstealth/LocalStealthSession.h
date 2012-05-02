@@ -28,7 +28,7 @@ public:
 		rtlDispatchExceptionAddr_(0),
 		ntContinueCallAddr_(0) {}
 	
-	void handleProcessStart(unsigned int processID, uintptr_t baseAddress) {
+	virtual void handleProcessStart(unsigned int processID, uintptr_t baseAddress) {
 		StealthSession::handleProcessStart(processID, baseAddress);
 		if (currentProfile_.getEnableDbgStartEnabled()) {
 			initSEHMonitoring();
@@ -36,7 +36,7 @@ public:
 		}
 	}
 
-	void handleDbgAttach(unsigned int processId) {
+	virtual void handleDbgAttach(unsigned int processId) {
 		StealthSession::handleDbgAttach(processId);
 		if (currentProfile_.getEnableDbgAttachEnabled()) {
 			initSEHMonitoring();
@@ -44,13 +44,13 @@ public:
 		}
 	}
 
-	void handleProcessExit() {
+	virtual void handleProcessExit() {
 		cleanupSEHMonitoring();
 		StealthSession::handleProcessExit();
 	}
 
 	// SEH logging and halting of the debuggee is implemented via breakpoints so we need to handle this event accordingly.
-	void handleBreakPoint(unsigned int threadID, uintptr_t address)	{
+	virtual void handleBreakPoint(unsigned int threadID, uintptr_t address)	{
 		std::set<BPHit>::const_iterator sehCit = sehHandlerBps_.find(BPHit(threadID, address));
 		std::set<BPHit>::const_iterator postSEHCit = postSEHBps_.find(BPHit(threadID, address));
 		if (address == getRtlDispatchExceptionAddr() &&
@@ -144,7 +144,7 @@ public:
 	}
 
 	// Handle an exception which occurred in the debuggee.
-	void handleException(unsigned int exceptionCode) {
+	virtual void handleException(unsigned int exceptionCode) {
 		engine_.setExceptionOption(exceptionCode, currentProfile_.getPassUnknownExceptionsEnabled());
 	}
 
