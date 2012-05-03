@@ -16,6 +16,10 @@ uberstealth::IPCConfigExchangeWriter::IPCConfigExchangeWriter(unsigned int proce
 	}
 }
 
+uberstealth::IPCConfigExchangeWriter::~IPCConfigExchangeWriter() {
+	boost::interprocess::shared_memory_object::remove(getSegmentName(processID_).c_str());
+}
+
 void uberstealth::IPCConfigExchangeWriter::setProfileFile(const std::string& configFile) {
 	std::pair<char*, size_t> segmentData = segment_.find<char>(ConfigFileDataStr);
 	strcpy_s(segmentData.first, segmentData.second, configFile.c_str());
@@ -34,8 +38,4 @@ void uberstealth::IPCConfigExchangeWriter::setIPCPEHeaderData(const IPCPEHeaderD
 void uberstealth::IPCConfigExchangeWriter::setPERestoreRequired(bool required) {
 	std::pair<bool*, size_t> segmentData = segment_.find<bool>(PERestoreRequiredStr);
 	*(segmentData.first) = required;
-}
-
-void uberstealth::IPCConfigExchangeWriter::remove() {
-	boost::interprocess::shared_memory_object::remove(getSegmentName(processID_).c_str());
 }

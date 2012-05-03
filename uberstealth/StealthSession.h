@@ -55,8 +55,6 @@ public:
 				Process process(processId);
 				IATModifier iatMod(process);
 				iatMod.setImageBase(baseAddress);
-				// TODO(jan.newger@newgre.net): move functionality of "remove" into destructor.
-				if (ipc_) ipc_->remove();
 				ipc_ = boost::make_shared<uberstealth::IPCConfigExchangeWriter>(processId);
 				ipc_->setProfileFile(profilePath_.string());
 				ipc_->setIPCPEHeaderData(uberstealth::IPCPEHeaderData(baseAddress, iatMod.readNTHeaders()));
@@ -79,6 +77,7 @@ public:
 	virtual void handleException(unsigned int exceptionCode) =0;
 
 protected:
+	// TODO(jan.newger@newgre.net): should these methods be moved to LocalStealthSession? (these are useless in a RemoteStealth scenario)
 	virtual ResourceItem getRDTSCDriverResource() =0;
 	virtual ResourceItem getStealthDriverResource() =0;
 	virtual std::string getStealthDllPath() =0;
@@ -179,7 +178,6 @@ private:
 		try	{
 			injectionBeacon_ = boost::make_shared<InjectionBeacon>(processId);
 			performCommonInit(processId);
-			if (ipc_) ipc_->remove();
 			ipc_ = boost::make_shared<uberstealth::IPCConfigExchangeWriter>(processId);
 			ipc_->setProfileFile(profilePath_.string());
 			ipc_->setPERestoreRequired(false);
