@@ -6,24 +6,24 @@
 
 #include "IDAEngine.h"
 #include "ResourceItem.h"
-#include "StealthSession.h"
+#include "CommonStealthSession.h"
 #include <uberstealthRemote/RemoteStealthClient.h>
 #include <uberstealthRemote/RemoteStealthConnection.h>
 
 namespace uberstealth {
 
-class RemoteStealthSession : public StealthSession<IDALogger>
+class RemoteStealthSession : public CommonStealthSession<IDALogger>
 {
 public:
 	RemoteStealthSession(const boost::filesystem::path& profilePath) :
-		StealthSession<IDALogger>(profilePath),
+		CommonStealthSession<IDALogger>(profilePath),
 		resolver_(boost::asio::ip::tcp::resolver(ioService_)) {}
-	void handleDbgAttach(unsigned int processID, const std::string& configFile, const std::string profile);
-	void handleProcessStart(unsigned int processID, uintptr_t baseAddress, const std::string& configFile, const std::string profile);
-	void handleProcessExit();
+	void handleDebuggerAttach(unsigned int processID, const std::string& configFile, const std::string profile);
+	void handleDebuggerStart(unsigned int processID, uintptr_t baseAddress, const std::string& configFile, const std::string profile);
+	void handleDebuggerExit();
 
 	// The remote stealth server doesn't have access to the debugging engine of IDA so these methods are implemented on the client side.
-	void handleBreakPoint(unsigned int /*threadID*/, uintptr_t /*address*/) {}
+	void handleBreakpoint(unsigned int /*threadID*/, uintptr_t /*address*/) {}
 	void handleException(unsigned int /*exceptionCode*/) {}
 
 private:

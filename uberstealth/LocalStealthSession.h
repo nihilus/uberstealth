@@ -14,43 +14,43 @@
 #include <NCodeHook/NCodeHookInstantiation.h>
 #include "ResourceItem.h"
 #include <set>
-#include "StealthSession.h"
+#include "CommonStealthSession.h"
 
 namespace uberstealth {
 
 template <typename EngineT, typename LoggerT>
 class LocalStealthSession :
-	public StealthSession<LoggerT>,
+	public CommonStealthSession<LoggerT>,
 	public boost::noncopyable {
 public:
 	LocalStealthSession(const boost::filesystem::path& profilePath) :
-		StealthSession<LoggerT>(profilePath),
+		CommonStealthSession<LoggerT>(profilePath),
 		rtlDispatchExceptionAddr_(0),
 		ntContinueCallAddr_(0) {}
 	
-	virtual void handleProcessStart(unsigned int processID, uintptr_t baseAddress) {
-		StealthSession::handleProcessStart(processID, baseAddress);
+	virtual void handleDebuggerStart(unsigned int processID, uintptr_t baseAddress) {
+		CommonStealthSession::handleDebuggerStart(processID, baseAddress);
 		if (currentProfile_.getEnableDbgStartEnabled()) {
 			initSEHMonitoring();
 			localStealth();
 		}
 	}
 
-	virtual void handleDbgAttach(unsigned int processId) {
-		StealthSession::handleDbgAttach(processId);
+	virtual void handleDebuggerAttach(unsigned int processId) {
+		CommonStealthSession::handleDebuggerAttach(processId);
 		if (currentProfile_.getEnableDbgAttachEnabled()) {
 			initSEHMonitoring();
 			localStealth();
 		}
 	}
 
-	virtual void handleProcessExit() {
+	virtual void handleDebuggerExit() {
 		cleanupSEHMonitoring();
-		StealthSession::handleProcessExit();
+		CommonStealthSession::handleDebuggerExit();
 	}
 
 	// SEH logging and halting of the debuggee is implemented via breakpoints so we need to handle this event accordingly.
-	virtual void handleBreakPoint(unsigned int threadID, uintptr_t address)	{
+	virtual void handleBreakpoint(unsigned int threadID, uintptr_t address)	{
 		std::set<BPHit>::const_iterator sehCit = sehHandlerBps_.find(BPHit(threadID, address));
 		std::set<BPHit>::const_iterator postSEHCit = postSEHBps_.find(BPHit(threadID, address));
 		if (address == getRtlDispatchExceptionAddr() &&

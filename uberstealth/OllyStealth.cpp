@@ -59,12 +59,12 @@ extc _export void cdecl ODBG2_Pluginmainloop(DEBUG_EVENT* debugEvent)
 			if (_run.status == STAT_LOADING)
 			{
 				session_ = boost::make_shared<OllySession>(&profileHelper_);
-				session_->handleProcessStart(_processid, reinterpret_cast<uintptr_t>(debugEvent->u.CreateProcessInfo.lpBaseOfImage));
+				session_->handleDebuggerStart(_processid, reinterpret_cast<uintptr_t>(debugEvent->u.CreateProcessInfo.lpBaseOfImage));
 			}		
 			else if (_run.status == STAT_ATTACHING)
 			{
 				session_ = boost::make_shared<OllySession>(&profileHelper_);
-				session_->handleDbgAttach(_processid);
+				session_->handleDebuggerAttach(_processid);
 			}
 			break;
 

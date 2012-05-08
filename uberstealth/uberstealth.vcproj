@@ -651,6 +651,10 @@
 			Name="Session"
 			>
 			<File
+				RelativePath=".\CommonStealthSession.h"
+				>
+			</File>
+			<File
 				RelativePath=".\LocalStealthSession.h"
 				>
 			</File>

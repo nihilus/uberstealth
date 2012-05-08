@@ -37,17 +37,17 @@ std::string uberstealth::RemoteStealthSession::readConfigFile(const std::string&
 	return oss.str();
 }
 
-void uberstealth::RemoteStealthSession::handleDbgAttach(unsigned int processID, const std::string& configFile, const std::string profile) {
+void uberstealth::RemoteStealthSession::handleDebuggerAttach(unsigned int processID, const std::string& configFile, const std::string profile) {
 	connectToServer();
 	sendRemoteCommand(uberstealth::RSProtocolItem(processID, 0, uberstealth::ProcessAttach, readConfigFile(configFile), profile));
 }
 
-void uberstealth::RemoteStealthSession::handleProcessStart(unsigned int processID, uintptr_t baseAddress, const std::string& configFile, const std::string profile) {
-
+void uberstealth::RemoteStealthSession::handleDebuggerStart(unsigned int processID, uintptr_t baseAddress, const std::string& configFile, const std::string profile) {
+	// send event to remote side.
 }
 
-void uberstealth::RemoteStealthSession::handleProcessExit() {
-
+void uberstealth::RemoteStealthSession::handleDebuggerExit() {
+	// send event to remote side.
 }
 
 uberstealth::ResourceItem uberstealth::RemoteStealthSession::getRDTSCDriverResource() {
@@ -59,7 +59,7 @@ uberstealth::ResourceItem uberstealth::RemoteStealthSession::getStealthDriverRes
 }
 
 std::string uberstealth::RemoteStealthSession::getStealthDllPath() {
-	return "";
+	throw std::runtime_error("not implemented");
 }
 
 #endif

@@ -20,11 +20,13 @@
 int idaapi callback(void* user_data, int notification_code, va_list va);
 
 namespace {
-	boost::shared_ptr<uberstealth::StealthSession<uberstealth::IDALogger>> session_;
 
-	enum DebuggerState { LocalWin32, RemoteWin32, Other };
-	DebuggerState debuggerState_ = Other;
-}
+boost::shared_ptr<uberstealth::StealthSession> session_;
+
+enum DebuggerState { LocalWin32, RemoteWin32, Other };
+DebuggerState debuggerState_ = Other;
+
+}  // Anonymous namespace.
 
 /*********************************************************************
 * Function: init
@@ -131,7 +133,7 @@ DebuggerState getDebuggerState() {
 	return debuggerState_;
 }
 
-boost::shared_ptr<uberstealth::StealthSession<uberstealth::IDALogger>> createSession(DebuggerState debuggerState) {
+boost::shared_ptr<uberstealth::CommonStealthSession<uberstealth::IDALogger>> createSession(DebuggerState debuggerState) {
 	switch (debuggerState) {
 	case LocalWin32:
 		return boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine, uberstealth::IDALogger>>(uberstealth::getCurrentProfileFile());
@@ -151,7 +153,7 @@ int idaapi callback(void*, int notification_code, va_list va) {
 			updateDebuggerState();
 			if (getDebuggerState() != Other) {
 				session_ = createSession(getDebuggerState());
-				session_->handleDbgAttach(dbgEvent->pid);
+				session_->handleDebuggerAttach(dbgEvent->pid);
 			}
 		}
 		break;
@@ -161,7 +163,7 @@ int idaapi callback(void*, int notification_code, va_list va) {
 			updateDebuggerState();
 			if (getDebuggerState() != Other) {
 				session_ = createSession(getDebuggerState());
-				session_->handleProcessStart(dbgEvent->pid, dbgEvent->modinfo.base);
+				session_->handleDebuggerStart(dbgEvent->pid, dbgEvent->modinfo.base);
 			}
 		}
 		break;
@@ -169,7 +171,7 @@ int idaapi callback(void*, int notification_code, va_list va) {
 		case dbg_process_exit:
 			va_arg(va, const debug_event_t*);
 			if (getDebuggerState() != Other) {
-				session_->handleProcessExit();
+				session_->handleDebuggerExit();
 			}
 		break;
 
@@ -178,7 +180,7 @@ int idaapi callback(void*, int notification_code, va_list va) {
 			ea_t breakpoint_ea = va_arg(va, ea_t);
 			va_arg(va, int*);
 			if (getDebuggerState() != Other) {
-				session_->handleBreakPoint(tid, breakpoint_ea);
+				session_->handleBreakpoint(tid, breakpoint_ea);
 			}
 		}
 		break;
