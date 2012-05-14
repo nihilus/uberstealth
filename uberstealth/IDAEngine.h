@@ -7,13 +7,11 @@
 #include "IDACommon.h"
 #include <iostream>
 
-namespace boost
-{
+// Template specialization needed for boost::unordered_set.
+namespace boost {
 	template<>
-	struct hash<exception_info_t>
-	{
-		size_t operator()(const exception_info_t& exceptionInfo) const
-		{
+	struct hash<exception_info_t> {
+		size_t operator()(const exception_info_t& exceptionInfo) const {
 			size_t hash = 0;
 			boost::hash_combine(hash, exceptionInfo.code);
 			boost::hash_combine(hash, exceptionInfo.flags);
@@ -24,13 +22,11 @@ namespace boost
 	};
 }
 
-namespace std
-{
+// Template specialization needed for boost::unordered_set.
+namespace std {
 	template<>
-	struct equal_to<exception_info_t> : public std::unary_function<exception_info_t, bool>
-	{
-		bool operator()(const exception_info_t& lhs, const exception_info_t& rhs) const
-		{
+	struct equal_to<exception_info_t> : public std::unary_function<exception_info_t, bool> {
+		bool operator()(const exception_info_t& lhs, const exception_info_t& rhs) const {
 			bool found = lhs.code == rhs.code &&
 				lhs.flags == rhs.flags &&
 				lhs.name == rhs.name &&
@@ -52,8 +48,7 @@ private:
 	unsigned int idaMainThread_;
 };
 
-class IDAEngine
-{
+class IDAEngine {
 public:
 	~IDAEngine();
 	bool setBreakpoint(uintptr_t address) const;

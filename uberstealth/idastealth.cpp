@@ -12,6 +12,7 @@
 #include <common/StringHelper.h>
 #include "IDACommon.h"
 #include "IDAEngine.h"
+#include <HideDebugger/HideDebuggerProfile.h>
 #include "LocalStealthSession.h"
 #include "RemoteStealthSession.h"
 #include "resource.h"
@@ -133,7 +134,7 @@ DebuggerState getDebuggerState() {
 	return debuggerState_;
 }
 
-boost::shared_ptr<uberstealth::CommonStealthSession<uberstealth::IDALogger>> createSession(DebuggerState debuggerState) {
+boost::shared_ptr<uberstealth::StealthSession> createSession(DebuggerState debuggerState) {
 	switch (debuggerState) {
 	case LocalWin32:
 		return boost::make_shared<uberstealth::LocalStealthSession<uberstealth::IDAEngine, uberstealth::IDALogger>>(uberstealth::getCurrentProfileFile());

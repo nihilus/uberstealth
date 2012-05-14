@@ -28,8 +28,6 @@
 
 namespace uberstealth {
 
-// TODO: create abstract base class that only requires deriving classes to implement handleDebuggerStart(), handleDebuggerAttach() and handleDebuggerExit().
-
 template <typename LoggerT>
 class CommonStealthSession : public StealthSession {
 public:
