@@ -156,7 +156,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\RDTSCEmu\driver\objfre_wxp_x86\i386\RDTSCEmu.sys" />
-    <None Include="..\StealthDriver\StealthDriver\objfre_wxp_x86\i386\StealthDriver.sys" />
+    <None Include="..\RDTSCEmu\driver\objchk_wxp_x86\i386\RDTSCEmu.sys" />
+    <None Include="..\StealthDriver\StealthDriver\objchk_wxp_x86\i386\StealthDriver.sys" />
   </ItemGroup>
 </Project>

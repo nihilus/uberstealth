@@ -14,6 +14,7 @@
     <ProjectGuid>{5C3801A0-3EFE-4D6A-9138-1CF5E8A05A07}</ProjectGuid>
     <RootNamespace>IDAStealthRemote</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>uberstealthRemote</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -142,8 +143,8 @@
     <ResourceCompile Include="IDAStealthRemote.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\RDTSCEmu\driver\objfre_wxp_x86\i386\RDTSCEmu.sys" />
-    <None Include="..\StealthDriver\StealthDriver\objfre_wxp_x86\i386\StealthDriver.sys" />
+    <None Include="..\RDTSCEmu\driver\objchk_wxp_x86\i386\RDTSCEmu.sys" />
+    <None Include="..\StealthDriver\StealthDriver\objchk_wxp_x86\i386\StealthDriver.sys" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
