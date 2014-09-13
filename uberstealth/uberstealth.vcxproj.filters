@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{1ac6fb41-1b83-4ec3-91f2-19caf1ea20ac}</UniqueIdentifier>
+      <Extensions>.cpp;.cxx;.c</Extensions>
+    </Filter>
+    <Filter Include="NInjectLib">
+      <UniqueIdentifier>{b3d0a0e9-4bee-4608-a145-6491154b8dd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{b627a1bc-92f2-4e78-a947-3db756fa2994}</UniqueIdentifier>
+      <Extensions>.rc;.rc2;.ico;.gif;.bmp;</Extensions>
+    </Filter>
+    <Filter Include="Profiles">
+      <UniqueIdentifier>{3e769ebc-12f6-452d-8ff4-2d50cf9a9d69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IPCConfigExchange">
+      <UniqueIdentifier>{15b36360-fdf2-40ea-b838-4ad479411e02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{14c47428-ccf1-4eb6-9f0d-607b8cab9e8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NCodeHook">
+      <UniqueIdentifier>{9ea02841-a2ee-49c7-b7c7-fb2addb52442}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DriverControl">
+      <UniqueIdentifier>{7bdf371d-d974-4bb6-a878-3df311491053}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceItem">
+      <UniqueIdentifier>{bb27e69b-6d00-4e8e-9eb6-a9866f508813}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gui">
+      <UniqueIdentifier>{05f8c0e5-504e-48f1-b94d-f19fe8b328eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RemoteStealth">
+      <UniqueIdentifier>{c780c339-50e8-498d-b352-d6f96e9b5bef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Session">
+      <UniqueIdentifier>{20e7af4d-3c9c-4f6e-bb0c-e080e6fff5ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{3885b7eb-37da-4a22-9050-64a443ee09b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{53474508-148a-4efa-aa33-a42dd8f19c15}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="IDAStealth.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OllyStealth.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NInjectLib\GenericInjector.cpp">
+      <Filter>NInjectLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NInjectLib\IATModifier.cpp">
+      <Filter>NInjectLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NInjectLib\InjectLib.cpp">
+      <Filter>NInjectLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NInjectLib\Process.cpp">
+      <Filter>NInjectLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NInjectLib\RemoteLibCall.cpp">
+      <Filter>NInjectLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HideDebugger\HideDebuggerProfile.cpp">
+      <Filter>Profiles</Filter>
+    </ClCompile>
+    <ClCompile Include="IPCConfigExchangeCommon.cpp">
+      <Filter>IPCConfigExchange</Filter>
+    </ClCompile>
+    <ClCompile Include="IPCConfigExchangeWriter.cpp">
+      <Filter>IPCConfigExchange</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NCodeHook\NCodeHook.cpp">
+      <Filter>NCodeHook</Filter>
+    </ClCompile>
+    <ClCompile Include="DriverControl.cpp">
+      <Filter>DriverControl</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceItem.cpp">
+      <Filter>ResourceItem</Filter>
+    </ClCompile>
+    <ClCompile Include="UberstealthDriversPage.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="UberstealthPage1.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="UberstealthPage2.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="UberstealthPageMisc.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\uberstealthRemote\RemoteStealthClient.cpp">
+      <Filter>RemoteStealth</Filter>
+    </ClCompile>
+    <ClCompile Include="RemoteStealthSession.cpp">
+      <Filter>Session</Filter>
+    </ClCompile>
+    <ClCompile Include="IDAEngine.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="OllyEngine.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\InjectionBeacon.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\StringHelper.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\NInjectLib\GenericInjector.h">
+      <Filter>NInjectLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NInjectLib\IATModifier.h">
+      <Filter>NInjectLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NInjectLib\InjectLib.h">
+      <Filter>NInjectLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NInjectLib\Process.h">
+      <Filter>NInjectLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NInjectLib\RemoteLibCall.h">
+      <Filter>NInjectLib</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HideDebugger\HideDebuggerProfile.h">
+      <Filter>Profiles</Filter>
+    </ClInclude>
+    <ClInclude Include="IPCConfigExchangeCommon.h">
+      <Filter>IPCConfigExchange</Filter>
+    </ClInclude>
+    <ClInclude Include="IPCConfigExchangeWriter.h">
+      <Filter>IPCConfigExchange</Filter>
+    </ClInclude>
+    <ClInclude Include="IDACommon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NCodeHook\distorm.h">
+      <Filter>NCodeHook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NCodeHook\NCodeHook.h">
+      <Filter>NCodeHook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NCodeHook\NCodeHookInstantiation.h">
+      <Filter>NCodeHook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NCodeHook\NCodeHookItem.h">
+      <Filter>NCodeHook</Filter>
+    </ClInclude>
+    <ClInclude Include="DriverControl.h">
+      <Filter>DriverControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RDTSCEmu\driver\RDTSCEmu.h">
+      <Filter>DriverControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\StealthDriver\StealthDriver\StealthDriver.h">
+      <Filter>DriverControl</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceItem.h">
+      <Filter>ResourceItem</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigProvider.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="ProfileEventConsumer.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveChangesDialog.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="UberstealthAboutPage.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="UberstealthDriversPage.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="UberstealthOptionsDialog.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="UberstealthPage1.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="UberstealthPage2.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="UberstealthPageMisc.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="UberstealthPropertyPage.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="WTLCommon.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="WTLInputBox.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="WTLWrapper.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uberstealthRemote\RemoteStealthClient.h">
+      <Filter>RemoteStealth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uberstealthRemote\RemoteStealthConnection.h">
+      <Filter>RemoteStealth</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonStealthSession.h">
+      <Filter>Session</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalStealthSession.h">
+      <Filter>Session</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoteStealthSession.h">
+      <Filter>Session</Filter>
+    </ClInclude>
+    <ClInclude Include="StealthSession.h">
+      <Filter>Session</Filter>
+    </ClInclude>
+    <ClInclude Include="IDAEngine.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="OllyEngine.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\InjectionBeacon.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\StringHelper.h">
+      <Filter>common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="uberstealth.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\RDTSCEmu\driver\objfre_wxp_x86\i386\RDTSCEmu.sys" />
+    <None Include="..\StealthDriver\StealthDriver\objfre_wxp_x86\i386\StealthDriver.sys" />
+    <None Include="uberstealth_logo.jpg" />
+  </ItemGroup>
+</Project>

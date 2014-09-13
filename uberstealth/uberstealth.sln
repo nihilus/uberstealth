@@ -1,18 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "uberstealth", "uberstealth.vcproj", "{9295F5F3-F47E-4C50-B526-55AE13AA9457}"
-	ProjectSection(ProjectDependencies) = postProject
-		{8B566A2C-41AC-40FF-B1EF-8AD47A208093} = {8B566A2C-41AC-40FF-B1EF-8AD47A208093}
-		{59339E37-7C43-4CD2-B7B5-DF10D9197655} = {59339E37-7C43-4CD2-B7B5-DF10D9197655}
-		{D42B8C42-9344-44E7-844C-524F13995981} = {D42B8C42-9344-44E7-844C-524F13995981}
-	EndProjectSection
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "uberstealth", "uberstealth.vcxproj", "{9295F5F3-F47E-4C50-B526-55AE13AA9457}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HideDebugger", "..\HideDebugger\HideDebugger.vcproj", "{59339E37-7C43-4CD2-B7B5-DF10D9197655}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HideDebugger", "..\HideDebugger\HideDebugger.vcxproj", "{59339E37-7C43-4CD2-B7B5-DF10D9197655}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StealthDriver.W7", "..\StealthDriver\StealthDriver\StealthDriver.W7.vcproj", "{D42B8C42-9344-44E7-844C-524F13995981}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StealthDriver.W7", "..\StealthDriver\StealthDriver\StealthDriver.W7.vcxproj", "{D42B8C42-9344-44E7-844C-524F13995981}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RDTSCEmu.WLH", "..\RDTSCEmu\driver\RDTSCEmu.WLH.vcproj", "{8B566A2C-41AC-40FF-B1EF-8AD47A208093}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RDTSCEmu.WLH", "..\RDTSCEmu\driver\RDTSCEmu.WLH.vcxproj", "{8B566A2C-41AC-40FF-B1EF-8AD47A208093}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
