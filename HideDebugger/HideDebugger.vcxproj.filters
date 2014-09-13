@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="HideDebuggerProfile">
+      <UniqueIdentifier>{21d478e6-659d-4c74-a569-1ab76166f8a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NCodeHook">
+      <UniqueIdentifier>{49f7844a-0f24-4ad4-a211-7394073c9978}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IPCConfigExchange">
+      <UniqueIdentifier>{9334fd65-3475-4b6d-abe8-4d2edaf65e9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RemoteEvent">
+      <UniqueIdentifier>{d36c263e-9204-496d-86a6-746cec061779}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ObjectTextSerialization">
+      <UniqueIdentifier>{e9df02ff-55da-46e6-9a5d-2c1c28b97464}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{8d61eea6-3f0e-4e7a-9f37-b8ec27c3b261}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="HideDebugger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HookHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadDebugRegisterState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HideDebuggerProfile.cpp">
+      <Filter>HideDebuggerProfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NCodeHook\NCodeHook.cpp">
+      <Filter>NCodeHook</Filter>
+    </ClCompile>
+    <ClCompile Include="..\uberstealth\IPCConfigExchangeCommon.cpp">
+      <Filter>IPCConfigExchange</Filter>
+    </ClCompile>
+    <ClCompile Include="IPCConfigExchangeReader.cpp">
+      <Filter>IPCConfigExchange</Filter>
+    </ClCompile>
+    <ClCompile Include="RemoteEventCommon.cpp">
+      <Filter>RemoteEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="RemoteEventWriter.cpp">
+      <Filter>RemoteEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\InjectionBeacon.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\StringHelper.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HideDebugger.def">
+      <Filter>Header Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="HideDebugger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HookHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ntdll.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadDebugRegisterState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HideDebuggerProfile.h">
+      <Filter>HideDebuggerProfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NCodeHook\distorm.h">
+      <Filter>NCodeHook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NCodeHook\NCodeHook.h">
+      <Filter>NCodeHook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NCodeHook\NCodeHookInstantiation.h">
+      <Filter>NCodeHook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NCodeHook\NCodeHookItem.h">
+      <Filter>NCodeHook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uberstealth\IPCConfigExchangeCommon.h">
+      <Filter>IPCConfigExchange</Filter>
+    </ClInclude>
+    <ClInclude Include="IPCConfigExchangeReader.h">
+      <Filter>IPCConfigExchange</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoteEventCommon.h">
+      <Filter>RemoteEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoteEventWriter.h">
+      <Filter>RemoteEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectTextSerialization.h">
+      <Filter>ObjectTextSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\InjectionBeacon.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\StringHelper.h">
+      <Filter>common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="HideDebugger.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
