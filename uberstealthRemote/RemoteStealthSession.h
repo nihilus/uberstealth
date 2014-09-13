@@ -3,6 +3,7 @@
 #pragma once
 
 #include <iostream>
+#include <boost/filesystem.hpp>
 #include "RemoteStealthProtocol.h"
 #include "RemoteStealthLogger.h"
 #include <uberstealth/ResourceItem.h>

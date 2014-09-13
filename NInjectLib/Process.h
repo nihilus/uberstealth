@@ -1,14 +1,15 @@
-// TODO(jan.newger@newgre.net): this class should be refactored! Copying should be forbidden;
-// also the interface can be used *very* wrongly. Ther are too many different exception types.
-
 #pragma once
 
+#include <iostream>
+#include <vector>
 #include <Windows.h>
 #include <TlHelp32.h>
-#include <vector>
 
-class Process {
+class Process
+{
 public:
+
+	//Process(HANDLE hProcess);
 	Process(DWORD processID);
 	Process::Process(const Process& instance);
 	Process& Process::operator=(const Process& instance);
@@ -25,47 +26,61 @@ public:
 	bool startThread(LPVOID address, LPVOID param);
 	void waitForThread();
 	std::vector<MODULEENTRY32> Process::getModules() const;
+	
 	uintptr_t getImageBase(HANDLE hThread) const;
 	uintptr_t getImageBase() const;
 
 private:
+
 	bool duplicateHandle(HANDLE hSrc, HANDLE* hDest);
 	void throwSysError(const char* msg, DWORD lastError) const;
 
 	HANDLE hProcess_;
 	HANDLE hThread_;
-	DWORD processId_;
+	DWORD processID_;
 };
 
-class ProcessHandleException : public std::runtime_error {
+// handle error
+class ProcessHandleException : public std::runtime_error
+{
 public:
-	ProcessHandleException::ProcessHandleException(const std::string& msg) : std::runtime_error(msg) {}
+	ProcessHandleException::ProcessHandleException(const std::string& msg) : std::runtime_error(msg) {};
 };
 
-class ProcessMemoryException : public std::runtime_error {
+// anything with memory
+class ProcessMemoryException : public std::runtime_error
+{
 public:
-	ProcessMemoryException::ProcessMemoryException(const std::string& msg, LPVOID address) : std::runtime_error(msg), address_(address) {}
-	LPVOID getAddress() { return address_; }
+	ProcessMemoryException::ProcessMemoryException(const std::string& msg, LPVOID address) : std::runtime_error(msg), address_(address) {};
+	LPVOID getAddress() { return address_; };
 private:
 	LPVOID address_;
 };
 
-class MemoryAccessException : public std::runtime_error {
+// access memory
+class MemoryAccessException : public std::runtime_error
+{
 public:
-	MemoryAccessException::MemoryAccessException(const std::string& msg) : std::runtime_error(msg) {}
+	MemoryAccessException::MemoryAccessException(const std::string& msg) : std::runtime_error(msg) {};	
 };
 
-class MemoryAllocationException : public std::runtime_error {
+// allocate
+class MemoryAllocationException : public std::runtime_error
+{
 public:
-	MemoryAllocationException::MemoryAllocationException(const std::string& msg) : std::runtime_error(msg) {}
+	MemoryAllocationException::MemoryAllocationException(const std::string& msg) : std::runtime_error(msg) {};	
 };
 
-class MemoryQueryException : public std::runtime_error {
+// query memory
+class MemoryQueryException : public std::runtime_error
+{
 public:
-	MemoryQueryException::MemoryQueryException(const std::string& msg) : std::runtime_error(msg) {}	
+	MemoryQueryException::MemoryQueryException(const std::string& msg) : std::runtime_error(msg) {};	
 };
 
-class MemoryProtectException : public ProcessMemoryException {
+// protect memory
+class MemoryProtectException : public ProcessMemoryException
+{
 public:
-	MemoryProtectException::MemoryProtectException(const std::string& msg, LPVOID address) : ProcessMemoryException(msg, address) {}
+	MemoryProtectException::MemoryProtectException(const std::string& msg, LPVOID address) : ProcessMemoryException(msg, address) {};	
 };

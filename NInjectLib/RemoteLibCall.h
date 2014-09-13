@@ -1,16 +1,20 @@
-// Performs a procedure call to a dll which was previously injected into a remote process.
-
 #pragma once
 
-#include <Windows.h>
 #include <iostream>
+#include <Windows.h>
+
 #include "InjectLib.h"
 #include "GenericInjector.h"
 #include "Process.h"
 
-class RemoteLibCall {
+const int MaxFuncNameLength = 42;
+
+// class to perform a procedure call to an dll which was previously injected into a remote process
+class RemoteLibCall
+{
 public:
 	RemoteLibCall(const InjectLibrary& library, const Process& process);
+	~RemoteLibCall();
 	bool remoteCall(const std::string& functionName);
 	bool remoteCall(unsigned int exportNumber);
 

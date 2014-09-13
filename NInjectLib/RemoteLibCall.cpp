@@ -1,18 +1,11 @@
 #include "RemoteLibCall.h"
 #include <tchar.h>
 
-// TODO(jan.newger@newgre.net): this code uses malloc, free, is not exception safe and should be fixed!
-
-namespace {
-
-const int MaxFuncNameLength = 42;
-
-}
-
 #pragma pack(push, 1)
 
-// This struct holds all data needed to perform a remote call.
-struct REMOTELIB_DATA {
+// this struct holds all data needed to perform a remote call
+struct REMOTELIB_DATA
+{
 	void* getProcAddress;
 	HMODULE hDll;
 	int functionNr;
@@ -23,33 +16,37 @@ struct REMOTELIB_DATA {
 #pragma pack(pop)
 
 RemoteLibCall::RemoteLibCall(const InjectLibrary& library, const Process& process)
-	: process_(process) {
+	: process_(process)
+{
 	hDll_ = library.getDllHandle();
-	if (hDll_ == NULL) {
-		throw std::runtime_error("Invalid dll handle.");
-	}
+	if (hDll_ == NULL) throw std::exception("Invalid dll handle");
 }
 
-// Preform remote call by function name.
-bool RemoteLibCall::remoteCall(const std::string& functionName) {
-	if (functionName.length() >= MaxFuncNameLength) {
-		throw std::runtime_error("Function name too long.");
-	}
+RemoteLibCall::~RemoteLibCall()
+{
+}
+
+// preform remote call by name
+bool RemoteLibCall::remoteCall(const std::string& functionName)
+{
+	if (functionName.length() >= MaxFuncNameLength) throw std::exception("Function name too long!");
 	functionName_ = functionName;
 	functionNumber_ = -1;
 	return remoteCall();
 }
 
-// Perform remote call by ordinal.
-bool RemoteLibCall::remoteCall(unsigned int exportNumber) {
+// perform remote call by ordinal
+bool RemoteLibCall::remoteCall(unsigned int exportNumber)
+{
 	functionNumber_ = exportNumber;
 	functionName_ = "";
 	return remoteCall();
 }
 
-// Create specific data/code payloads and use GenericInjector to start the remote code.
-// Returns true iff the remote call succeeded.
-bool RemoteLibCall::remoteCall() {
+// create specific data/code payloads and use genericinjector to start the remote code
+// returns true if remote call succeeded otherwise false
+bool RemoteLibCall::remoteCall()
+{
 	GenericInjector injector(process_);
 	INJECT_DATAPAYLOAD data = createDataPayload();
 	INJECT_CODEPAYLOAD code = createCodePayload();
@@ -66,19 +63,21 @@ bool RemoteLibCall::remoteCall() {
 	return noError;
 }
 
-INJECT_DATAPAYLOAD RemoteLibCall::createDataPayload() {
+INJECT_DATAPAYLOAD RemoteLibCall::createDataPayload()
+{
 	REMOTELIB_DATA* tmpData = (REMOTELIB_DATA*)malloc(sizeof(REMOTELIB_DATA));
-	if (functionNumber_ == -1) {
+	// set functionNr to -1 if we call by name
+	if (functionNumber_ == -1) 
+	{
 		strcpy_s(tmpData->functionName, MaxFuncNameLength, functionName_.c_str());
 		tmpData->functionNr = -1;
-	} else {
-		tmpData->functionNr = functionNumber_;
 	}
+	else tmpData->functionNr = functionNumber_;
 
-	// The remote process needs the virtual address of GetProcAddress and our dll handle.
+	// the remote process needs the actual address of GetProcAddress and our dll handle
 	HMODULE hKernel32 = LoadLibrary(_T("kernel32.dll"));
 	tmpData->getProcAddress = GetProcAddress(hKernel32, "GetProcAddress");
-	// Save handle of the dll we want to call.
+	// save handle of the dll we want to call
 	tmpData->hDll = hDll_;
 
 	INJECT_DATAPAYLOAD injectData;
@@ -89,57 +88,65 @@ INJECT_DATAPAYLOAD RemoteLibCall::createDataPayload() {
 
 #pragma warning(disable : 4731 4740) 
 
-// Create code to perform remote call.
-INJECT_CODEPAYLOAD RemoteLibCall::createCodePayload() {
+//create code to perform remote call
+INJECT_CODEPAYLOAD RemoteLibCall::createCodePayload()
+{
 	size_t s, e;
 	void* source;
 
-	__asm {
-		mov s, offset _start
-		mov e, offset _end
-		mov source, offset _start
-		jmp _end			// We only want to copy this code - not execute it so jump over it.
-	_start:
+	__asm
+	{
+		mov s, offset start
+		mov e, offset end
+		mov source, offset start
+		jmp end // we only want to copy this code - not execute it so jump over it
+	start:
+		// create standard stack frame
 		push ebp
 		mov ebp, esp
 		push ebx
 		push esi
 		push edi
 		
-		mov esi, [ebp+8]	// Get first param, ESI now points to struct.
-		mov edi, [esi]		// Get GetProcaddress pointer.
-		mov ebx, [esi+8]	// Get functionNr.
-		mov ecx, [esi+4]	// Get module handle.
+		mov esi, [ebp+8] // get first param, ESI now points to strcut
+		mov edi, [esi] // get getprocaddress pointer
+		mov ebx, [esi+8] // get functionNr
+		mov ecx, [esi+4] // get module handle
 		cmp ebx, 0xFFFFFFFF
-		jnz _byOrdinal
-		lea ebx, [esi+16]	// Get pointer to function name.
+		jnz byOrdinal
+		lea ebx, [esi+16] // get pointer to function name
 		
-	_byOrdinal:
+	byOrdinal:
 		push ebx
 		push ecx
-		call edi			// Call GetProcaddress.
-		test eax, eax		// Could we resolve the function?
-		jz _error
-		call eax			// Call exported function.
+		call edi // call getprocaddress
+		test eax, eax // could we resolve the funtion?
+		jz error
+		call eax // call exported function
 		mov eax, 1
-		jmp _finished
+		jmp finished
 
-	_error:
+	error:
 		xor eax, eax
 
-	_finished:
-		mov [esi+12], eax	// Save error flag.
+	finished:
+		mov [esi+12], eax // save error flag
 		pop edi
 		pop esi
 		pop ebx
 		pop ebp
+		//pop ebx
+		//pop esi
+		//pop edi
+		//pop ebp
 		ret
-	_end:
+	end:
 	}
 
 	INJECT_CODEPAYLOAD tmpPayload;
 	tmpPayload.size = e - s;
 	tmpPayload.code = malloc(tmpPayload.size);
+	// copying code from code section should always work
 	memcpy(tmpPayload.code, source, tmpPayload.size);
 	return tmpPayload;
 }

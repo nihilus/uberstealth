@@ -3,6 +3,7 @@
 #include <boost/thread.hpp>
 #pragma warning(default : 4244 4512)
 #include <boost/bind.hpp>
+#include <boost/smart_ptr.hpp>
 #include "RemoteStealthServer.h"
 #include "RemoteStealthSession.h"
 #include "TemporaryConfigFile.h"
