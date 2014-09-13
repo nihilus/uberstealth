@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="DriverControl">
+      <UniqueIdentifier>{d8e1802b-606f-4794-8309-0a55197d1b71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NInjectLib">
+      <UniqueIdentifier>{584ded90-17db-4672-910b-bb5f5492fd8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IPCConfigExchange">
+      <UniqueIdentifier>{ec877828-7c53-4ae4-b245-ac8c0423fe1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HideDebuggerProfile">
+      <UniqueIdentifier>{5857d70a-f81c-42d7-8c49-d00f5bdafb88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceItem">
+      <UniqueIdentifier>{2a0555c3-c534-409c-a01c-3fbf6134b6be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{deecd0f3-d057-4e3c-8fb3-63faab75fcfb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="IDAStealthRemote.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RemoteStealthServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RemoteStealthSession.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TemporaryConfigFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\uberstealth\DriverControl.cpp">
+      <Filter>DriverControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NInjectLib\GenericInjector.cpp">
+      <Filter>NInjectLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NInjectLib\IATModifier.cpp">
+      <Filter>NInjectLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NInjectLib\InjectLib.cpp">
+      <Filter>NInjectLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NInjectLib\Process.cpp">
+      <Filter>NInjectLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NInjectLib\RemoteLibCall.cpp">
+      <Filter>NInjectLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\uberstealth\IPCConfigExchangeCommon.cpp">
+      <Filter>IPCConfigExchange</Filter>
+    </ClCompile>
+    <ClCompile Include="..\uberstealth\IPCConfigExchangeWriter.cpp">
+      <Filter>IPCConfigExchange</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HideDebugger\HideDebuggerProfile.cpp">
+      <Filter>HideDebuggerProfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\uberstealth\ResourceItem.cpp">
+      <Filter>ResourceItem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\InjectionBeacon.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\StringHelper.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="IDAStealthRemote.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoteStealthConnection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoteStealthLogger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoteStealthProtocol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoteStealthServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoteStealthSession.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uberstealth\StealthSession.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TemporaryConfigFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDAStealth\version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uberstealth\DriverControl.h">
+      <Filter>DriverControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NInjectLib\GenericInjector.h">
+      <Filter>NInjectLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NInjectLib\IATModifier.h">
+      <Filter>NInjectLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NInjectLib\InjectLib.h">
+      <Filter>NInjectLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NInjectLib\Process.h">
+      <Filter>NInjectLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NInjectLib\RemoteLibCall.h">
+      <Filter>NInjectLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uberstealth\IPCConfigExchangeCommon.h">
+      <Filter>IPCConfigExchange</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uberstealth\IPCConfigExchangeWriter.h">
+      <Filter>IPCConfigExchange</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HideDebugger\HideDebuggerProfile.h">
+      <Filter>HideDebuggerProfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\uberstealth\ResourceItem.h">
+      <Filter>ResourceItem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\InjectionBeacon.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\StringHelper.h">
+      <Filter>common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="IDAStealthRemote.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\RDTSCEmu\driver\objfre_wxp_x86\i386\RDTSCEmu.sys" />
+    <None Include="..\StealthDriver\StealthDriver\objfre_wxp_x86\i386\StealthDriver.sys" />
+  </ItemGroup>
+</Project>
